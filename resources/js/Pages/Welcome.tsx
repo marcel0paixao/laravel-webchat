@@ -1,6 +1,6 @@
 import React from 'react';
 import GuestLayout from "@/Layouts/GuestLayout";
-import OuterCenteredContainer from "@/Components/OuterCenteredContainer";
+import OuterCenteredContainer from "@/Components/Site/OuterCenteredContainer";
 
 const Welcome = () => {
     return (

@@ -7389,10 +7389,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./resources/js/Components/OuterCenteredContainer.tsx":
-/*!************************************************************!*\
-  !*** ./resources/js/Components/OuterCenteredContainer.tsx ***!
-  \************************************************************/
+/***/ "./resources/js/Components/Site/OuterCenteredContainer.tsx":
+/*!*****************************************************************!*\
+  !*** ./resources/js/Components/Site/OuterCenteredContainer.tsx ***!
+  \*****************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -7515,7 +7515,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 
 var GuestLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/GuestLayout */ "./resources/js/Layouts/GuestLayout.tsx"));
 
-var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/OuterCenteredContainer */ "./resources/js/Components/OuterCenteredContainer.tsx"));
+var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
 
 var Welcome = function Welcome() {
   return react_1["default"].createElement(GuestLayout_1["default"], {
