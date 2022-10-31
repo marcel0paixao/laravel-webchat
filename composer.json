@@ -12,7 +12,19 @@
         "laravel/jetstream": "^2.12",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "canducci/cep": "^3.1",
+        "doctrine/dbal": "^3.3",
+        "fruitcake/laravel-cors": "^3.0",
+        "intervention/image": "^2.7",
+        "laravel-notification-channels/aws-sns": "^1.4",
+        "laravel/socialite": "^5.5",
+        "laravellegends/pt-br-validator": "^9.0",
+        "socialiteproviders/facebook": "^4.1",
+        "socialiteproviders/google": "^4.1",
+        "symfony/http-client": "^6.0",
+        "symfony/mailgun-mailer": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -21,7 +33,9 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "barryvdh/laravel-debugbar": "^3.6",
+        "lucascudo/laravel-pt-br-localization": "^1.1"
     },
     "autoload": {
         "psr-4": {
