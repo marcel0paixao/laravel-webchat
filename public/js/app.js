@@ -7634,6 +7634,45 @@ exports["default"] = FormLabel;
 
 /***/ }),
 
+/***/ "./resources/js/Components/Site/ChatRoom.tsx":
+/*!***************************************************!*\
+  !*** ./resources/js/Components/Site/ChatRoom.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function ChatRoom(_a) {
+  var children = _a.children,
+    props = __rest(_a, ["children"]);
+  return react_1["default"].createElement("div", {
+    className: "border-l border-r bg-white border-[#ddd]"
+  }, children);
+}
+exports["default"] = ChatRoom;
+
+/***/ }),
+
 /***/ "./resources/js/Components/Site/Header.tsx":
 /*!*************************************************!*\
   !*** ./resources/js/Components/Site/Header.tsx ***!
@@ -7678,7 +7717,7 @@ function Header(_a) {
     });
   }
   return react_1["default"].createElement("header", {
-    className: "w-full h-16 border-b px-6 py-2"
+    className: "w-full h-16 border-b px-6 py-2 border-[#ddd] absolute bg-white"
   }, react_1["default"].createElement("form", {
     action: route('logout'),
     onSubmit: logout
@@ -7709,15 +7748,16 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
-var OuterCenteredContainer = function OuterCenteredContainer(_a) {
+function OuterCenteredContainer(_a) {
   var children = _a.children,
     _b = _a.className,
     className = _b === void 0 ? '' : _b;
   return react_1["default"].createElement("div", {
     className: (0, classnames_1["default"])("px-4 max-w-md mx-auto mb-16 ", className)
   }, children);
-};
+}
 exports["default"] = OuterCenteredContainer;
+;
 
 /***/ }),
 
@@ -7932,7 +7972,7 @@ function GuestLayout(_a) {
   return react_1["default"].createElement("div", null, react_1["default"].createElement(inertia_react_1.Head, {
     title: title
   }), react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement("div", {
-    className: "font-sans text-TBL_TEXT_PRIMARY antialiased bg-purple-900"
+    className: "font-sans rounded-md pt-32 p-4 text-TBL_TEXT_PRIMARY antialiased bg-gray-200"
   }, children));
 }
 exports["default"] = GuestLayout;
@@ -8257,6 +8297,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+var ChatRoom_1 = __importDefault(__webpack_require__(/*! @/Components/Site/ChatRoom */ "./resources/js/Components/Site/ChatRoom.tsx"));
 var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
 var AppLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.tsx"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
@@ -8264,8 +8305,235 @@ function default_1() {
   return react_1["default"].createElement(AppLayout_1["default"], {
     title: "Chat room"
   }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
-    className: "bg-white w-full"
-  }));
+    className: "max-w-[1024px] h-screen"
+  }, react_1["default"].createElement(ChatRoom_1["default"], null, react_1["default"].createElement("div", {
+    className: "md:block hidden w-[35%]"
+  }, react_1["default"].createElement("ul", {
+    className: "max-h-screen w-full overflow-y-auto"
+  }, react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
+    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015"))))), react_1["default"].createElement("div", {
+    className: ""
+  }, react_1["default"].createElement("div", null))));
 }
 exports["default"] = default_1;
 
@@ -8293,7 +8561,7 @@ var GuestLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/GuestLayou
 var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
 var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
 var ziggy_js_1 = __importDefault(__webpack_require__(/*! ziggy-js */ "./node_modules/ziggy-js/dist/index.js"));
-var Welcome = function Welcome() {
+function Welcome() {
   var page = (0, useTypedPage_1["default"])();
   return react_1["default"].createElement(GuestLayout_1["default"], {
     title: __('')
@@ -8312,7 +8580,7 @@ var Welcome = function Welcome() {
     src: "/images/menu/register.svg",
     alt: ""
   }))) : null)));
-};
+}
 exports["default"] = Welcome;
 
 /***/ }),

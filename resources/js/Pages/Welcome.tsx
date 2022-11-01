@@ -4,7 +4,7 @@ import OuterCenteredContainer from "@/Components/Site/OuterCenteredContainer";
 import useTypedPage from '@/Hooks/useTypedPage';
 import route from 'ziggy-js';
 
-const Welcome = () => {
+export default function Welcome(){
     const page = useTypedPage();
     
     return (
@@ -29,5 +29,3 @@ const Welcome = () => {
         </GuestLayout>
     );
 }
-
-export default Welcome;
