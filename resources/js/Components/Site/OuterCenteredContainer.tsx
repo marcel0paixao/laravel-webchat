@@ -7,7 +7,7 @@ interface Props {
 
 const OuterCenteredContainer = ({children, className = ''}: PropsWithChildren<Props>) => {
     return (
-        <div className={classNames("px-4 max-w-md mx-auto mb-16", className)}>
+        <div className={classNames("px-4 max-w-md mx-auto mb-16 ", className)}>
             {children}
         </div>
     );
