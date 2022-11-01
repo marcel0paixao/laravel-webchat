@@ -7634,6 +7634,128 @@ exports["default"] = FormLabel;
 
 /***/ }),
 
+/***/ "./resources/js/Components/Site/Chat.tsx":
+/*!***********************************************!*\
+  !*** ./resources/js/Components/Site/Chat.tsx ***!
+  \***********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Button_1 = __importDefault(__webpack_require__(/*! ../Form/Button */ "./resources/js/Components/Form/Button.tsx"));
+var Input_1 = __importDefault(__webpack_require__(/*! ../Form/Input */ "./resources/js/Components/Form/Input.tsx"));
+var ChatHeader_1 = __importDefault(__webpack_require__(/*! ./ChatHeader */ "./resources/js/Components/Site/ChatHeader.tsx"));
+var MessagesList_1 = __importDefault(__webpack_require__(/*! ./MessagesList */ "./resources/js/Components/Site/MessagesList.tsx"));
+function Chat() {
+  var form = (0, inertia_react_1.useForm)({
+    message: '',
+    user_id: 1,
+    chat_room: 1
+  });
+  var submitMessage = function submitMessage(e) {
+    if (e.key == "Enter") {
+      console.log(Object(e.target).value);
+    }
+  };
+  var onSubmit = function onSubmit(e) {
+    e.preventDefault();
+    console.log('submited');
+  };
+  return react_1["default"].createElement("div", {
+    className: "h-full ml-4"
+  }, react_1["default"].createElement(ChatHeader_1["default"], null), react_1["default"].createElement("div", {
+    className: "p-4 flex h-[80%] overflow-y-auto border-[#ddd]"
+  }, react_1["default"].createElement(MessagesList_1["default"], null)), react_1["default"].createElement("form", {
+    action: "",
+    onSubmit: onSubmit,
+    className: "mt-3 pt-2 flex border-t"
+  }, react_1["default"].createElement(Input_1["default"], {
+    name: "message",
+    placeholder: __('Enter a message'),
+    id: "message",
+    type: "text",
+    className: "mt-1 block w-full rounded-r-none"
+  }), react_1["default"].createElement(Button_1["default"], {
+    type: "submit",
+    className: (0, classnames_1["default"])('w-[30px] bg-purple-600 h-[48px] mt-[4px] rounded-r-md ', {
+      'opacity-25': form.processing
+    }),
+    disabled: form.processing
+  }, react_1["default"].createElement("svg", {
+    className: "-ml-2",
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "21",
+    height: "18",
+    viewBox: "0 0 21 18",
+    fill: "none"
+  }, react_1["default"].createElement("path", {
+    d: "M0.00999999 18L21 9L0.00999999 0L0 7L15 9L0 11L0.00999999 18Z",
+    fill: "#fff"
+  })))));
+}
+exports["default"] = Chat;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Site/ChatHeader.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/Components/Site/ChatHeader.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function ChatHeader(_a) {
+  var props = __rest(_a, []);
+  return react_1["default"].createElement("header", {
+    className: "flex h-16 border-b border-[#ccc] w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-3 mt-1 min-w-max"
+  }, react_1["default"].createElement("h2", null, "Nome Usu\xE1rio"), react_1["default"].createElement("span", {
+    className: "text-[10px] text-gray-400"
+  }, "Last seen one hour ago")), react_1["default"].createElement("button", {
+    className: "border border-red-500 px-2 h-12 py-1 mt-1 mr-4 ml-auto rounded-md text-red-500"
+  }, "Delete"));
+}
+exports["default"] = ChatHeader;
+
+/***/ }),
+
 /***/ "./resources/js/Components/Site/ChatRoom.tsx":
 /*!***************************************************!*\
   !*** ./resources/js/Components/Site/ChatRoom.tsx ***!
@@ -7666,7 +7788,7 @@ function ChatRoom(_a) {
   var children = _a.children,
     props = __rest(_a, ["children"]);
   return react_1["default"].createElement("div", {
-    className: "border-l border-r bg-white border-[#ddd]"
+    className: "border-l border-r bg-white border-[#ddd] w-full rounded-lg h-[750px] p-4 flex"
   }, children);
 }
 exports["default"] = ChatRoom;
@@ -7729,6 +7851,152 @@ exports["default"] = Header;
 
 /***/ }),
 
+/***/ "./resources/js/Components/Site/MessageBox.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/Components/Site/MessageBox.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function MessageBox(_a) {
+  var children = _a.children,
+    byOwn = _a.byOwn,
+    date = _a.date;
+  return react_1["default"].createElement("li", {
+    className: "border rounded-md p-2 text-md text-black bg-[#eee] max-w-[80%]" + (byOwn ? ' ml-auto' : '')
+  }, react_1["default"].createElement("p", {
+    className: "text-[14px]"
+  }, children), react_1["default"].createElement("p", {
+    className: "text-[10px] font-lighter text-right"
+  }, date));
+}
+exports["default"] = MessageBox;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Site/MessagesList.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/Components/Site/MessagesList.tsx ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var MessageBox_1 = __importDefault(__webpack_require__(/*! ./MessageBox */ "./resources/js/Components/Site/MessageBox.tsx"));
+function MessagesList() {
+  return react_1["default"].createElement("ul", {
+    className: "space-y-4"
+  }, react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: false
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
+    date: "23:59 21/12/2015",
+    byOwn: true
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"));
+}
+exports["default"] = MessagesList;
+
+/***/ }),
+
 /***/ "./resources/js/Components/Site/OuterCenteredContainer.tsx":
 /*!*****************************************************************!*\
   !*** ./resources/js/Components/Site/OuterCenteredContainer.tsx ***!
@@ -7758,6 +8026,83 @@ function OuterCenteredContainer(_a) {
 }
 exports["default"] = OuterCenteredContainer;
 ;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Site/UserBox.tsx":
+/*!**************************************************!*\
+  !*** ./resources/js/Components/Site/UserBox.tsx ***!
+  \**************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function UserBox() {
+  return react_1["default"].createElement("li", {
+    className: "h-18 p-2 border rounded-md border-[#ddd] flex w-full"
+  }, react_1["default"].createElement("img", {
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    className: "w-14 h-14 rounded-full"
+  }), react_1["default"].createElement("div", {
+    className: "ml-2 mt-1 w-full"
+  }, react_1["default"].createElement("h5", {
+    className: "font-bold truncate"
+  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+    className: "truncate text-xs max-w-[100px]"
+  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
+    className: "ml-full font-ligther text-[10px] mt-3"
+  }, "23:59 21/12/2015"));
+}
+exports["default"] = UserBox;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Site/UsersList.tsx":
+/*!****************************************************!*\
+  !*** ./resources/js/Components/Site/UsersList.tsx ***!
+  \****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var UserBox_1 = __importDefault(__webpack_require__(/*! ./UserBox */ "./resources/js/Components/Site/UserBox.tsx"));
+function UsersList(_a) {
+  var props = __rest(_a, []);
+  return react_1["default"].createElement("ul", {
+    className: "w-full max-h-[710px] overflow-y-auto space-y-2 pr-2"
+  }, react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null));
+}
+exports["default"] = UsersList;
 
 /***/ }),
 
@@ -8297,243 +8642,22 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+var Chat_1 = __importDefault(__webpack_require__(/*! @/Components/Site/Chat */ "./resources/js/Components/Site/Chat.tsx"));
 var ChatRoom_1 = __importDefault(__webpack_require__(/*! @/Components/Site/ChatRoom */ "./resources/js/Components/Site/ChatRoom.tsx"));
 var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
 var AppLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.tsx"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var UsersList_1 = __importDefault(__webpack_require__(/*! @/Components/Site/UsersList */ "./resources/js/Components/Site/UsersList.tsx"));
 function default_1() {
   return react_1["default"].createElement(AppLayout_1["default"], {
     title: "Chat room"
   }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
-    className: "max-w-[1024px] h-screen"
+    className: "!max-w-[1024px]"
   }, react_1["default"].createElement(ChatRoom_1["default"], null, react_1["default"].createElement("div", {
-    className: "md:block hidden w-[35%]"
-  }, react_1["default"].createElement("ul", {
-    className: "max-h-screen w-full overflow-y-auto"
-  }, react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015")), react_1["default"].createElement("li", {
-    className: "h-18 p-2 border-b border-l border-[#ddd] flex w-full"
-  }, react_1["default"].createElement("img", {
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-    className: "w-14 h-14 rounded-full"
-  }), react_1["default"].createElement("div", {
-    className: "ml-2 mt-1 w-full"
-  }, react_1["default"].createElement("h5", {
-    className: "font-bold"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
-    className: "truncate text-xs max-w-[100px]"
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
-    className: "ml-full font-ligther text-[10px] mt-3"
-  }, "23:59 21/12/2015"))))), react_1["default"].createElement("div", {
-    className: ""
-  }, react_1["default"].createElement("div", null))));
+    className: "md:block hidden md:w-[35%]"
+  }, react_1["default"].createElement(UsersList_1["default"], null)), react_1["default"].createElement("div", {
+    className: "h-full md:w-[65%]"
+  }, react_1["default"].createElement(Chat_1["default"], null)))));
 }
 exports["default"] = default_1;
 
