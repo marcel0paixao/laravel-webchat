@@ -7389,6 +7389,307 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./resources/js/Components/Form/Button.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/Components/Form/Button.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var FormButton = function FormButton(_a) {
+  var _b;
+  var children = _a.children,
+    className = _a.className,
+    props = __rest(_a, ["children", "className"]);
+  var type = (_b = props.type) !== null && _b !== void 0 ? _b : 'submit';
+  return react_1["default"].createElement("button", __assign({
+    type: type
+  }, props, {
+    className: (0, classnames_1["default"])('py-2.5 px-6 bg-TBL_PRIMARY rounded-sm font-semibold text-base text-white disabled:opacity-25 transition text-center', className !== null && className !== void 0 ? className : '')
+  }), children);
+};
+exports["default"] = FormButton;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/Error.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/Components/Form/Error.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var FormError = function FormError(_a) {
+  var children = _a.children,
+    _b = _a.className,
+    className = _b === void 0 ? '' : _b;
+  return react_1["default"].createElement("div", null, react_1["default"].createElement("p", {
+    className: (0, classnames_1["default"])("text-xs text-TBL_DANGER font-medium", className)
+  }, children));
+};
+exports["default"] = FormError;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/Input.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/Components/Form/Input.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+  __setModuleDefault(result, mod);
+  return result;
+};
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Label_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Label */ "./resources/js/Components/Form/Label.tsx"));
+var Error_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Error */ "./resources/js/Components/Form/Error.tsx"));
+var FormInput = (0, react_1.forwardRef)(function (_a, ref) {
+  var _b = _a.showCount,
+    showCount = _b === void 0 ? false : _b,
+    _c = _a.maxLength,
+    maxLength = _c === void 0 ? 0 : _c,
+    onChange = _a.onChange,
+    props = __rest(_a, ["showCount", "maxLength", "onChange"]);
+  var _d = (0, react_1.useState)(0),
+    count = _d[0],
+    setCount = _d[1];
+  (0, react_1.useEffect)(function () {
+    if (props.value) {
+      setCount(props.value.length);
+    }
+  }, []);
+  var handleKeyUp = function handleKeyUp(e) {
+    if (onChange) {
+      onChange(e);
+    }
+    setCount(e.target.value.length);
+  };
+  return react_1["default"].createElement(react_1["default"].Fragment, null, props.label && react_1["default"].createElement(Label_1["default"], {
+    htmlFor: props.id
+  }, props.label), react_1["default"].createElement("input", __assign({}, props, {
+    maxLength: maxLength !== 0 ? maxLength : undefined,
+    ref: ref,
+    onChange: handleKeyUp,
+    className: (0, classnames_1["default"])('border-TBL_BORDERS focus:border-TBL_BORDERS focus:ring-TBL_BORDERS focus:ring-opacity-50 ' + 'disabled:text-TBL_TEXT_PRIMARY/50 rounded-lg bg-TBL_INPUT_BG text-xs text-TBL_MENU_COLOR placeholder:text-TBL_TEXT_PLACEHOLDER h-12', props.className)
+  })), showCount && react_1["default"].createElement("div", {
+    className: "mt-1 flex justify-end italic text-TBL_TERTIARY font-normal text-2xs"
+  }, react_1["default"].createElement("span", null, count), " / ", react_1["default"].createElement("span", null, maxLength)), props.error && react_1["default"].createElement(Error_1["default"], {
+    className: "pl-2 ".concat(showCount ? '-mt-2' : 'mt-2')
+  }, props.error));
+});
+exports["default"] = FormInput;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Form/Label.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/Components/Form/Label.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var FormLabel = function FormLabel(_a) {
+  var children = _a.children,
+    _b = _a.className,
+    className = _b === void 0 ? '' : _b,
+    props = __rest(_a, ["children", "className"]);
+  return react_1["default"].createElement("label", {
+    htmlFor: props.htmlFor,
+    className: (0, classnames_1["default"])("block font-normal text-base text-TBL_MENU_COLOR leading-7", className)
+  }, children);
+};
+exports["default"] = FormLabel;
+
+/***/ }),
+
+/***/ "./resources/js/Components/Site/Header.tsx":
+/*!*************************************************!*\
+  !*** ./resources/js/Components/Site/Header.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __rest = this && this.__rest || function (s, e) {
+  var t = {};
+  for (var p in s) {
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+  }
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var useRoute_1 = __importDefault(__webpack_require__(/*! @/Hooks/useRoute */ "./resources/js/Hooks/useRoute.ts"));
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
+var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function Header(_a) {
+  var props = __rest(_a, []);
+  var page = (0, useTypedPage_1["default"])();
+  var route = (0, useRoute_1["default"])();
+  function logout(e) {
+    e.preventDefault();
+    inertia_1.Inertia.post(route('logout'), {}, {
+      onSuccess: function onSuccess() {
+        location.reload();
+      }
+    });
+  }
+  return react_1["default"].createElement("header", {
+    className: "w-full h-16 border-b px-6 py-2"
+  }, react_1["default"].createElement("form", {
+    action: route('logout'),
+    onSubmit: logout
+  }, react_1["default"].createElement("button", {
+    type: "submit"
+  }, "Log Out")));
+}
+exports["default"] = Header;
+
+/***/ }),
+
 /***/ "./resources/js/Components/Site/OuterCenteredContainer.tsx":
 /*!*****************************************************************!*\
   !*** ./resources/js/Components/Site/OuterCenteredContainer.tsx ***!
@@ -7403,25 +7704,114 @@ var __importDefault = this && this.__importDefault || function (mod) {
     "default": mod
   };
 };
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
 var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
-
 var OuterCenteredContainer = function OuterCenteredContainer(_a) {
   var children = _a.children,
-      _b = _a.className,
-      className = _b === void 0 ? '' : _b;
+    _b = _a.className,
+    className = _b === void 0 ? '' : _b;
   return react_1["default"].createElement("div", {
-    className: (0, classnames_1["default"])("px-4 max-w-md mx-auto mb-16", className)
+    className: (0, classnames_1["default"])("px-4 max-w-md mx-auto mb-16 ", className)
   }, children);
 };
-
 exports["default"] = OuterCenteredContainer;
+
+/***/ }),
+
+/***/ "./resources/js/Hooks/usePrevalidate.ts":
+/*!**********************************************!*\
+  !*** ./resources/js/Hooks/usePrevalidate.ts ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+var react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var usePrevalidate = function usePrevalidate(form, _a) {
+  var method = _a.method,
+    url = _a.url;
+  var _b = (0, react_1.useState)(new Set()),
+    touchedFields = _b[0],
+    setTouchedFields = _b[1];
+  var _c = (0, react_1.useState)(false),
+    needsValidation = _c[0],
+    setNeedsValidation = _c[1];
+  var prevFormData = (0, react_1.useRef)(form.data);
+  (0, react_1.useEffect)(function () {
+    if (prevFormData.current !== form.data) {
+      var changedFields = Object.keys(form.data).filter(function (field) {
+        return form.data[field] !== prevFormData.current[field];
+      });
+      setTouchedFields(new Set(__spreadArray(__spreadArray([], changedFields, true), Array.from(touchedFields.values()), true)));
+      setNeedsValidation(true);
+    }
+    return function () {
+      prevFormData.current = form.data;
+    };
+  }, [form.data]);
+  var preValidate = function preValidate() {
+    if (!needsValidation) return;
+    setNeedsValidation(false);
+    inertia_1.Inertia.visit(url, {
+      method: method,
+      data: __assign(__assign({}, form.data), {
+        prevalidate: true
+      }),
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: function onSuccess() {
+        return form.clearErrors();
+      },
+      onError: function onError(errors) {
+        Object.keys(errors).filter(function (field) {
+          return !touchedFields.has(field);
+        }).forEach(function (field) {
+          return delete errors[field];
+        });
+        form.clearErrors();
+        form.setError(errors);
+      }
+    });
+  };
+  var setAndValidate = function setAndValidate(field, value) {
+    form.setData(field, value);
+    preValidate();
+  };
+  return {
+    preValidate: preValidate,
+    setAndValidate: setAndValidate
+  };
+};
+exports["default"] = usePrevalidate;
 
 /***/ }),
 
@@ -7437,16 +7827,115 @@ exports["default"] = OuterCenteredContainer;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 function useRoute() {
   function routeWrapper(name, params, absolute) {
     return window.route(name, params, absolute);
   }
-
   return routeWrapper;
 }
-
 exports["default"] = useRoute;
+
+/***/ }),
+
+/***/ "./resources/js/Hooks/useTypedPage.ts":
+/*!********************************************!*\
+  !*** ./resources/js/Hooks/useTypedPage.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+function useTypedPage() {
+  return (0, inertia_react_1.usePage)();
+}
+exports["default"] = useTypedPage;
+
+/***/ }),
+
+/***/ "./resources/js/Jetstream/Checkbox.tsx":
+/*!*********************************************!*\
+  !*** ./resources/js/Jetstream/Checkbox.tsx ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function JetCheckbox(props) {
+  return react_1["default"].createElement("input", __assign({
+    type: "checkbox"
+  }, props, {
+    className: (0, classnames_1["default"])('rounded-[1px] border-TBL_TEXT_PLACEHOLDER border-2 text-TBL_SECONDARY shadow-sm focus:ring-opacity-50', props.className)
+  }));
+}
+exports["default"] = JetCheckbox;
+
+/***/ }),
+
+/***/ "./resources/js/Layouts/AppLayout.tsx":
+/*!********************************************!*\
+  !*** ./resources/js/Layouts/AppLayout.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var useRoute_1 = __importDefault(__webpack_require__(/*! @/Hooks/useRoute */ "./resources/js/Hooks/useRoute.ts"));
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+var Header_1 = __importDefault(__webpack_require__(/*! @/Components/Site/Header */ "./resources/js/Components/Site/Header.tsx"));
+function GuestLayout(_a) {
+  var title = _a.title,
+    children = _a.children;
+  var route = (0, useRoute_1["default"])();
+  function logout(e) {
+    e.preventDefault();
+    inertia_1.Inertia.post(route('logout'));
+  }
+  return react_1["default"].createElement("div", null, react_1["default"].createElement(inertia_react_1.Head, {
+    title: title
+  }), react_1["default"].createElement(Header_1["default"], null), react_1["default"].createElement("div", {
+    className: "font-sans text-TBL_TEXT_PRIMARY antialiased bg-purple-900"
+  }, children));
+}
+exports["default"] = GuestLayout;
 
 /***/ }),
 
@@ -7464,31 +7953,321 @@ var __importDefault = this && this.__importDefault || function (mod) {
     "default": mod
   };
 };
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
 var useRoute_1 = __importDefault(__webpack_require__(/*! @/Hooks/useRoute */ "./resources/js/Hooks/useRoute.ts"));
-
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
 function GuestLayout(_a) {
   var title = _a.title,
-      children = _a.children;
+    children = _a.children;
   var route = (0, useRoute_1["default"])();
-
   function logout(e) {
     e.preventDefault();
     inertia_1.Inertia.post(route('logout'));
   }
-
-  return react_1["default"].createElement("div", null, react_1["default"].createElement("h1", null, "teste"));
+  return react_1["default"].createElement("div", null, react_1["default"].createElement(inertia_react_1.Head, {
+    title: title
+  }), react_1["default"].createElement("div", {
+    className: "font-sans text-TBL_TEXT_PRIMARY antialiased"
+  }, children));
 }
-
 exports["default"] = GuestLayout;
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Auth/Login.tsx":
+/*!*******************************************!*\
+  !*** ./resources/js/Pages/Auth/Login.tsx ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var useRoute_1 = __importDefault(__webpack_require__(/*! @/Hooks/useRoute */ "./resources/js/Hooks/useRoute.ts"));
+var GuestLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/GuestLayout */ "./resources/js/Layouts/GuestLayout.tsx"));
+var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
+var usePrevalidate_1 = __importDefault(__webpack_require__(/*! @/Hooks/usePrevalidate */ "./resources/js/Hooks/usePrevalidate.ts"));
+var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
+var Input_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Input */ "./resources/js/Components/Form/Input.tsx"));
+var Checkbox_1 = __importDefault(__webpack_require__(/*! @/Jetstream/Checkbox */ "./resources/js/Jetstream/Checkbox.tsx"));
+var Button_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Button */ "./resources/js/Components/Form/Button.tsx"));
+var POST_ROUTE = 'login';
+function Login() {
+  var route = (0, useRoute_1["default"])();
+  var flash = (0, useTypedPage_1["default"])().props.flash;
+  var form = (0, inertia_react_1.useForm)({
+    email: '',
+    password: '',
+    remember: ''
+  });
+  var preValidate = (0, usePrevalidate_1["default"])(form, {
+    method: inertia_1.Method.POST,
+    url: route(POST_ROUTE)
+  }).preValidate;
+  function onSubmit(e) {
+    e.preventDefault();
+    form.post(route(POST_ROUTE), {
+      preserveState: true,
+      preserveScroll: true,
+      onFinish: function onFinish() {
+        return form.reset('password');
+      }
+    });
+  }
+  return react_1["default"].createElement(GuestLayout_1["default"], {
+    title: __('Login')
+  }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
+    className: "py-32"
+  }, react_1["default"].createElement("h1", {
+    className: 'flex justify-center font-bold mb-16'
+  }, react_1["default"].createElement("div", {
+    className: "block mr-1 text-TBL_MENU_COLOR"
+  }, __('Login in')), react_1["default"].createElement("div", {
+    className: "block text-purple-600"
+  }, "Webchat")), (flash === null || flash === void 0 ? void 0 : flash.status) && react_1["default"].createElement("div", {
+    className: "mb-4 font-medium text-sm text-green-600"
+  }, flash === null || flash === void 0 ? void 0 : flash.status), react_1["default"].createElement("form", {
+    onSubmit: onSubmit
+  }, react_1["default"].createElement("div", null, react_1["default"].createElement(Input_1["default"], {
+    placeholder: __('Enter your email'),
+    label: __('Email label'),
+    error: form.errors.email,
+    id: "email",
+    type: "email",
+    className: "mt-1 block w-full",
+    value: form.data.email,
+    onChange: function onChange(e) {
+      return form.setData('email', e.currentTarget.value);
+    },
+    autoFocus: true
+  })), react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement(Input_1["default"], {
+    placeholder: __('Enter your password'),
+    label: __('Password'),
+    error: form.errors.password,
+    id: "password",
+    type: "password",
+    className: "mt-1 block w-full",
+    value: form.data.password,
+    onChange: function onChange(e) {
+      return form.setData('password', e.currentTarget.value);
+    },
+    autoComplete: "current-password"
+  })), react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement("label", {
+    htmlFor: "remember_me",
+    className: "flex items-center"
+  }, react_1["default"].createElement(Checkbox_1["default"], {
+    id: "remember_me",
+    name: "remember",
+    checked: form.data.remember === 'on',
+    onChange: function onChange(e) {
+      return form.setData('remember', e.currentTarget.checked ? 'on' : '');
+    }
+  }), react_1["default"].createElement("span", {
+    className: "ml-2 text-sm text-TBL_TEXT_PLACEHOLDER"
+  }, __('Remember me')))), react_1["default"].createElement(Button_1["default"], {
+    className: (0, classnames_1["default"])('mt-6 w-full bg-purple-600 ', {
+      'opacity-25': form.processing
+    }),
+    disabled: form.processing
+  }, __('Log in')), react_1["default"].createElement("div", {
+    className: "mt-3"
+  }, react_1["default"].createElement("div", {
+    className: "text-center"
+  }, react_1["default"].createElement(inertia_react_1.InertiaLink, {
+    href: route('password.request'),
+    className: "text-TBL_SECONDARY font-normal"
+  }, __('Forgot your password?')))), react_1["default"].createElement("div", {
+    className: 'flex justify-center text-TBL_TEXT_PLACEHOLDER text-xs mt-2'
+  }, __("Don't have an account?"), react_1["default"].createElement(inertia_react_1.InertiaLink, {
+    href: route('register')
+  }, react_1["default"].createElement("span", {
+    className: 'text-TBL_SECONDARY font-normal ml-1'
+  }, __("Register")))))));
+}
+exports["default"] = Login;
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Auth/Register.tsx":
+/*!**********************************************!*\
+  !*** ./resources/js/Pages/Auth/Register.tsx ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var useRoute_1 = __importDefault(__webpack_require__(/*! @/Hooks/useRoute */ "./resources/js/Hooks/useRoute.ts"));
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
+var GuestLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/GuestLayout */ "./resources/js/Layouts/GuestLayout.tsx"));
+var Button_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Button */ "./resources/js/Components/Form/Button.tsx"));
+var Input_1 = __importDefault(__webpack_require__(/*! @/Components/Form/Input */ "./resources/js/Components/Form/Input.tsx"));
+var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
+var usePrevalidate_1 = __importDefault(__webpack_require__(/*! @/Hooks/usePrevalidate */ "./resources/js/Hooks/usePrevalidate.ts"));
+var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+var POST_ROUTE = 'register';
+function Register(props) {
+  var page = (0, useTypedPage_1["default"])();
+  var route = (0, useRoute_1["default"])();
+  var form = (0, inertia_react_1.useForm)(POST_ROUTE, {
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    terms: false
+  });
+  var preValidate = (0, usePrevalidate_1["default"])(form, {
+    method: inertia_1.Method.POST,
+    url: route(POST_ROUTE)
+  }).preValidate;
+  function onSubmit(e) {
+    e.preventDefault();
+    form.post(route(POST_ROUTE), {
+      onFinish: function onFinish() {
+        return form.reset('password', 'password_confirmation');
+      }
+    });
+  }
+  return react_1["default"].createElement(GuestLayout_1["default"], {
+    title: __('Register')
+  }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
+    className: "py-32"
+  }, react_1["default"].createElement("h1", {
+    className: 'flex justify-center font-bold mb-16'
+  }, react_1["default"].createElement("div", {
+    className: "block mr-1 text-TBL_MENU_COLOR"
+  }, __('Register'), " ", __('in')), react_1["default"].createElement("div", {
+    className: "block text-purple-600"
+  }, "Webchat")), react_1["default"].createElement("form", {
+    onSubmit: onSubmit
+  }, react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement(Input_1["default"], {
+    label: __('Name') + '*',
+    error: form.errors.name,
+    placeholder: __('Enter your name'),
+    id: "name",
+    type: "text",
+    className: "mt-1 block w-full",
+    value: form.data.name,
+    onChange: function onChange(e) {
+      return form.setData('name', e.currentTarget.value);
+    },
+    autoFocus: true,
+    autoComplete: "name"
+  })), react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement(Input_1["default"], {
+    label: __('Email label') + '*',
+    error: form.errors.email,
+    placeholder: __('Enter your email'),
+    id: "email",
+    type: "email",
+    className: "mt-1 block w-full",
+    value: form.data.email,
+    onChange: function onChange(e) {
+      return form.setData('email', e.currentTarget.value);
+    }
+  })), react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement(Input_1["default"], {
+    label: __('Password') + '*',
+    error: form.errors.password,
+    placeholder: __('Enter your password'),
+    id: "password",
+    type: "password",
+    className: "mt-1 block w-full",
+    value: form.data.password,
+    onChange: function onChange(e) {
+      return form.setData('password', e.currentTarget.value);
+    },
+    autoComplete: "new-password"
+  })), react_1["default"].createElement("div", {
+    className: "mt-4"
+  }, react_1["default"].createElement(Input_1["default"], {
+    label: __('Confirm Password') + '*',
+    error: form.errors.password_confirmation,
+    placeholder: __('Confirm your password'),
+    id: "password_confirmation",
+    type: "password",
+    className: "mt-1 block w-full",
+    value: form.data.password_confirmation,
+    onChange: function onChange(e) {
+      return form.setData('password_confirmation', e.currentTarget.value);
+    },
+    autoComplete: "new-password"
+  })), react_1["default"].createElement(Button_1["default"], {
+    className: "mt-8 w-full h-12 bg-purple-600",
+    disabled: form.processing
+  }, __('Register')), react_1["default"].createElement("div", {
+    className: "mt-8 mb-16 flex text-xs justify-center font-normal text-TBL_TEXT_PLACEHOLDER"
+  }, __('Já possui conta?'), react_1["default"].createElement(inertia_react_1.InertiaLink, {
+    href: route('login'),
+    className: "ml-2 text-TBL_SECONDARY hover:font-semibold"
+  }, __('Enter login'))))));
+}
+exports["default"] = Register;
+
+/***/ }),
+
+/***/ "./resources/js/Pages/Home.tsx":
+/*!*************************************!*\
+  !*** ./resources/js/Pages/Home.tsx ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
+var AppLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.tsx"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+function default_1() {
+  return react_1["default"].createElement(AppLayout_1["default"], {
+    title: "Chat room"
+  }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
+    className: "bg-white w-full"
+  }));
+}
+exports["default"] = default_1;
 
 /***/ }),
 
@@ -7506,27 +8285,34 @@ var __importDefault = this && this.__importDefault || function (mod) {
     "default": mod
   };
 };
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
 var GuestLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/GuestLayout */ "./resources/js/Layouts/GuestLayout.tsx"));
-
 var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
-
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
+var ziggy_js_1 = __importDefault(__webpack_require__(/*! ziggy-js */ "./node_modules/ziggy-js/dist/index.js"));
 var Welcome = function Welcome() {
+  var page = (0, useTypedPage_1["default"])();
   return react_1["default"].createElement(GuestLayout_1["default"], {
-    title: __('Bem vindo')
+    title: __('')
   }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
     className: "mb-32"
   }, react_1["default"].createElement("div", {
     className: "flex flex-col justify-center items-center "
-  })));
+  }, !page.props.user ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement("a", {
+    href: (0, ziggy_js_1["default"])('login')
+  }, react_1["default"].createElement("span", null, __('Log in')), react_1["default"].createElement("img", {
+    src: "/images/menu/login.svg",
+    alt: ""
+  })), react_1["default"].createElement("a", {
+    href: (0, ziggy_js_1["default"])('register')
+  }, react_1["default"].createElement("span", null, __('Register')), react_1["default"].createElement("img", {
+    src: "/images/menu/register.svg",
+    alt: ""
+  }))) : null)));
 };
-
 exports["default"] = Welcome;
 
 /***/ }),
@@ -7539,6 +8325,7 @@ exports["default"] = Welcome;
 
 "use strict";
 
+
 /*
 * FUNÇÃO TEMPORÁRIA ATÉ QUE SE DEFINA QUAL ESTRATÉGIA DE I18N SERÁ USADA NO FRONTEND!
 *
@@ -7546,28 +8333,20 @@ exports["default"] = Welcome;
 *
 * @TODO: encontrar uma lib apropriada para React, que interaja com o que temos no BE.
 */
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 var ptBR = __webpack_require__(/*! ./pt-BR.json */ "./resources/js/Services/pt-BR.json");
-
 var __ = function __(term) {
   var _a;
-
   var params = [];
-
   for (var _i = 1; _i < arguments.length; _i++) {
     params[_i - 1] = arguments[_i];
   }
-
   return (_a = ptBR[term]) !== null && _a !== void 0 ? _a : term;
-}; // Global scope augmentation
-
-
+};
+// Global scope augmentation
 var _global = window || __webpack_require__.g;
-
 _global.__ = __;
 
 /***/ }),
@@ -7585,48 +8364,32 @@ var __assign = this && this.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
       s = arguments[i];
-
       for (var p in s) {
         if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
       }
     }
-
     return t;
   };
-
   return __assign.apply(this, arguments);
 };
-
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
   };
 };
-
 var _a;
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-
 var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-
 var react_dom_1 = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-
 var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-
 var progress_1 = __webpack_require__(/*! @inertiajs/progress */ "./node_modules/@inertiajs/progress/dist/index.js");
-
 __webpack_require__(/*! ./Services/I18nService */ "./resources/js/Services/I18nService.ts");
-
 var react_datepicker_1 = __webpack_require__(/*! react-datepicker */ "./node_modules/react-datepicker/dist/react-datepicker.min.js");
-
 var pt_BR_1 = __importDefault(__webpack_require__(/*! date-fns/locale/pt-BR */ "./node_modules/date-fns/esm/locale/pt-BR/index.js"));
-
 (0, react_datepicker_1.registerLocale)('pt-BR', pt_BR_1["default"]);
 (0, react_datepicker_1.setDefaultLocale)('pt-BR');
 var appName = ((_a = window.document.getElementsByTagName('title')[0]) === null || _a === void 0 ? void 0 : _a.innerText) || 'Laravel';
@@ -7636,14 +8399,12 @@ window.addEventListener('popstate', function () {
 });
 inertia_1.Inertia.on('navigate', function (event) {
   var page = event.detail.page;
-
   if (stale) {
     inertia_1.Inertia.get(page.url, {}, {
       replace: true,
       preserveState: false
     });
   }
-
   stale = false;
 });
 (0, inertia_react_1.createInertiaApp)({
@@ -7655,8 +8416,8 @@ inertia_1.Inertia.on('navigate', function (event) {
   },
   setup: function setup(_a) {
     var el = _a.el,
-        App = _a.App,
-        props = _a.props;
+      App = _a.App,
+      props = _a.props;
     return (0, react_dom_1.render)(react_1["default"].createElement(App, __assign({}, props)), el);
   }
 });
@@ -7680,6 +8441,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 
 window._ = (lodash__WEBPACK_IMPORTED_MODULE_0___default());
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -7689,14 +8451,18 @@ window._ = (lodash__WEBPACK_IMPORTED_MODULE_0___default());
 
 window.axios = (axios__WEBPACK_IMPORTED_MODULE_1___default());
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
  */
+
 // import Echo from 'laravel-echo';
+
 // import Pusher from 'pusher-js';
 // window.Pusher = Pusher;
+
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
 //     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -69528,6 +70294,17 @@ module.exports = warning;
 
 /***/ }),
 
+/***/ "./node_modules/ziggy-js/dist/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/ziggy-js/dist/index.js ***!
+  \*********************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+!function(n,t){ true?module.exports=t(__webpack_require__(/*! qs */ "./node_modules/qs/lib/index.js")):0}(this,function(n){function t(n,t){for(var r=0;r<t.length;r++){var e=t[r];e.enumerable=e.enumerable||!1,e.configurable=!0,"value"in e&&(e.writable=!0),Object.defineProperty(n,e.key,e)}}function r(n,r,e){return r&&t(n.prototype,r),e&&t(n,e),Object.defineProperty(n,"prototype",{writable:!1}),n}function e(){return e=Object.assign||function(n){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var e in r)Object.prototype.hasOwnProperty.call(r,e)&&(n[e]=r[e])}return n},e.apply(this,arguments)}function i(n){return i=Object.setPrototypeOf?Object.getPrototypeOf:function(n){return n.__proto__||Object.getPrototypeOf(n)},i(n)}function u(n,t){return u=Object.setPrototypeOf||function(n,t){return n.__proto__=t,n},u(n,t)}function o(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){})),!0}catch(n){return!1}}function f(n,t,r){return f=o()?Reflect.construct:function(n,t,r){var e=[null];e.push.apply(e,t);var i=new(Function.bind.apply(n,e));return r&&u(i,r.prototype),i},f.apply(null,arguments)}function c(n){var t="function"==typeof Map?new Map:void 0;return c=function(n){if(null===n||-1===Function.toString.call(n).indexOf("[native code]"))return n;if("function"!=typeof n)throw new TypeError("Super expression must either be null or a function");if(void 0!==t){if(t.has(n))return t.get(n);t.set(n,r)}function r(){return f(n,arguments,i(this).constructor)}return r.prototype=Object.create(n.prototype,{constructor:{value:r,enumerable:!1,writable:!0,configurable:!0}}),u(r,n)},c(n)}var a=/*#__PURE__*/function(){function t(n,t,r){var e,i;this.name=n,this.definition=t,this.bindings=null!=(e=t.bindings)?e:{},this.wheres=null!=(i=t.wheres)?i:{},this.config=r}var e=t.prototype;return e.matchesUrl=function(t){var r=this;if(!this.definition.methods.includes("GET"))return!1;var e=this.template.replace(/(\/?){([^}?]*)(\??)}/g,function(n,t,e,i){var u,o="(?<"+e+">"+((null==(u=r.wheres[e])?void 0:u.replace(/(^\^)|(\$$)/g,""))||"[^/?]+")+")";return i?"("+t+o+")?":""+t+o}).replace(/^\w+:\/\//,""),i=t.replace(/^\w+:\/\//,"").split("?"),u=i[0],o=i[1],f=new RegExp("^"+e+"/?$").exec(u);return!!f&&{params:f.groups,query:n.parse(o)}},e.compile=function(n){var t=this,r=this.parameterSegments;return r.length?this.template.replace(/{([^}?]+)(\??)}/g,function(e,i,u){var o,f,c;if(!u&&[null,void 0].includes(n[i]))throw new Error("Ziggy error: '"+i+"' parameter is required for route '"+t.name+"'.");if(r[r.length-1].name===i&&".*"===t.wheres[i])return encodeURIComponent(null!=(c=n[i])?c:"").replace(/%2F/g,"/");if(t.wheres[i]&&!new RegExp("^"+(u?"("+t.wheres[i]+")?":t.wheres[i])+"$").test(null!=(o=n[i])?o:""))throw new Error("Ziggy error: '"+i+"' parameter does not match required format '"+t.wheres[i]+"' for route '"+t.name+"'.");return encodeURIComponent(null!=(f=n[i])?f:"")}).replace(/\/+$/,""):this.template},r(t,[{key:"template",get:function(){return((this.config.absolute?this.definition.domain?""+this.config.url.match(/^\w+:\/\//)[0]+this.definition.domain+(this.config.port?":"+this.config.port:""):this.config.url:"")+"/"+this.definition.uri).replace(/\/+$/,"")}},{key:"parameterSegments",get:function(){var n,t;return null!=(n=null==(t=this.template.match(/{[^}?]+\??}/g))?void 0:t.map(function(n){return{name:n.replace(/{|\??}/g,""),required:!/\?}$/.test(n)}}))?n:[]}}]),t}(),s=/*#__PURE__*/function(t){var i,o;function f(n,r,i,u){var o;if(void 0===i&&(i=!0),(o=t.call(this)||this).t=null!=u?u:"undefined"!=typeof Ziggy?Ziggy:null==globalThis?void 0:globalThis.Ziggy,o.t=e({},o.t,{absolute:i}),n){if(!o.t.routes[n])throw new Error("Ziggy error: route '"+n+"' is not in the route list.");o.i=new a(n,o.t.routes[n],o.t),o.u=o.o(r)}return o}o=t,(i=f).prototype=Object.create(o.prototype),i.prototype.constructor=i,u(i,o);var c=f.prototype;return c.toString=function(){var t=this,r=Object.keys(this.u).filter(function(n){return!t.i.parameterSegments.some(function(t){return t.name===n})}).filter(function(n){return"_query"!==n}).reduce(function(n,r){var i;return e({},n,((i={})[r]=t.u[r],i))},{});return this.i.compile(this.u)+n.stringify(e({},r,this.u._query),{addQueryPrefix:!0,arrayFormat:"indices",encodeValuesOnly:!0,skipNulls:!0,encoder:function(n,t){return"boolean"==typeof n?Number(n):t(n)}})},c.l=function(n){var t=this;n?this.t.absolute&&n.startsWith("/")&&(n=this.h().host+n):n=this.v();var r={},i=Object.entries(this.t.routes).find(function(e){return r=new a(e[0],e[1],t.t).matchesUrl(n)})||[void 0,void 0];return e({name:i[0]},r,{route:i[1]})},c.v=function(){var n=this.h(),t=n.pathname,r=n.search;return(this.t.absolute?n.host+t:t.replace(this.t.url.replace(/^\w*:\/\/[^/]+/,""),"").replace(/^\/+/,"/"))+r},c.current=function(n,t){var r=this.l(),i=r.name,u=r.params,o=r.query,f=r.route;if(!n)return i;var c=new RegExp("^"+n.replace(/\./g,"\\.").replace(/\*/g,".*")+"$").test(i);if([null,void 0].includes(t)||!c)return c;var s=new a(i,f,this.t);t=this.o(t,s);var l=e({},u,o);return!(!Object.values(t).every(function(n){return!n})||Object.values(l).some(function(n){return void 0!==n}))||Object.entries(t).every(function(n){return l[n[0]]==n[1]})},c.h=function(){var n,t,r,e,i,u,o="undefined"!=typeof window?window.location:{},f=o.host,c=o.pathname,a=o.search;return{host:null!=(n=null==(t=this.t.location)?void 0:t.host)?n:void 0===f?"":f,pathname:null!=(r=null==(e=this.t.location)?void 0:e.pathname)?r:void 0===c?"":c,search:null!=(i=null==(u=this.t.location)?void 0:u.search)?i:void 0===a?"":a}},c.has=function(n){return Object.keys(this.t.routes).includes(n)},c.o=function(n,t){var r=this;void 0===n&&(n={}),void 0===t&&(t=this.i),n=["string","number"].includes(typeof n)?[n]:n;var i=t.parameterSegments.filter(function(n){return!r.t.defaults[n.name]});if(Array.isArray(n))n=n.reduce(function(n,t,r){var u,o;return e({},n,i[r]?((u={})[i[r].name]=t,u):"object"==typeof t?t:((o={})[t]="",o))},{});else if(1===i.length&&!n[i[0].name]&&(n.hasOwnProperty(Object.values(t.bindings)[0])||n.hasOwnProperty("id"))){var u;(u={})[i[0].name]=n,n=u}return e({},this.p(t),this.g(n,t))},c.p=function(n){var t=this;return n.parameterSegments.filter(function(n){return t.t.defaults[n.name]}).reduce(function(n,r,i){var u,o=r.name;return e({},n,((u={})[o]=t.t.defaults[o],u))},{})},c.g=function(n,t){var r=t.bindings,i=t.parameterSegments;return Object.entries(n).reduce(function(n,t){var u,o,f=t[0],c=t[1];if(!c||"object"!=typeof c||Array.isArray(c)||!i.some(function(n){return n.name===f}))return e({},n,((o={})[f]=c,o));if(!c.hasOwnProperty(r[f])){if(!c.hasOwnProperty("id"))throw new Error("Ziggy error: object passed as '"+f+"' parameter is missing route model binding key '"+r[f]+"'.");r[f]="id"}return e({},n,((u={})[f]=c[r[f]],u))},{})},c.valueOf=function(){return this.toString()},c.check=function(n){return this.has(n)},r(f,[{key:"params",get:function(){var n=this.l();return e({},n.params,n.query)}}]),f}(/*#__PURE__*/c(String));return function(n,t,r,e){var i=new s(n,t,r,e);return n?i.toString():i}});
+
+
+/***/ }),
+
 /***/ "./resources/js/Pages sync recursive ^\\.\\/.*\\.tsx$":
 /*!************************************************!*\
   !*** ./resources/js/Pages/ sync ^\.\/.*\.tsx$ ***!
@@ -69535,6 +70312,9 @@ module.exports = warning;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./Auth/Login.tsx": "./resources/js/Pages/Auth/Login.tsx",
+	"./Auth/Register.tsx": "./resources/js/Pages/Auth/Register.tsx",
+	"./Home.tsx": "./resources/js/Pages/Home.tsx",
 	"./Welcome.tsx": "./resources/js/Pages/Welcome.tsx"
 };
 
@@ -69578,7 +70358,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"Name":"Nome","E-Mail Address":"E-mail","Password":"Senha","Confirm":"Confirmar","Confirm Password":"Confirmação de senha","Remember Me":"Manter conectado","Remember me":"Manter conectado","Forgot Your Password?":"Esqueceu sua senha?","Forgot your password?":"Esqueceu sua senha?","Already registered?":"Já registrado?","Wellcome to":"Bem-vindo ao","Login":"Entrar","Log in":"Entrar","Register":"Cadastre-se","Home":"Principal","Logout":"Sair","Phone":"Celular","Tax ID":"CPF","ZIP":"CEP","Toggle navigation":"Alternar navegação","Verify my phone":"Verificar meu telefone","Send":"Enviar","Validate":"Validar","Or":"OU","in":"no","at":"em","Exit":"Sair","Yes":"Sim","No":"Não","No description":"Sem descrição","Fill in all mandatory fields.":"Preencha todos os campos obrigatórios.","Review sent successfully!":"Avaliação enviada com sucesso!","Nevermind":"Deixa pra lá","Verify Your Email Address":"Verifique seu endereço de e-mail","A fresh verification link has been sent to your email address.":"Um novo link de verificação foi enviado para seu e-mail","Before proceeding, please check your email for a verification link.":"Antes de prosseguir, por favor, veja se recebeu o link de verificação em seu e-mail","If you did not receive the email":"Se você não recebeu o e-mail","click here to request another":"clique aqui para solicitar outro","Please click the button below to verify your email address.":"Clique no botão abaixo para verificar seu endereço de e-mail","Your feedback helps others find the best professionals.":"Seu feedback ajuda outras pessoas a encontrarem os melhores profissionais.","Verify Email Address":"Verificar E-mail","Important!":"Importante!","The blocks “Skills”, “Localities Served” and “Portfolio” were enabled in your profile. You will notice that the header will contain the professional note that you will receive from your clients for the services provided. Complete your profile and have a better chance of getting customers.":"Foram habilitados os blocos “Habilidades”, “Localidades Atendidas” e “Portfólio” em seu perfil. Irá observar que no cabeçalho constará a nota profissional que você receberá de seus clientes pelos serviços prestados. Complete seu perfil e tenha maiores chances de conseguir clientes.","If you did not create an account, no further action is required.":"Se você não criou a conta, favor desconsiderar este e-mail","If you’re having trouble clicking the \\":actionText\\" button, copy and paste the URL below\\ninto your web browser:":"Se você estiver com problemas para clicar no botão \\":actionText\\", copie e cole o URL abaixo\\nem seu navegador da web:","If you’re having trouble clicking the \\":actionText\\" button, copy and paste the URL below\\ninto your web browser: [:displayableActionUrl](:actionURL)":"Se você estiver com problemas para clicar no botão \\":actionText\\", copie e cole o URL abaixo\\nem seu navegador da web: [:displayableActionUrl](:actionURL)","Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.":"Sem problemas. Apenas informe seu endereço de e-mail que enviaremos um link que te permitirá definir uma nova senha.","Send Password Reset Link":"Enviar link","Email Password Reset Link":"Enviar link","Reset Password":"Modificar Senha","This is a secure area of the application. Please confirm your password before continuing.":"Essa é uma área segura da aplicação. Por favor confirme sua senha antes de continuar.","You are receiving this email because we received a password reset request for your account.":"Você está recebendo este e-mail porque recebemos uma solicitação de redefinição de senha para sua conta.","If you did not request a password reset, no further action is required.":"Se você não solicitou a redefinição de senha, nenhuma ação adicional será necessária.","This password reset link will expire in :count minutes.":"Este link de redefinição de senha expirará em :count minutos.","Please confirm your password before continuing.":"Por favor, confirme sua senha para continuar.","Hello!":"Olá!","Regards":"um abraço,","Reset Password Notification":"[Trabalista] Redefinição de senha","All rights reserved.":"Todos os direitos reservados.","The :attribute must be at least :length characters and contain at least one uppercase character.":"O campo :attribute deve ter pelo menos :length e conter pelo menos um caractere maiúsculo.","The :attribute must be at least :length characters and contain at least one number.":"O campo :attribute deve ter pelo menos :length caracteres e conter pelo menos um número.","The :attribute must be at least :length characters and contain at least one special character.":"O campo :attribute deve ter pelo menos :length caracteres e conter pelo menos um caractere especial.","The :attribute must be at least :length characters and contain at least one uppercase character and one number.":"O campo :attribute deve ter pelo menos :length caracteres e conter pelo menos um caractere maiúsculo e um número.","The :attribute must be at least :length characters and contain at least one uppercase character and one special character.":"O campo :attribute deve ter pelo menos :length caracteres e conter pelo menos um caractere maiúsculo e um caractere especial.","The :attribute must be at least :length characters and contain at least one uppercase character, one number, and one special character.":"O campo :attribute deve ter pelo menos :length caracteres e conter pelo menos um caractere maiúsculo, um número e um caractere especial.","The :attribute must be at least :length characters.":"O campo :attribute deve ter pelo menos :length caracteres.","You have been invited to join the :team team!":"Você foi convidado para entrar no time :team!","Do not make payments without being sure of the advertised service.":"Não faça pagamentos sem ter certeza do serviço anunciado.","Watch out for below market prices and excess facilities.":"Fique atento a preços abaixo do mercado e excessos de facilidades.","If you do not have an account, you may create one by clicking the button below. After creating an account, you may click the invitation acceptance button in this email to accept the team invitation:":"Caso não tenha uma conta, você pode criar uma usando o botão abaixo. Após criar a conta, você pode clicar no botão de aceitar convite nesse e-mail para aceitar o convite para o time","Create Account":"Criar Conta","Safety tip":"Dica de segurança","If you already have an account, you may accept this invitation by clicking the button below:":"Se já tiver uma conta, você pode aceitar esse convite através do botão abaixo:","Accept Invitation":"Aceitar Convite","If you did not expect to receive an invitation to this team, you may discard this email.":"Se você não sabe porque está recebendo um convite para esse time, pode descartar esse e-mail","You are logged in!":"Você está logado!","Dashboard":"Central do Usuário","Tap a star to rate*":"Toque em uma estrelas para avaliar*","Your evaluation will be lost":"Sua avaliação será perdida","Do you want to continue with the assessment?":"Você deseja continuar com a avaliação?","Rate":"Avaliar","Yes, I want to rate":"Sim, quero avaliar","Tell us about your experience with":"Conte-nos sobre sua experiência com","The :attribute must contain at least one uppercase and one lowercase letter.":"O campo :attribute deve conter pelo menos uma letra maiúscula e uma letra minúscula.","The :attribute must contain at least one letter.":"O campo :attribute deve conter pelo menos uma letra.","The :attribute must contain at least one symbol.":"O campo :attribute deve conter pelo menos um símbolo.","The :attribute must contain at least one number.":"O campo :attribute deve conter pelo menos um número.","The given :attribute has appeared in a data leak. Please choose a different :attribute.":"A senha que você inseriu em :attribute está em um vazamento de dados. Por favor escolha uma senha diferente.","Are you sure you want to delete this ad?":"Tem certeza que deseja excluir este anúncio?","When you DELETE the ad it will be removed from Home, “My Ads” and “Favorites List”.":"Ao EXCLUIR o anúncio ele será removido da Home, “Meus anúncios” e “Listagem de favoritos”.","Delete Account":"Deletar Conta","Terrible":"Péssimo","Bad":"Ruim","Reasonable":"Razoável","Very good":"Muito bom","Excelent":"Excelente","Would you recommend this professional?*":"Recomendaria este profissional?*","Make a comment":"Faça um comentário","View advertisement":"Visualizar anúncio","Tell us how this professional performed and help other people in the community with your feedback.":"Conte como foi a atuação desse profissional e ajude outras pessoas da comunidade com o seu feedback.","Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.":"Você tem certeza que quer deletar essa conta? Uma vez que sua conta é deletada, todos os dados serão permanentemente deletados. Por favor, entre com a sua senha para confirmar que você quer deletar permanentemente sua conta.","Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.":"Depois que sua conta for excluída, todos os seus recursos e dados serão excluídos permanentemente. Antes de excluir sua conta, baixe todos os dados ou informações que deseja reter.","Permanently delete your account.":"Deleta permanentemente a sua conta.","Activating this toggle, the system will enable the blocks of &#34;Skills&#34;, &#34;Localities Served&#34; and &#34;Portfolio&#34;. The header will also contain the professional note.":"Ativando este toggle o sistema irá habiltar os blocos de &#34;Habilidades&#34;, &#34;Localidades Atendidas&#34; e &#34;Portfólio&#34;. No cabeçalho constará a nota profissional também.","Do I want to offer services in Trabalista?":"Desejo oferecer serviços no Trabalista?","What are expired and inactive ads?":"O que são anúncios expirados e inativos?","If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.":"Se necessário, você pode sair de todas as outras sessões do navegador em todos os seus dispositivos. Algumas de suas sessões recentes estão listadas abaixo; no entanto, esta lista pode não ser exaustiva. Se você acha que sua conta foi comprometida, você também deve atualizar sua senha.","Browser Sessions":"Sessões do navegador","Manage and log out your active sessions on other browsers and devices.":"Gerencie e saia de suas sessões ativas em outros navegadores e dispositivos.","Update Password":"Atualizar a senha","Ensure your account is using a long, random password to stay secure.":"Certifique-se de que sua conta esteja usando uma senha longa e aleatória para permanecer segura.","Profile Information":"Informação do Perfil","Is <strong>offering</strong> services":"Está <strong>oferecendo</strong> serviços","Is <strong>looking</strong> for a professional":"Está <strong>buscando</strong> profissional","Update your account\'s profile information and email address.":"Atualize as informações do perfil da sua conta e o endereço de e-mail.","Profile":"Meu Perfil","My Account":"Minha Conta","Save":"Salvar","Current Password":"Senha Atual","New Password":"Nova Senha","Confirm password":"Confirmar Senha","Change my password":"Alterar minha senha","Change":"Alterar","Change your password":"Altere sua senha","Log Out Other Browser Sessions":"Sair de outras sessões do navegador","Log Out":"Sair","Next Step":"Avançar","Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.":"Obrigado por se registrar! Antes de começar, precisamos que você verifique seu endereço de email clicando no link que acabamos de enviar para o seu email. Se você não recebeu nossa mensagem, clique abaixo que a gente te reenvia agora mesmo.","Resend Verification Email":"Reenviar email de verificação","By clicking on the button below I agree to the :terms_of_service and :privacy_policy":"Ao se registrar você concorda com os :terms_of_service e a :privacy_policy","Terms of Service":"Termos de Uso","Privacy":"Privacidade","Or simply Sign up / Login with your Social Account!":"Ou simplesmente conecte-se com a sua Conta Social","Continue with Google":"Entrar com Google","Continue with Facebook":"Entrar com Facebook","Whoops! Something went wrong.":"Opa! Alguma coisa deu errado.","Pick Action":"Para Onde","Change Password":"Alterar Senha","Save changes":"Salvar alterações","Enter login":"Faça Login","Don\'t have an account?":"Não possui conta?","A new verification link has been sent to the email address you provided during registration.":"A novo link de verificação foi enviado ao endereço de email que você forneceu durante o carastro.","verification-phone-sent":"Um novo código foi enviado ao seu telefone","If you\'re having trouble clicking the \\":actionText\\" button, copy and paste the URL below\\ninto your web browser:":"Se você está tendo problemas ao clicar no botão \\":actionText\\", copie e cole o endereço abaixo no seu navegador:","Portfolio":"Portfólio","Pending":"Pendente","Active":"Ativo","Inactive":"Inativo","Expired":"Expirado","Filters":"Filtros","Apply filters":"Aplicar filtros","Looks like there aren\'t any ads for what you\'re looking for.":"Parece que não existem anúncios para o que você procura.","My advertisements":"Meus anúncios","Advertised services":"Serviços anunciados","You don&apos;t have any ads created yet.":"Você ainda não possui anúncios criados.","Terms message":"Será enviada uma mensagem de texto para confirmar seu número de celular. Não se preocupe, essa informação não será repassada a terceiros.","We send a code to":"Enviamos um código para","Resend code":"Reenviar","Didn\'t receive the code?":"Não recebeu o código?","Enter this code to validate your registration":"Digite esse código para validar seu cadastro","Wait up to 10 seconds":"Aguarde até 10 segundos","Ad limit reached!":"Limite de anúncios atingido!","This profile has no information to display.":"Este perfil não possui informações a serem exibidas.","Chat":"Conversar","Evaluate professional":"Avaliar profissional","View profile":"Ver perfil","Tell us your main objective":"Conte pra gente qual o seu principal objetivo no Trabalista","About me":"Sobre mim","This profile has no information to display":"Este perfil não possui informações a serem exibidas","Ad inactive!":"Anúncio inativo!","Updated successfully!":"Atualizado com sucesso!","Deleted successfully!":"Excluído com sucesso!","8 or more characters":"8 ou mais caracteres","Manage Address":"Gerenciar Endereços","Delete address":"Excluir endereço","Advertiser data":"Dados do anunciante","Confirm delete address":"Deseja excluir esse endereço da sua lista?","Yes, I want to delete":"Sim, quero excluir","Is offering services":"Está oferecendo serviços","To disable, delete service ads!":"Para desabilitar, exclua os anúncios de serviço!","Is looking for a professional":"Está buscando profissional","Are you sure you want to disable this ad?":"Tem certeza que deseja inativar este anúncio?","Your review will be lost":"Sua avaliação será perdida","By inactivating the ad it will be removed from Home. In “My Ads” and “Favorites List” it will have the information “Inactive”.":"Ao inativar o anúncio ele será removido da Home. Em “Meus anúncios” e “Listagem de favoritos” ele ficará com o informativo “Inativo”.","Yes, I want to inactivate":"Sim, quero inativar","Your feedback helps a community":"Seu feedback ajuda uma comunidade","Looking for a professional":"Buscando profissional","Promoting service":"Divulgando serviço","Search skill":"Buscar habilidade","Search city":"Buscar cidade","Search category":"Buscar categoria","Select a skill related to the service you are in need of.":"Selecione uma habilidade referente ao serviço que está precisando.","Add the cities where you provide your services to be found more easily.":"Adicione as cidades em que você presta seus serviços para ser encontrado mais facilmente.","Inform the city that you are looking for a professional.":"Informe a cidade que você está procurando um profissional.","Your ad has been successfully created!":"Seu anúncio foi criado com sucesso!","You have already rated this professional!":"Você já avaliou este profissional!","You\'ve just created a service offering ad, so we\'ve released more features on your profile to make you more attractive.":"Você acabou de criar um anúncio de oferta de serviços, por isso liberamos mais recursos no seu perfil para torná-lo mais atrativo.","You have just created an ad looking for a professional for the service you need, now just wait and soon someone will contact you.":"Você acabou de criar um anúncio procurando um profissional para o serviço que precisa, agora é só aguardar que logo logo alguém entrará em contato.","You have just created a service offering ad, now you just have to wait and soon someone will contact you.":"Você acabou de criar um anúncio de oferta de serviços, agora é só aguardar que logo logo alguém entrará em contato.","Go to Home":"Ir para Home","Edit Account Data":"Editar dados da conta","Enter your name":"Insira seu nome:","Enter your email":"Insira seu e-mail:","Enter your password":"Insira sua senha:","Confirm your password":"Confirme a senha:","Enter your current password":"Insira sua senha atual:","Enter your new password":"Insira sua nova senha:","Insert your phone number":"Insira seu celular:","Inform your CPF":"Informe seu CPF:","Inform your zip code":"Informe seu CEP:","Enter the validation code":"Digite o código de validação","Email label":"E-mail","BirthDate label":"Data Nascimento","Gender label":"Gênero","Male":"Masculino","Female":"Feminino","I prefer not to inform":"Prefiro não informar","Address":"Endereço","Create Ad":"Criar anúncio","Ad type":"Tipo de anúncio","Clear filters":"Limpar filtros","What do you need? :)":"O que você precisa? :)","Advertise a service":"Divulgar um serviço","Find a professional":"Procurar um profissional","Ad title":"Título do anúncio","Description":"Descrição","Skill":"Habilidade","Locations served":"Localidades atendidas","Location":"Localidade","Remote work":"Trabalho remoto","Advertisements of":"Anúncios de","Remote":"Remoto","Update Ad":"Editar anúncio","Ad placeholder title":"Ex: Reparos e reformas residenciais","Ad placeholder description":"Ex: Procuro pedreiro para  reformas e pequenos reparos em casa e apartamentos na região de Florianópolis.","/register":"/cadastro","/logout":"/sair","/login":"/entrar","/forgot-password":"/esqueci-senha","/reset-password":"/recuperar-senha","/reset-password/{token}":"/recuperar-senha/{token}","/user/profile-information":"/usuario/perfil","/user/password":"/usuario/senha","/user/confirm-password":"/usuario/confirmar-senha","/user/confirmed-password-status":"/usuario/senha-confirmada","/dashboard":"/central-usuario","/register-step2":"/completar-cadastro","/verify-phone":"/verificar-telefone","/store-verify-phone":"/confirmar-verificacao","/resend-verify-phone":"/reenviar-verificacao","/pick-action":"/para-onde","/edit-profile":"/editar-perfil","/store-profile":"/salvar-perfil","/store-professional":"/salvar-modo-perfil","/store-about-me":"/salvar-sobre-mim","/store-categories":"/salvar-categorias","/store-locations":"/salvar-localidades","/store-profile-picture":"/salvar-avatar","/store-portfolio-pic":"/salvar-foto-portfolio","/delete-portfolio-pic":"/excluir-foto-portfolio","/store-password":"/salvar-senha","/my-profile":"/meu-perfil","/my-account":"/minha-conta","/my-home":"/inicio","/update-password":"/alterar-senha","/manage-addresses":"/gerenciar-enderecos","/favorites":"/favoritos","/address":"/endereco","/store-address":"/salvar-endereco","/delete-address":"/excluir-endereco","/locate-address-data":"/localizar-endereco","/categories/query":"/habilidades/buscar","/locations/query":"/localidades/buscar","/terms-of-service":"/termos-de-uso","/privacy-policy":"/politica-privacidade","/edit-phone":"/alterar-telefone","/store-new-phone":"/salvar-telefone","/verify-new-phone":"/verificar-novo-telefone","/store-verify-new-phone":"/confirmar-verificacao-novo-telefone","/resend-verify-new-phone":"/reenviar-verificacao-novo-telefone","Created ad":"Anúncio criado","/create-ad":"/criar-anuncio","/success-ad-created":"/anuncio-criado","/store-ad":"/salvar-anuncio","/update-ad":"/editar-anuncio","/store-ad-pic":"salvar-foto-anuncio","failed":"Usuário ou senha inválidos.","password":"Usuário ou senha inválidos","throttle":"Muitas tentativas de login. Tente novamente em :seconds segundos.","previous":"&laquo; Anterior","next":"Próximo &raquo;","reset":"Sua senha foi redefinida!","sent":"Enviamos seu link de redefinição de senha por e-mail!","throttled":"Aguarde antes de tentar novamente.","token":"Este token de redefinição de senha é inválido.","user":"Não encontramos um usuário com esse endereço de e-mail."}');
+module.exports = {};
 
 /***/ })
 

@@ -15,4 +15,9 @@ trait PasswordValidationRules
     {
         return ['required', 'string', new Password, 'confirmed'];
     }
+
+    protected function passwordConfirmationRules()
+    {
+        return ['required', 'string', new Password, 'same:password'];
+    }
 }

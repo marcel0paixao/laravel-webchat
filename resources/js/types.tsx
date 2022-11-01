@@ -10,3 +10,48 @@ declare module "react" {
 type DateTime = string;
 
 export type Nullable<T> = T | null;
+
+export type InertiaSharedProps<T = {}> = T & {
+    jetstream: {
+      canCreateTeams: boolean;
+      canManageTwoFactorAuthentication: boolean;
+      canUpdatePassword: boolean;
+      canUpdateProfileInformation: boolean;
+      flash: any;
+      hasAccountDeletionFeatures: boolean;
+      hasApiFeatures: boolean;
+      hasTeamFeatures: boolean;
+      hasTermsAndPrivacyPolicyFeature: boolean;
+      managesProfilePhotos: boolean;
+    };
+    user: User & {
+      all_teams?: Team[];
+      current_team?: Team;
+    };
+    errorBags: any;
+    errors: any;
+    urlPrev?: string;
+  };
+
+export interface Team {
+    id: number;
+    name: string;
+    personal_team: boolean;
+    created_at: DateTime;
+    updated_at: DateTime;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    current_team_id: Nullable<number>;
+    profile_photo_path: Nullable<string>;
+    profile_photo_url: string;
+    profile_photo_thumb_url: string;
+    two_factor_enabled: boolean;
+    email_verified_at: Nullable<DateTime>;
+    created_at: DateTime;
+    updated_at: DateTime;
+  }
+  

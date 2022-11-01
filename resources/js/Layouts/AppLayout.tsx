@@ -2,6 +2,7 @@ import {Inertia} from '@inertiajs/inertia';
 import React, {PropsWithChildren} from 'react';
 import useRoute from '@/Hooks/useRoute';
 import { Head } from '@inertiajs/inertia-react';
+import Header from '@/Components/Site/Header';
 
 interface Props {
     title: string;
@@ -21,8 +22,9 @@ export default function GuestLayout({
     return (
         <div>
             <Head title={title} />
+            <Header />
 
-            <div className="font-sans text-TBL_TEXT_PRIMARY antialiased">
+            <div className="font-sans text-TBL_TEXT_PRIMARY antialiased bg-purple-900">
                 {children}
             </div>
         </div>
