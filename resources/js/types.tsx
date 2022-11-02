@@ -51,6 +51,7 @@ export interface User {
     profile_photo_thumb_url: string;
     two_factor_enabled: boolean;
     email_verified_at: Nullable<DateTime>;
+    last_message: string;
     created_at: DateTime;
     updated_at: DateTime;
   }

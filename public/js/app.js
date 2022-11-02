@@ -8047,7 +8047,9 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-function UserBox() {
+function UserBox(_a) {
+  var id = _a.id,
+    name = _a.name;
   return react_1["default"].createElement("li", {
     className: "h-18 p-2 border rounded-md border-[#ddd] flex w-full"
   }, react_1["default"].createElement("img", {
@@ -8057,7 +8059,7 @@ function UserBox() {
     className: "ml-2 mt-1 w-full"
   }, react_1["default"].createElement("h5", {
     className: "font-bold truncate"
-  }, "Nome Usu\xE1rio"), react_1["default"].createElement("p", {
+  }, name), react_1["default"].createElement("p", {
     className: "truncate text-xs max-w-[100px]"
   }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem")), react_1["default"].createElement("span", {
     className: "ml-full font-ligther text-[10px] mt-3"
@@ -8076,6 +8078,39 @@ exports["default"] = UserBox;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+  __setModuleDefault(result, mod);
+  return result;
+};
 var __rest = this && this.__rest || function (s, e) {
   var t = {};
   for (var p in s) {
@@ -8094,13 +8129,28 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var UserBox_1 = __importDefault(__webpack_require__(/*! ./UserBox */ "./resources/js/Components/Site/UserBox.tsx"));
 function UsersList(_a) {
   var props = __rest(_a, []);
+  var _b = (0, react_1.useState)(),
+    users = _b[0],
+    setUsers = _b[1];
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('api/users').then(function (response) {
+      setUsers(response.data.users);
+    });
+  }, []);
   return react_1["default"].createElement("ul", {
     className: "w-full max-h-[710px] overflow-y-auto space-y-2 pr-2"
-  }, react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null), react_1["default"].createElement(UserBox_1["default"], null));
+  }, users === null || users === void 0 ? void 0 : users.map(function (user) {
+    return react_1["default"].createElement(UserBox_1["default"], {
+      key: user.id,
+      id: user.id,
+      name: user.name
+    });
+  }));
 }
 exports["default"] = UsersList;
 
@@ -8703,7 +8753,9 @@ function Welcome() {
   }, react_1["default"].createElement("span", null, __('Register')), react_1["default"].createElement("img", {
     src: "/images/menu/register.svg",
     alt: ""
-  }))) : null)));
+  }))) : react_1["default"].createElement("a", {
+    href: (0, ziggy_js_1["default"])('Home')
+  }, react_1["default"].createElement("span", null, __('Home'))))));
 }
 exports["default"] = Welcome;
 

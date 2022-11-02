@@ -23,7 +23,11 @@ export default function Welcome(){
                                     <img src="/images/menu/register.svg" alt="" />
                                 </a>
                             </>
-                    ) : null}
+                    ) : (
+                        <a href={route('Home')}>
+                            <span>{__('Home')}</span>
+                        </a>
+                    )}
                 </div>
             </OuterCenteredContainer>
         </GuestLayout>
