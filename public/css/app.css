@@ -760,6 +760,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 4rem;
 }.mr-1 {
   margin-right: 0.25rem;
+}.mt-16 {
+  margin-top: 4rem;
 }.block {
   display: block;
 }.inline {
@@ -1169,6 +1171,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 0.5rem;
 }.pr-2 {
   padding-right: 0.5rem;
+}.pt-16 {
+  padding-top: 4rem;
 }.text-left {
   text-align: left;
 }.text-center {

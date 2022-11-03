@@ -62,43 +62,43 @@ class DatabaseSeeder extends Seeder
         \App\Models\Message::create([
             'from' => 1,
             'to' => 2,
-            'message' => 'aaaaa1 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, incidunt. Aliquam facilis optio excepturi dolorum.'
         ]);
 
         \App\Models\Message::create([
             'from' => 1,
             'to' => 3,
-            'message' => 'aaaaaa2 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem ipsum dolor sit amet.'
         ]);
 
         \App\Models\Message::create([
             'from' => 1,
             'to' => 4,
-            'message' => 'aaaaaa3 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
         ]);
 
         \App\Models\Message::create([
             'from' => 4,
             'to' => 1,
-            'message' => 'aaaaaa4 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure quo error provident corporis consectetur quam maxime est laboriosam, magni facere minus facilis dolores ea architecto!'
         ]);
 
         \App\Models\Message::create([
             'from' => 2,
             'to' => 5,
-            'message' => 'aaaaaa5 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero ad labore ipsam rerum? Beatae, sunt reprehenderit consectetur cum delectus ullam, ipsa aperiam at commodi quaerat minus nisi dolores error, assumenda sit modi minima? Quae optio explicabo, sequi laudantium repellendus harum consequuntur rem quaerat ducimus dolore voluptas, qui molestiae non labore? Est aut dignissimos neque, dolorum, sunt vitae quidem dolorem assumenda at deserunt quae quo distinctio tempora, doloribus fuga iure?'
         ]);
 
         \App\Models\Message::create([
             'from' => 6,
             'to' => 7,
-            'message' => 'aaaaaa6 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem, ipsum dolor.'
         ]);
 
         \App\Models\Message::create([
             'from' => 7,
             'to' => 1,
-            'message' => 'aaaaaa7 aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa aaaaaa '
+            'message' => 'Lorem, ipsum dolor. aaaaaa aaaaaa aaaaaa '
         ]);
     }
 }

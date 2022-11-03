@@ -58,7 +58,8 @@ export interface User {
 
   export interface Message {
     id: number,
-    user_id: number,
+    from: number,
+    to: number,
     message: string,
     created_at: DateTime,
     updated_at: DateTime,

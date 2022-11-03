@@ -1,93 +1,22 @@
+import useTypedPage from "@/Hooks/useTypedPage";
+import { Message } from "@/types";
 import React from "react";
 import MessageBox from "./MessageBox";
 
-export default function MessagesList(){
+interface Props{
+    messages: Array<Message>;
+}
+
+export default function MessagesList({messages}: Props){
+    const user = useTypedPage().props;
+
     return (
         <ul className="space-y-4">
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={false}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
-            <MessageBox date="23:59 21/12/2015" byOwn={true}>
-                Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem
-            </MessageBox>
+            {messages.map(message =>
+                <MessageBox date={message.created_at} byOwn={message.from == user.id} key={message.id}>
+                    {message.message}
+                </MessageBox>)}
+            
         </ul>
     )
 }

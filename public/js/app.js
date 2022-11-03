@@ -7658,7 +7658,9 @@ var Button_1 = __importDefault(__webpack_require__(/*! ../Form/Button */ "./reso
 var Input_1 = __importDefault(__webpack_require__(/*! ../Form/Input */ "./resources/js/Components/Form/Input.tsx"));
 var ChatHeader_1 = __importDefault(__webpack_require__(/*! ./ChatHeader */ "./resources/js/Components/Site/ChatHeader.tsx"));
 var MessagesList_1 = __importDefault(__webpack_require__(/*! ./MessagesList */ "./resources/js/Components/Site/MessagesList.tsx"));
-function Chat() {
+function Chat(_a) {
+  var messages = _a.messages,
+    activeUser = _a.activeUser;
   var form = (0, inertia_react_1.useForm)({
     message: '',
     user_id: 1,
@@ -7675,9 +7677,13 @@ function Chat() {
   };
   return react_1["default"].createElement("div", {
     className: "h-full ml-4"
-  }, react_1["default"].createElement(ChatHeader_1["default"], null), react_1["default"].createElement("div", {
+  }, activeUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(ChatHeader_1["default"], {
+    user: activeUser
+  }), react_1["default"].createElement("div", {
     className: "p-4 flex h-[80%] overflow-y-auto border-[#ddd]"
-  }, react_1["default"].createElement(MessagesList_1["default"], null)), react_1["default"].createElement("form", {
+  }, react_1["default"].createElement(MessagesList_1["default"], {
+    messages: messages
+  })), react_1["default"].createElement("form", {
     action: "",
     onSubmit: onSubmit,
     className: "mt-3 pt-2 flex border-t"
@@ -7703,7 +7709,9 @@ function Chat() {
   }, react_1["default"].createElement("path", {
     d: "M0.00999999 18L21 9L0.00999999 0L0 7L15 9L0 11L0.00999999 18Z",
     fill: "#fff"
-  })))));
+  }))))) : react_1["default"].createElement("div", {
+    className: "h-full border-l text-center text-xl pt-16"
+  }, react_1["default"].createElement("h2", null, "No messages to show")));
 }
 exports["default"] = Chat;
 
@@ -7738,7 +7746,8 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 function ChatHeader(_a) {
-  var props = __rest(_a, []);
+  var user = _a.user,
+    props = __rest(_a, ["user"]);
   return react_1["default"].createElement("header", {
     className: "flex h-16 border-b border-[#ccc] w-full"
   }, react_1["default"].createElement("img", {
@@ -7746,7 +7755,7 @@ function ChatHeader(_a) {
     className: "w-14 h-14 rounded-full"
   }), react_1["default"].createElement("div", {
     className: "ml-3 mt-1 min-w-max"
-  }, react_1["default"].createElement("h2", null, "Nome Usu\xE1rio"), react_1["default"].createElement("span", {
+  }, react_1["default"].createElement("h2", null, user === null || user === void 0 ? void 0 : user.name), react_1["default"].createElement("span", {
     className: "text-[10px] text-gray-400"
   }, "Last seen one hour ago")), react_1["default"].createElement("button", {
     className: "border border-red-500 px-2 h-12 py-1 mt-1 mr-4 ml-auto rounded-md text-red-500"
@@ -7902,96 +7911,21 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var MessageBox_1 = __importDefault(__webpack_require__(/*! ./MessageBox */ "./resources/js/Components/Site/MessageBox.tsx"));
-function MessagesList() {
+function MessagesList(_a) {
+  var messages = _a.messages;
+  var user = (0, useTypedPage_1["default"])().props;
   return react_1["default"].createElement("ul", {
     className: "space-y-4"
-  }, react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: false
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"), react_1["default"].createElement(MessageBox_1["default"], {
-    date: "23:59 21/12/2015",
-    byOwn: true
-  }, "Mensagem mensagem mensagem mensagem mensagem mensagem mensagem mensagem"));
+  }, messages.map(function (message) {
+    return react_1["default"].createElement(MessageBox_1["default"], {
+      date: message.created_at,
+      byOwn: message.from == user.id,
+      key: message.id
+    }, message.message);
+  }));
 }
 exports["default"] = MessagesList;
 
@@ -8049,9 +7983,13 @@ Object.defineProperty(exports, "__esModule", ({
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 function UserBox(_a) {
   var id = _a.id,
-    name = _a.name;
+    name = _a.name,
+    active = _a.active,
+    _b = _a.onClick,
+    onClick = _b === void 0 ? function () {} : _b;
   return react_1["default"].createElement("li", {
-    className: "h-18 p-2 border rounded-md border-[#ddd] flex w-full"
+    className: "h-18 p-2 border rounded-md border-[#ddd] flex w-full cursor-pointer " + (active ? 'bg-gray-100' : 'bg-white'),
+    onClick: onClick
   }, react_1["default"].createElement("img", {
     src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     className: "w-14 h-14 rounded-full"
@@ -8078,39 +8016,6 @@ exports["default"] = UserBox;
 "use strict";
 
 
-var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
-  if (k2 === undefined) k2 = k;
-  var desc = Object.getOwnPropertyDescriptor(m, k);
-  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-    desc = {
-      enumerable: true,
-      get: function get() {
-        return m[k];
-      }
-    };
-  }
-  Object.defineProperty(o, k2, desc);
-} : function (o, m, k, k2) {
-  if (k2 === undefined) k2 = k;
-  o[k2] = m[k];
-});
-var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
-  Object.defineProperty(o, "default", {
-    enumerable: true,
-    value: v
-  });
-} : function (o, v) {
-  o["default"] = v;
-});
-var __importStar = this && this.__importStar || function (mod) {
-  if (mod && mod.__esModule) return mod;
-  var result = {};
-  if (mod != null) for (var k in mod) {
-    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-  }
-  __setModuleDefault(result, mod);
-  return result;
-};
 var __rest = this && this.__rest || function (s, e) {
   var t = {};
   for (var p in s) {
@@ -8130,25 +8035,38 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
-var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var UserBox_1 = __importDefault(__webpack_require__(/*! ./UserBox */ "./resources/js/Components/Site/UserBox.tsx"));
 function UsersList(_a) {
-  var props = __rest(_a, []);
-  var _b = (0, react_1.useState)(),
-    users = _b[0],
-    setUsers = _b[1];
-  (0, react_1.useEffect)(function () {
-    axios_1["default"].get('api/users').then(function (response) {
-      setUsers(response.data.users);
+  var users = _a.users,
+    active = _a.active,
+    setActive = _a.setActive,
+    setMessages = _a.setMessages,
+    props = __rest(_a, ["users", "active", "setActive", "setMessages"]);
+  var loadMessages = function loadMessages(id) {
+    var _a;
+    axios_1["default"].get('api/messages', {
+      params: {
+        'user_id': id
+      }
+    }).then(function (response) {
+      return setMessages(response.data.messages);
     });
-  }, []);
+    setActive((_a = users.find(function (user) {
+      return user.id == id;
+    })) !== null && _a !== void 0 ? _a : null);
+  };
   return react_1["default"].createElement("ul", {
     className: "w-full max-h-[710px] overflow-y-auto space-y-2 pr-2"
   }, users === null || users === void 0 ? void 0 : users.map(function (user) {
     return react_1["default"].createElement(UserBox_1["default"], {
       key: user.id,
       id: user.id,
-      name: user.name
+      name: user.name,
+      onClick: function onClick() {
+        return loadMessages(user.id);
+      },
+      active: (active === null || active === void 0 ? void 0 : active.id) == user.id
     });
   }));
 }
@@ -8684,6 +8602,39 @@ exports["default"] = Register;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+  __setModuleDefault(result, mod);
+  return result;
+};
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -8696,18 +8647,41 @@ var Chat_1 = __importDefault(__webpack_require__(/*! @/Components/Site/Chat */ "
 var ChatRoom_1 = __importDefault(__webpack_require__(/*! @/Components/Site/ChatRoom */ "./resources/js/Components/Site/ChatRoom.tsx"));
 var OuterCenteredContainer_1 = __importDefault(__webpack_require__(/*! @/Components/Site/OuterCenteredContainer */ "./resources/js/Components/Site/OuterCenteredContainer.tsx"));
 var AppLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.tsx"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var UsersList_1 = __importDefault(__webpack_require__(/*! @/Components/Site/UsersList */ "./resources/js/Components/Site/UsersList.tsx"));
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 function default_1() {
+  var _a = (0, react_1.useState)([]),
+    users = _a[0],
+    setUsers = _a[1];
+  var _b = (0, react_1.useState)([]),
+    messages = _b[0],
+    setMessages = _b[1];
+  var _c = (0, react_1.useState)(null),
+    activeUser = _c[0],
+    setActiveUser = _c[1];
+  (0, react_1.useEffect)(function () {
+    axios_1["default"].get('api/users').then(function (response) {
+      setUsers(response.data.users);
+    });
+  }, []);
   return react_1["default"].createElement(AppLayout_1["default"], {
     title: "Chat room"
   }, react_1["default"].createElement(OuterCenteredContainer_1["default"], {
     className: "!max-w-[1024px]"
   }, react_1["default"].createElement(ChatRoom_1["default"], null, react_1["default"].createElement("div", {
     className: "md:block hidden md:w-[35%]"
-  }, react_1["default"].createElement(UsersList_1["default"], null)), react_1["default"].createElement("div", {
+  }, react_1["default"].createElement(UsersList_1["default"], {
+    users: users,
+    active: activeUser,
+    setActive: setActiveUser,
+    setMessages: setMessages
+  })), react_1["default"].createElement("div", {
     className: "h-full md:w-[65%]"
-  }, react_1["default"].createElement(Chat_1["default"], null)))));
+  }, react_1["default"].createElement(Chat_1["default"], {
+    activeUser: activeUser,
+    messages: messages
+  })))));
 }
 exports["default"] = default_1;
 
