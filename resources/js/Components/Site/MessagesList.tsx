@@ -1,6 +1,6 @@
 import useTypedPage from "@/Hooks/useTypedPage";
 import { Message } from "@/types";
-import React from "react";
+import React, { useEffect } from "react";
 import MessageBox from "./MessageBox";
 
 interface Props{
@@ -8,7 +8,7 @@ interface Props{
 }
 
 export default function MessagesList({messages}: Props){
-    const user = useTypedPage().props;
+    const { user } = useTypedPage().props;
 
     return (
         <ul className="space-y-4">

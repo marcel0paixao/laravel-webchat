@@ -7916,7 +7916,7 @@ var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/r
 var MessageBox_1 = __importDefault(__webpack_require__(/*! ./MessageBox */ "./resources/js/Components/Site/MessageBox.tsx"));
 function MessagesList(_a) {
   var messages = _a.messages;
-  var user = (0, useTypedPage_1["default"])().props;
+  var user = (0, useTypedPage_1["default"])().props.user;
   return react_1["default"].createElement("ul", {
     className: "space-y-4"
   }, messages.map(function (message) {
