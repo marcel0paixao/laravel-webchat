@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFundation\Response;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{
+    Auth, Event
+};
 
 class MessageController extends Controller
 {
@@ -53,6 +55,13 @@ class MessageController extends Controller
             'message' => $request->message
         ]);
         $message->save();
+
+        Event::dispatch(new SendMessage([
+            'from' => Auth::id(),
+            'to' => $request->to,
+            'message' => $request->message
+        ]));
+
         return redirect()->back();
     }
 
