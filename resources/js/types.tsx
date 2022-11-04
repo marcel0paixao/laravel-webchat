@@ -63,8 +63,8 @@ export interface User {
     message: string,
     created_at: DateTime,
     updated_at: DateTime,
-    deleted_at: DateTime,
-    seen_by: Array<User>
+    deleted_at: DateTime | null,
+    seen_by: Array<User> | null
   }
   
   export interface ChatRoom {

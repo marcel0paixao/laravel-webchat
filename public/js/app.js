@@ -7643,6 +7643,165 @@ exports["default"] = FormLabel;
 "use strict";
 
 
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  }
+  __setModuleDefault(result, mod);
+  return result;
+};
+var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+var __generator = this && this.__generator || function (thisArg, body) {
+  var _ = {
+      label: 0,
+      sent: function sent() {
+        if (t[0] & 1) throw t[1];
+        return t[1];
+      },
+      trys: [],
+      ops: []
+    },
+    f,
+    y,
+    t,
+    g;
+  return g = {
+    next: verb(0),
+    "throw": verb(1),
+    "return": verb(2)
+  }, typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+    while (_) {
+      try {
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
+        switch (op[0]) {
+          case 0:
+          case 1:
+            t = op;
+            break;
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false
+            };
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+          case 7:
+            op = _.ops.pop();
+            _.trys.pop();
+            continue;
+          default:
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+              _ = 0;
+              continue;
+            }
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+              _.label = op[1];
+              break;
+            }
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
+              break;
+            }
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+              _.ops.push(op);
+              break;
+            }
+            if (t[2]) _.ops.pop();
+            _.trys.pop();
+            continue;
+        }
+        op = body.call(thisArg, _);
+      } catch (e) {
+        op = [6, e];
+        y = 0;
+      } finally {
+        f = t = 0;
+      }
+    }
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -7651,48 +7810,102 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
 var inertia_react_1 = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
+var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var ziggy_js_1 = __importDefault(__webpack_require__(/*! ziggy-js */ "./node_modules/ziggy-js/dist/index.js"));
 var Button_1 = __importDefault(__webpack_require__(/*! ../Form/Button */ "./resources/js/Components/Form/Button.tsx"));
 var Input_1 = __importDefault(__webpack_require__(/*! ../Form/Input */ "./resources/js/Components/Form/Input.tsx"));
 var ChatHeader_1 = __importDefault(__webpack_require__(/*! ./ChatHeader */ "./resources/js/Components/Site/ChatHeader.tsx"));
 var MessagesList_1 = __importDefault(__webpack_require__(/*! ./MessagesList */ "./resources/js/Components/Site/MessagesList.tsx"));
 function Chat(_a) {
-  var messages = _a.messages,
-    activeUser = _a.activeUser;
+  var _this = this;
+  var activeUser = _a.activeUser;
+  var user = (0, useTypedPage_1["default"])().props.user;
+  var lastMessageElement = document.querySelectorAll('.message:last-child')[0];
+  var _b = (0, react_1.useState)([]),
+    messages = _b[0],
+    setMessages = _b[1];
+  (0, react_1.useEffect)(function () {
+    var _a;
+    form.setData('to', activeUser === null || activeUser === void 0 ? void 0 : activeUser.id);
+    lastMessageElement === null || lastMessageElement === void 0 ? void 0 : lastMessageElement.scrollIntoView();
+    axios_1["default"].get((0, ziggy_js_1["default"])('load.messages', {
+      'user_id': (_a = activeUser === null || activeUser === void 0 ? void 0 : activeUser.id) !== null && _a !== void 0 ? _a : 0
+    })).then(function (response) {
+      return setMessages(response.data.messages);
+    });
+  }, [activeUser]);
   var form = (0, inertia_react_1.useForm)({
     message: '',
-    user_id: 1,
-    chat_room: 1
+    from: user.id,
+    to: activeUser === null || activeUser === void 0 ? void 0 : activeUser.id
   });
-  var submitMessage = function submitMessage(e) {
-    if (e.key == "Enter") {
-      console.log(Object(e.target).value);
+  var enterSubmit = function enterSubmit(e) {
+    if (e.key == "Enter" && form.data.message.length > 0) {
+      submitMessage();
     }
   };
   var onSubmit = function onSubmit(e) {
     e.preventDefault();
-    console.log('submited');
+    if (form.data.message.length > 0) {
+      submitMessage();
+    }
   };
+  var submitMessage = function submitMessage() {
+    return __awaiter(_this, void 0, void 0, function () {
+      return __generator(this, function (_a) {
+        form.post((0, ziggy_js_1["default"])('store.messages'), {
+          onSuccess: function onSuccess(response) {
+            setMessages(function (msg) {
+              var _a, _b;
+              return __spreadArray(__spreadArray([], msg, true), [{
+                id: msg.length,
+                to: (_b = (_a = form.data.to) !== null && _a !== void 0 ? _a : activeUser === null || activeUser === void 0 ? void 0 : activeUser.id) !== null && _b !== void 0 ? _b : 0,
+                from: user.id,
+                message: form.data.message,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                deleted_at: null,
+                seen_by: null
+              }], false);
+            });
+            lastMessageElement === null || lastMessageElement === void 0 ? void 0 : lastMessageElement.scrollIntoView();
+            form.setData('message', '');
+          }
+        });
+        return [2 /*return*/];
+      });
+    });
+  };
+
   return react_1["default"].createElement("div", {
     className: "h-full ml-4"
   }, activeUser ? react_1["default"].createElement(react_1["default"].Fragment, null, react_1["default"].createElement(ChatHeader_1["default"], {
     user: activeUser
   }), react_1["default"].createElement("div", {
-    className: "p-4 flex h-[80%] overflow-y-auto border-[#ddd]"
+    className: "p-4 flex h-[80%] overflow-y-auto border-[#ddd]",
+    id: "chatbox"
   }, react_1["default"].createElement(MessagesList_1["default"], {
     messages: messages
   })), react_1["default"].createElement("form", {
-    action: "",
     onSubmit: onSubmit,
     className: "mt-3 pt-2 flex border-t"
   }, react_1["default"].createElement(Input_1["default"], {
     name: "message",
     placeholder: __('Enter a message'),
+    value: form.data.message,
     id: "message",
     type: "text",
-    className: "mt-1 block w-full rounded-r-none"
+    className: "mt-1 block w-full rounded-r-none",
+    onChange: function onChange(e) {
+      return form.setData('message', e.target.value);
+    },
+    onKeyDown: function onKeyDown(e) {
+      return enterSubmit(e);
+    }
   }), react_1["default"].createElement(Button_1["default"], {
     type: "submit",
     className: (0, classnames_1["default"])('w-[30px] bg-purple-600 h-[48px] mt-[4px] rounded-r-md ', {
@@ -7883,7 +8096,7 @@ function MessageBox(_a) {
     byOwn = _a.byOwn,
     date = _a.date;
   return react_1["default"].createElement("li", {
-    className: "border rounded-md p-2 text-md text-black bg-[#eee] max-w-[80%]" + (byOwn ? ' ml-auto' : '')
+    className: "border rounded-md p-2 text-md text-black bg-[#eee] max-w-[80%] message " + (byOwn ? ' ml-auto' : '')
   }, react_1["default"].createElement("p", {
     className: "text-[14px]"
   }, children), react_1["default"].createElement("p", {
@@ -7919,7 +8132,7 @@ function MessagesList(_a) {
   var user = (0, useTypedPage_1["default"])().props.user;
   return react_1["default"].createElement("ul", {
     className: "space-y-4"
-  }, messages.map(function (message) {
+  }, messages.map(function (message, key) {
     return react_1["default"].createElement(MessageBox_1["default"], {
       date: new Intl.DateTimeFormat('en-GB', {
         hour: "numeric",
@@ -7929,7 +8142,7 @@ function MessagesList(_a) {
         year: "2-digit"
       }).format(new Date(message.created_at)),
       byOwn: message.from == user.id,
-      key: message.id
+      key: key
     }, message.message);
   }));
 }
@@ -8040,28 +8253,13 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var UserBox_1 = __importDefault(__webpack_require__(/*! ./UserBox */ "./resources/js/Components/Site/UserBox.tsx"));
 function UsersList(_a) {
   var users = _a.users,
     active = _a.active,
     setActive = _a.setActive,
-    setMessages = _a.setMessages,
-    props = __rest(_a, ["users", "active", "setActive", "setMessages"]);
-  var loadMessages = function loadMessages(id) {
-    var _a;
-    axios_1["default"].get('api/messages', {
-      params: {
-        'user_id': id
-      }
-    }).then(function (response) {
-      return setMessages(response.data.messages);
-    });
-    setActive((_a = users.find(function (user) {
-      return user.id == id;
-    })) !== null && _a !== void 0 ? _a : null);
-  };
+    props = __rest(_a, ["users", "active", "setActive"]);
   return react_1["default"].createElement("ul", {
     className: "w-full max-h-[710px] overflow-y-auto space-y-2 pr-2"
   }, users === null || users === void 0 ? void 0 : users.map(function (user) {
@@ -8070,7 +8268,10 @@ function UsersList(_a) {
       id: user.id,
       name: user.name,
       onClick: function onClick() {
-        return loadMessages(user.id);
+        var _a;
+        return setActive((_a = users.find(function (usr) {
+          return usr.id == user.id;
+        })) !== null && _a !== void 0 ? _a : null);
       },
       active: (active === null || active === void 0 ? void 0 : active.id) == user.id
     });
@@ -8656,16 +8857,15 @@ var AppLayout_1 = __importDefault(__webpack_require__(/*! @/Layouts/AppLayout */
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var UsersList_1 = __importDefault(__webpack_require__(/*! @/Components/Site/UsersList */ "./resources/js/Components/Site/UsersList.tsx"));
 var axios_1 = __importDefault(__webpack_require__(/*! axios */ "./node_modules/axios/index.js"));
+var useTypedPage_1 = __importDefault(__webpack_require__(/*! @/Hooks/useTypedPage */ "./resources/js/Hooks/useTypedPage.ts"));
 function default_1() {
+  var user = (0, useTypedPage_1["default"])().props.user;
   var _a = (0, react_1.useState)([]),
     users = _a[0],
     setUsers = _a[1];
-  var _b = (0, react_1.useState)([]),
-    messages = _b[0],
-    setMessages = _b[1];
-  var _c = (0, react_1.useState)(null),
-    activeUser = _c[0],
-    setActiveUser = _c[1];
+  var _b = (0, react_1.useState)(null),
+    activeUser = _b[0],
+    setActiveUser = _b[1];
   (0, react_1.useEffect)(function () {
     axios_1["default"].get('api/users').then(function (response) {
       setUsers(response.data.users);
@@ -8680,13 +8880,11 @@ function default_1() {
   }, react_1["default"].createElement(UsersList_1["default"], {
     users: users,
     active: activeUser,
-    setActive: setActiveUser,
-    setMessages: setMessages
+    setActive: setActiveUser
   })), react_1["default"].createElement("div", {
     className: "h-full md:w-[65%]"
   }, react_1["default"].createElement(Chat_1["default"], {
-    activeUser: activeUser,
-    messages: messages
+    activeUser: activeUser
   })))));
 }
 exports["default"] = default_1;

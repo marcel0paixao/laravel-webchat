@@ -1,33 +1,69 @@
+import useTypedPage from "@/Hooks/useTypedPage";
 import { Message, User } from "@/types";
+import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/inertia-react";
+import axios from "axios";
 import classNames from "classnames";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import route from "ziggy-js";
 import FormButton from "../Form/Button";
 import FormInput from "../Form/Input";
 import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessagesList";
 
 interface Props{
-    messages: Array<Message>;
     activeUser: User | null;
 }
 
-export default function Chat({messages, activeUser}: Props){
+export default function Chat({activeUser}: Props){
+    const { user } = useTypedPage().props;
+    const lastMessageElement = document.querySelectorAll('.message:last-child')[0];
+    const [messages, setMessages] = useState<Array<Message>>([]);
+
+    useEffect(() => {
+        form.setData('to', activeUser?.id)
+        lastMessageElement?.scrollIntoView();
+        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => setMessages(response.data.messages));
+    }, [activeUser])
+
     const form = useForm({
         message: '',
-        user_id: 1,
-        chat_room: 1
+        from: user.id,
+        to: activeUser?.id
     });
 
-    const submitMessage = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key == "Enter") {
-            console.log(Object(e.target).value);
+    const enterSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key == "Enter" && form.data.message.length > 0) {
+            submitMessage();
         }
     }
     
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('submited');
+        if (form.data.message.length > 0) {
+            submitMessage();
+        }
+    }
+
+    const submitMessage = async () => {
+        form.post(route('store.messages'), {
+            onSuccess: (response) => {
+                setMessages(msg => {
+                    return [...msg, {
+                        id: msg.length,
+                        to: form.data.to ?? activeUser?.id ?? 0,
+                        from: user.id,
+                        message: form.data.message,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        deleted_at: null,
+                        seen_by: null
+                    }];
+                });
+                lastMessageElement?.scrollIntoView();
+                form.setData('message', '');
+            }
+        })
     }
 
     return (
@@ -35,16 +71,19 @@ export default function Chat({messages, activeUser}: Props){
             {activeUser ? (
                 <>
                     <ChatHeader user={activeUser} />
-                    <div className="p-4 flex h-[80%] overflow-y-auto border-[#ddd]">
+                    <div className="p-4 flex h-[80%] overflow-y-auto border-[#ddd]" id="chatbox">
                         <MessagesList messages={messages} />
                     </div>
-                    <form action="" onSubmit={onSubmit} className="mt-3 pt-2 flex border-t">
+                    <form onSubmit={onSubmit} className="mt-3 pt-2 flex border-t">
                         <FormInput
                             name="message"
                             placeholder={__('Enter a message')}
+                            value={form.data.message}
                             id="message"
                             type="text"
-                            className="mt-1 block w-full rounded-r-none" />
+                            className="mt-1 block w-full rounded-r-none"
+                            onChange={(e) => form.setData('message', e.target.value)}
+                            onKeyDown={(e) => enterSubmit(e)} />
                         <FormButton
                             type="submit"
                             className={classNames('w-[30px] bg-purple-600 h-[48px] mt-[4px] rounded-r-md ', {'opacity-25': form.processing})}

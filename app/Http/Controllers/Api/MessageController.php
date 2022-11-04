@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Message;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFundation\Response;
-use App\Models\{
-    Message, User
-};
-use Illuminate\Support\Facades\{
-    Auth
-};
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -51,7 +47,13 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $message = new Message([
+            'from' => Auth::id(),
+            'to' => $request->to,
+            'message' => $request->message
+        ]);
+        $message->save();
+        return redirect()->back();
     }
 
     /**
