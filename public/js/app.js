@@ -7921,7 +7921,13 @@ function MessagesList(_a) {
     className: "space-y-4"
   }, messages.map(function (message) {
     return react_1["default"].createElement(MessageBox_1["default"], {
-      date: message.created_at,
+      date: new Intl.DateTimeFormat('en-GB', {
+        hour: "numeric",
+        minute: "numeric",
+        day: "numeric",
+        month: "short",
+        year: "2-digit"
+      }).format(new Date(message.created_at)),
       byOwn: message.from == user.id,
       key: message.id
     }, message.message);
