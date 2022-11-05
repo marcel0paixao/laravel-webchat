@@ -9,6 +9,7 @@ use Symfony\Component\HttpFundation\Response;
 use Illuminate\Support\Facades\{
     Auth, Event
 };
+use App\Events\Chat\SendMessage;
 
 class MessageController extends Controller
 {
@@ -56,11 +57,7 @@ class MessageController extends Controller
         ]);
         $message->save();
 
-        Event::dispatch(new SendMessage([
-            'from' => Auth::id(),
-            'to' => $request->to,
-            'message' => $request->message
-        ]));
+        Event::dispatch(new SendMessage($message, $message->to));
 
         return redirect()->back();
     }

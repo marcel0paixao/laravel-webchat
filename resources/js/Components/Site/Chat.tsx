@@ -22,8 +22,12 @@ export default function Chat({activeUser}: Props){
 
     useEffect(() => {
         form.setData('to', activeUser?.id)
-        lastMessageElement?.scrollIntoView();
         axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => setMessages(response.data.messages));
+        lastMessageElement?.scrollIntoView();
+
+        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
+            console.log(e);
+        });
     }, [activeUser])
 
     const form = useForm({
