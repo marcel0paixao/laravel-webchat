@@ -17,21 +17,20 @@ interface Props{
 
 export default function Chat({activeUser}: Props){
     const { user } = useTypedPage().props;
-    const lastMessageElement = document.querySelectorAll('.message:last-child')[0];
     const [messages, setMessages] = useState<Array<Message>>([]);
 
     useEffect(() => {
-        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
-            console.log(e);
-        });
+        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => console.log(e));
     }, [])
 
     useEffect(() => {
         form.setData('to', activeUser?.id)
-        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => setMessages(response.data.messages));
-        lastMessageElement?.scrollIntoView();
+        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => {
+            setMessages(response.data.messages);
+            document.querySelectorAll('.message:last-child')[0].scrollIntoView();
+        });
     }, [activeUser]);
-    
+
     const form = useForm({
         message: '',
         from: user.id,
@@ -66,7 +65,7 @@ export default function Chat({activeUser}: Props){
                         seen_by: null
                     }];
                 });
-                lastMessageElement?.scrollIntoView();
+                document.querySelectorAll('.message:last-child')[0].scrollIntoView();
                 form.setData('message', '');
             }
         })
