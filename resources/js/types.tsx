@@ -75,3 +75,7 @@ export interface User {
     updated_at: DateTime,
     deleted_at: DateTime
   }
+
+  export interface window{
+    Echo: any
+  }

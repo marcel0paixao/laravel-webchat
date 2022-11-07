@@ -10,7 +10,6 @@ import FormButton from "../Form/Button";
 import FormInput from "../Form/Input";
 import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessagesList";
-import Echo from 'laravel-echo';
 
 interface Props{
     activeUser: User | null;
