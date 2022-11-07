@@ -10,6 +10,7 @@ import FormButton from "../Form/Button";
 import FormInput from "../Form/Input";
 import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessagesList";
+import Echo from 'laravel-echo';
 
 interface Props{
     activeUser: User | null;
@@ -21,15 +22,17 @@ export default function Chat({activeUser}: Props){
     const [messages, setMessages] = useState<Array<Message>>([]);
 
     useEffect(() => {
-        form.setData('to', activeUser?.id)
-        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => setMessages(response.data.messages));
-        lastMessageElement?.scrollIntoView();
-
         Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
             console.log(e);
         });
-    }, [activeUser])
+    }, [])
 
+    useEffect(() => {
+        form.setData('to', activeUser?.id)
+        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => setMessages(response.data.messages));
+        lastMessageElement?.scrollIntoView();
+    }, [activeUser]);
+    
     const form = useForm({
         message: '',
         from: user.id,
