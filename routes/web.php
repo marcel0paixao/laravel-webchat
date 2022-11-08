@@ -50,15 +50,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/', function () {
-        if (Auth::user()) {
-            return Inertia::render('Home');
-        }
-        return Inertia::render('Welcome');
-    })->name('root');
+Route::middleware(['auth:sanctum',config('jetstream.auth_session'), 'verified',])->group(function () {
+    Route::get('/home',  [\App\Http\Controllers\HomeController::class, 'home'])->name('Home');
 });

@@ -51,7 +51,31 @@ export interface User {
     profile_photo_thumb_url: string;
     two_factor_enabled: boolean;
     email_verified_at: Nullable<DateTime>;
+    last_message: string;
     created_at: DateTime;
     updated_at: DateTime;
   }
+
+  export interface Message {
+    id: number,
+    from: number,
+    to: number,
+    message: string,
+    created_at: DateTime,
+    updated_at: DateTime,
+    deleted_at: DateTime | null,
+    seen_by: Array<User> | null
+  }
   
+  export interface ChatRoom {
+    members: Array<User>,
+    admin: Array<User>,
+    created_by: User,
+    created_at: DateTime,
+    updated_at: DateTime,
+    deleted_at: DateTime
+  }
+
+  export interface window{
+    Echo: any
+  }

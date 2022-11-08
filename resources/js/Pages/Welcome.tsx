@@ -4,7 +4,7 @@ import OuterCenteredContainer from "@/Components/Site/OuterCenteredContainer";
 import useTypedPage from '@/Hooks/useTypedPage';
 import route from 'ziggy-js';
 
-const Welcome = () => {
+export default function Welcome(){
     const page = useTypedPage();
     
     return (
@@ -23,11 +23,13 @@ const Welcome = () => {
                                     <img src="/images/menu/register.svg" alt="" />
                                 </a>
                             </>
-                    ) : null}
+                    ) : (
+                        <a href={route('Home')}>
+                            <span>{__('Home')}</span>
+                        </a>
+                    )}
                 </div>
             </OuterCenteredContainer>
         </GuestLayout>
     );
 }
-
-export default Welcome;

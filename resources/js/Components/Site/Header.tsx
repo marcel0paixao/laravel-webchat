@@ -22,7 +22,7 @@ export default function Header({...props}: Props) {
     }
     
     return (
-        <header className="w-full h-16 border-b px-6 py-2">
+        <header className="w-full h-16 border-b px-6 py-2 border-[#ddd] absolute bg-white">
             <form action={route('logout')} onSubmit={logout}>
                 <button type="submit">Log Out</button>
             </form>

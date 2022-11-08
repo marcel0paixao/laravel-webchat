@@ -5,12 +5,10 @@ interface Props {
     className?: string;
 }
 
-const OuterCenteredContainer = ({children, className = ''}: PropsWithChildren<Props>) => {
+export default function OuterCenteredContainer({children, className = ''}: PropsWithChildren<Props>){
     return (
         <div className={classNames("px-4 max-w-md mx-auto mb-16 ", className)}>
             {children}
         </div>
     );
 };
-
-export default OuterCenteredContainer;

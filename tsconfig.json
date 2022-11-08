@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
+    "module": "CommonJS",
     "jsx": "react",
     "rootDir": "./resources/js",
     "strict": true,
@@ -11,6 +11,9 @@
     "paths": {
       "@/*": ["./resources/js/*"]
     },
+    "types": [
+      "node"
+    ],
     "lib": [
       "dom",
       "es6",

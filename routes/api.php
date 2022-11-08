@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/users',  [\App\Http\Controllers\Api\UserController::class, 'index'])->name('load.users');
+    Route::get('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'index'])->name('load.messages');
+    Route::post('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'store'])->name('store.messages');
+});
