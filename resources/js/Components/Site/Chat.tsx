@@ -20,14 +20,28 @@ export default function Chat({activeUser}: Props){
     const [messages, setMessages] = useState<Array<Message>>([]);
 
     useEffect(() => {
-        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => console.log(e));
+        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
+            setMessages(msg => {
+                return [...msg, {
+                    id: e.message.id,
+                    to: e.message.to,
+                    from: e.message.from,
+                    message: e.message.message,
+                    created_at: e.message.created_at,
+                    updated_at: e.message.updated_at,
+                    deleted_at: null,
+                    seen_by: null
+                }];
+            });
+            document.querySelectorAll('.message:last-child')[0]?.scrollIntoView()
+        });
     }, [])
 
     useEffect(() => {
         form.setData('to', activeUser?.id)
         axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => {
             setMessages(response.data.messages);
-            document.querySelectorAll('.message:last-child')[0].scrollIntoView();
+            document.querySelectorAll('.message:last-child')[0]?.scrollIntoView();
         });
     }, [activeUser]);
 
