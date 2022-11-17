@@ -21,19 +21,21 @@ export default function Chat({activeUser}: Props){
 
     useEffect(() => {
         Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
-            setMessages(msg => {
-                return [...msg, {
-                    id: e.message.id,
-                    to: e.message.to,
-                    from: e.message.from,
-                    message: e.message.message,
-                    created_at: e.message.created_at,
-                    updated_at: e.message.updated_at,
-                    deleted_at: null,
-                    seen_by: null
-                }];
-            });
-            document.querySelectorAll('.message:last-child')[0]?.scrollIntoView()
+            if (e.message.from == activeUser?.id) {
+                setMessages(msg => {
+                    return [...msg, {
+                        id: e.message.id,
+                        to: e.message.to,
+                        from: e.message.from,
+                        message: e.message.message,
+                        created_at: e.message.created_at,
+                        updated_at: e.message.updated_at,
+                        deleted_at: null,
+                        seen_by: null
+                    }];
+                });
+                document.querySelectorAll('.message:last-child')[0]?.scrollIntoView();
+            }
         });
     }, [])
 
