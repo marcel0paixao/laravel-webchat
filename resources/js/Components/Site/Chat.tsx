@@ -20,12 +20,7 @@ export default function Chat({activeUser}: Props){
     const [messages, setMessages] = useState<Array<Message>>([]);
 
     useEffect(() => {
-        console.log(activeUser);
-    }, [activeUser])
-
-    useEffect(() => {
         Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
-            console.log(e, activeUser);
             if (e.message.from == activeUser?.id) {
                 setMessages(msg => {
                     return [...msg, {
