@@ -50,6 +50,12 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'message' => 'required',
+            'from' => 'required',
+            'to' => 'required',
+        ]);
+
         $message = new Message([
             'from' => Auth::id(),
             'to' => $request->to,

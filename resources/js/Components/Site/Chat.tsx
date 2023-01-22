@@ -12,7 +12,7 @@ import ChatHeader from "./ChatHeader";
 import MessagesList from "./MessagesList";
 
 interface Props{
-    activeUser: User | null;
+    activeUser: User;
 }
 
 export default function Chat({activeUser}: Props){
