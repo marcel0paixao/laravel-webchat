@@ -9,6 +9,7 @@ import route from "ziggy-js";
 import FormButton from "../Form/Button";
 import FormInput from "../Form/Input";
 import ChatHeader from "./ChatHeader";
+import Form from "./Form";
 import MessagesList from "./MessagesList";
 
 interface Props{
@@ -18,6 +19,7 @@ interface Props{
 export default function Chat({activeUser}: Props){
     const { user } = useTypedPage().props;
     const [messages, setMessages] = useState<Array<Message>>([]);
+    const [submitProcessing, setSubmitProcessing] = useState<boolean>(false);
 
     useEffect(() => {
         Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
@@ -52,23 +54,24 @@ export default function Chat({activeUser}: Props){
         from: user.id,
         to: activeUser?.id
     });
-
-    const enterSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key == "Enter" && form.data.message.length > 0) {
-            submitMessage();
-        }
-    }
     
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (form.data.message.length > 0) {
-            submitMessage();
+        if (Object(e.target)[0].value.length > 0) {
+            form.data.message = Object(e.target)[0].value;
+            if (!submitProcessing) {
+                Object(document.querySelectorAll('#form_messages'))[0].value = '';
+                submitMessage();   
+            }
         }
     }
 
     const submitMessage = async () => {
         form.post(route('store.messages'), {
-            onSuccess: (response) => {
+            onProgress: () => {
+                setSubmitProcessing(true);
+            },
+            onSuccess: () => {
                 setMessages(msg => {
                     return [...msg, {
                         id: msg.length,
@@ -83,6 +86,7 @@ export default function Chat({activeUser}: Props){
                 });
                 document.querySelectorAll('.message:last-child')[0].scrollIntoView();
                 form.setData('message', '');
+                setSubmitProcessing(false);
             }
         })
     }
@@ -95,25 +99,7 @@ export default function Chat({activeUser}: Props){
                     <div className="p-4 flex h-[80%] overflow-y-auto border-[#ddd]" id="chatbox">
                         <MessagesList messages={messages} />
                     </div>
-                    <form onSubmit={onSubmit} className="mt-3 pt-2 flex border-t">
-                        <FormInput
-                            name="message"
-                            placeholder={__('Enter a message')}
-                            value={form.data.message}
-                            id="message"
-                            type="text"
-                            className="mt-1 block w-full rounded-r-none"
-                            onChange={(e) => form.setData('message', e.target.value)}
-                            onKeyDown={(e) => enterSubmit(e)} />
-                        <FormButton
-                            type="submit"
-                            className={classNames('w-[30px] bg-purple-600 h-[48px] mt-[4px] rounded-r-md ', {'opacity-25': form.processing})}
-                            disabled={form.processing}>
-                                <svg className="-ml-2" xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
-                                    <path d="M0.00999999 18L21 9L0.00999999 0L0 7L15 9L0 11L0.00999999 18Z" fill="#fff"/>
-                                </svg>
-                        </FormButton>
-                    </form>
+                    <Form onSubmit={onSubmit} form={form} />
                 </>
             ) : (
                 <div className="h-full border-l text-center text-xl pt-16">
