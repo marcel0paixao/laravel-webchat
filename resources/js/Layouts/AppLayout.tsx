@@ -24,7 +24,7 @@ export default function GuestLayout({
             <Head title={title} />
             <Header />
 
-            <div className="font-sans rounded-md pt-32 p-4 text-TBL_TEXT_PRIMARY antialiased bg-gray-200">
+            <div className="font-sans rounded-md sm:p-4 !pt-20 !sm:pt-32 text-TBL_TEXT_PRIMARY antialiased bg-gray-200">
                 {children}
             </div>
         </div>

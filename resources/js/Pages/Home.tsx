@@ -25,7 +25,7 @@ export default function() {
         <AppLayout title="Chat room">
             <OuterCenteredContainer className="!max-w-[1024px]">
                 <ChatRoom>
-                    <div className="md:block hidden md:w-[35%]">
+                    <div className={`md:block md:w-[35%] ${activeUser ? 'hidden' : 'block'}`}>
                         <UsersList users={users} active={activeUser} setActive={setActiveUser} />
                     </div>
                     <div className="h-full md:w-[65%]">

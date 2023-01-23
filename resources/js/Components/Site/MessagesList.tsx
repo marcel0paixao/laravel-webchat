@@ -12,7 +12,7 @@ export default function MessagesList({messages}: Props){
     const { user } = useTypedPage().props;
 
     return (
-        <ul className="space-y-4 h-fit">
+        <ul className="space-y-4 h-fit w-full">
             {messages.map((message, key) =>
                 <MessageBox date={new Intl.DateTimeFormat('en-GB', {
                     hour: "numeric",

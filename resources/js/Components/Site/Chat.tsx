@@ -96,7 +96,7 @@ export default function Chat({activeUser}: Props){
             {activeUser ? (
                 <>
                     <ChatHeader user={activeUser} />
-                    <div className="p-4 flex h-[80%] overflow-y-auto border-[#ddd]" id="chatbox">
+                    <div className="sm:p-4 flex h-[80%] overflow-y-auto border-[#ddd]" id="chatbox">
                         <MessagesList messages={messages} />
                     </div>
                     <Form onSubmit={onSubmit} form={form} />

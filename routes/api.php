@@ -22,4 +22,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/users',  [\App\Http\Controllers\Api\UserController::class, 'index'])->name('load.users');
     Route::get('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'index'])->name('load.messages');
     Route::post('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'store'])->name('store.messages');
+    Route::delete('/messages/{id}',  [\App\Http\Controllers\Api\MessageController::class, 'destroy'])->name('destroy.messages');
 });
