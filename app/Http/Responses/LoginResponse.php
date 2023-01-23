@@ -11,7 +11,7 @@ class LoginResponse implements LoginResponseContract
     public function toResponse($request)
     {
         $user = Auth::user();
-        $route = 'internal-home';
+        $route = 'Home';
 
         //
 
