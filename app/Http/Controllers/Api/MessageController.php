@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Message;
+use App\Models\{Message, User};
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFundation\Response;
 use Illuminate\Support\Facades\{
@@ -99,6 +99,28 @@ class MessageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (!$user = User::find($id)) {
+            return response(404);
+        }
+        $messages = Message::where(
+            function ($query) use ($user)
+            {
+                $query->where([
+                    'from' => $user->id,
+                    'to' => Auth::id()
+                ]);
+            }
+        )
+        ->orWhere(
+            function ($query) use ($user)
+            {
+                $query->where([
+                    'from' => Auth::id(),
+                    'to' => $user->id
+                ]);
+            }
+        )->whereNull('deleted_at')->delete();
+
+        return response(204);
     }
 }
