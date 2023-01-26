@@ -19,8 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/users',  [\App\Http\Controllers\Api\UserController::class, 'index'])->name('load.users');
-    Route::get('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'index'])->name('load.messages');
-    Route::post('/messages',  [\App\Http\Controllers\Api\MessageController::class, 'store'])->name('store.messages');
-    Route::delete('/messages/{id}',  [\App\Http\Controllers\Api\MessageController::class, 'destroy'])->name('destroy.messages');
+    Route::get('/users',  [\App\Http\Controllers\Api\UserController::class, 'all'])->name('load.users');
+    Route::group(['prefix' => 'messages'], function () {
+        Route::get('/load',  [\App\Http\Controllers\Api\MessageController::class, 'index'])->name('load.messages');
+        Route::post('/store',  [\App\Http\Controllers\Api\MessageController::class, 'store'])->name('store.messages');
+        Route::delete('/delete/{id}',  [\App\Http\Controllers\Api\MessageController::class, 'destroy'])->name('destroy.messages');
+    });
 });

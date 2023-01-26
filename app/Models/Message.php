@@ -12,4 +12,6 @@ class Message extends Model
     use SoftDeletes;
 
     protected $fillable = ['from', 'to', 'message'];
+
+    protected $hidden = ['updated_at', 'deleted_at'];
 }

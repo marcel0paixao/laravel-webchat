@@ -123,4 +123,16 @@ class MessageController extends Controller
 
         return response(204);
     }
+
+    public static function last_messages()
+    {
+        $last_messages = [];
+        foreach (Message::where('to', Auth::id())->orderBy('created_at', 'DESC')->get() as $key => $message) {
+            //grouping by from
+            if (!array_key_exists($message->from, $last_messages)) {
+                $last_messages[$message->from] = $message;
+            }
+        }
+        return $last_messages;
+    }
 }
