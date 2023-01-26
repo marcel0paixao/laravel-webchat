@@ -29,7 +29,7 @@ export default function() {
                         <UsersList users={users} active={activeUser} setActive={setActiveUser} />
                     </div>
                     <div className="h-full md:w-[65%]">
-                        {activeUser && <Chat activeUser={activeUser} />}
+                        {activeUser ? <Chat activeUser={activeUser} /> : <h2 className="text-center text-xl text-black pt-24">Select a conversation</h2>}
                     </div>
                 </ChatRoom>
             </OuterCenteredContainer>
