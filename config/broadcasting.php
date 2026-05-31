@@ -36,11 +36,11 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'encrypted' => false,
-                'host' => '127.0.0.1',
-                'port' => 6001,
-                'scheme' => 'http',
-                'useTLS' => false, // turn to true if is a HTTPS server
+                'encrypted' => env('PUSHER_SCHEME', 'http') === 'https',
+                'host' => env('PUSHER_HOST', '127.0.0.1'),
+                'port' => env('PUSHER_PORT', 6001),
+                'scheme' => env('PUSHER_SCHEME', 'http'),
+                'useTLS' => env('PUSHER_SCHEME', 'http') === 'https',
                 'cluster' => env('PUSHER_APP_CLUSTER')
             ],
             'client_options' => [

@@ -43,8 +43,7 @@ const FormInput = forwardRef<
                 ref={ref}
                 onChange={handleKeyUp}
                 className={classNames(
-                    'border-TBL_BORDERS focus:border-TBL_BORDERS focus:ring-TBL_BORDERS focus:ring-opacity-50 ' +
-                    'disabled:text-TBL_TEXT_PRIMARY/50 rounded-lg bg-TBL_INPUT_BG text-xs text-TBL_MENU_COLOR placeholder:text-TBL_TEXT_PLACEHOLDER h-12',
+                    'h-12 rounded-lg border-slate-300 bg-white text-sm text-slate-900 placeholder:text-slate-400 focus:border-purple-400 focus:ring-purple-400 focus:ring-opacity-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500',
                     props.className)}/>
                 {showCount && (
                 <div className="mt-1 flex justify-end italic text-TBL_TERTIARY font-normal text-2xs">

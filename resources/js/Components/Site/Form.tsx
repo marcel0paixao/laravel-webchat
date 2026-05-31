@@ -1,32 +1,4 @@
-import React, { Dispatch, MouseEvent, SetStateAction, useState } from "react";
-import FormError from "@/Components/Form/Error";
-import { InertiaFormProps } from "@inertiajs/inertia-react";
-import { ChevronDoubleRightIcon } from '@heroicons/react/outline';
-
-interface Props {
-    onSubmit: (e: React.FormEvent) => void;
-    errors?: string;
-    form: InertiaFormProps<{ message: string; from: number; to: number; }>;
-}
-
-export default function Form({onSubmit, form, errors}: Props) {
-    return (
-        <>
-            <form action="" className="py-[30px] px-[20px] border-t border-[#DFE1E5]" id="chat-form" onSubmit={e => onSubmit(e)}>
-                <input type="text" 
-                    className="rounded-[20px] h-[44px] px-[20px] py-[12px] text-[12px] text-TBL_TEXT_PLACEHOLDER font-[400] bg-[#FBFBFB] border-[#DADADA] w-full pr-10" 
-                    id="form_messages"
-                    maxLength={65535}
-                    onKeyDown={e => {
-                        if (e.key == "Enter" && Object(e.target).value.length > 0) {
-                           form.setData('message', Object(e.target).value) 
-                        }
-                    }}
-                    placeholder={__('Type a message...')} />
-                <button type="submit" className="absolute -ml-8">
-                    <ChevronDoubleRightIcon color="#611199" className="h-7 w-7 mt-[8px] -ml-[7px]" />
-                </button>
-            </form>
-        </>
-    )
-}
+import React from 'react';
+import { PaperAirplaneIcon, PaperClipIcon, XIcon } from '@heroicons/react/outline';
+interface Props { onSubmit: (e: React.FormEvent) => void; value: string; error?: string | null; disabled?: boolean; onChange: (value: string) => void; attachments: File[]; onAttachmentsChange: (files: File[]) => void; onRemoveAttachment: (index: number) => void; }
+export default function Form({onSubmit,value,error,disabled=false,onChange,attachments,onAttachmentsChange,onRemoveAttachment}: Props) { return <form className="border-t border-slate-200 bg-white px-3 py-3 dark:border-slate-800 dark:bg-slate-900 sm:px-5" onSubmit={onSubmit}>{attachments.length > 0 && <ul className="mb-2 flex flex-wrap gap-2">{attachments.map((file,index)=><li key={`${file.name}-${index}`} className="flex max-w-full items-center gap-2 rounded-md border border-slate-300 bg-slate-50 px-2 py-1 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"><span className="max-w-[180px] truncate">{file.name}</span><button type="button" className="inline-flex h-5 w-5 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-700" onClick={() => onRemoveAttachment(index)}><XIcon className="h-3.5 w-3.5" /></button></li>)}</ul>}<div className="flex items-center gap-2"><label title="Attach media" className="inline-flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-slate-300 bg-white text-slate-500 transition hover:border-TBL_SECONDARY hover:text-TBL_SECONDARY dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"><PaperClipIcon className="h-5 w-5" /><input type="file" className="sr-only" multiple accept="image/*,video/*,audio/*,application/pdf" onChange={e => { onAttachmentsChange(Array.from(e.currentTarget.files ?? [])); e.currentTarget.value = ''; }} /></label><input type="text" className="h-11 min-w-0 flex-1 rounded-full border-slate-300 bg-slate-50 px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-TBL_SECONDARY focus:ring-TBL_SECONDARY dark:border-slate-700 dark:bg-slate-800 dark:text-white" maxLength={65535} value={value} onChange={e => onChange(e.currentTarget.value)} placeholder="Type a message..." /><button type="submit" disabled={disabled} className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-white transition hover:bg-[#4d0d7a] disabled:opacity-40"><PaperAirplaneIcon className="h-5 w-5 rotate-90" /></button></div>{error && <p className="mt-2 text-xs text-red-600">{error}</p>}</form>; }

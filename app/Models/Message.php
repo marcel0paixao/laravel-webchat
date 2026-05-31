@@ -11,7 +11,27 @@ class Message extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['from', 'to', 'message'];
+    protected $fillable = ['conversation_id', 'from', 'to', 'message', 'type', 'metadata'];
+    protected $hidden = ['deleted_at'];
+    protected $casts = ['metadata' => 'array'];
 
-    protected $hidden = ['updated_at', 'deleted_at'];
+    public function attachments()
+    {
+        return $this->hasMany(MessageAttachment::class);
+    }
+
+    public function conversation()
+    {
+        return $this->belongsTo(Conversation::class);
+    }
+
+    public function statuses()
+    {
+        return $this->hasMany(MessageStatus::class);
+    }
+
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'from');
+    }
 }

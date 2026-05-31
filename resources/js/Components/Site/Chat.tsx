@@ -1,112 +1,92 @@
-import useTypedPage from "@/Hooks/useTypedPage";
-import { Message, User } from "@/types";
-import { Inertia } from "@inertiajs/inertia";
-import { useForm } from "@inertiajs/inertia-react";
-import axios from "axios";
-import classNames from "classnames";
-import React, { useEffect, useState } from "react";
-import route from "ziggy-js";
-import FormButton from "../Form/Button";
-import FormInput from "../Form/Input";
-import ChatHeader from "./ChatHeader";
-import Form from "./Form";
-import MessagesList from "./MessagesList";
+import { Conversation, Message, MessageAttachment } from '@/types';
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import route from 'ziggy-js';
+import ChatHeader from './ChatHeader';
+import Form from './Form';
+import MessagesList from './MessagesList';
 
-interface Props{
-    activeUser: User;
-}
+interface Props { conversation: Conversation; onBack: () => void; incomingMessage: Message | null; typing: boolean; onConversationMessage: (message: Message) => void; onConversationBlocked: () => void; }
 
-export default function Chat({activeUser}: Props){
-    const { user } = useTypedPage().props;
-    const [messages, setMessages] = useState<Array<Message>>([]);
-    const [submitProcessing, setSubmitProcessing] = useState<boolean>(false);
+export default function Chat({conversation, onBack, incomingMessage, typing, onConversationMessage, onConversationBlocked}: Props) {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [draft, setDraft] = useState('');
+    const [attachments, setAttachments] = useState<File[]>([]);
+    const [processing, setProcessing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [newCount, setNewCount] = useState(0);
+    const [preview, setPreview] = useState<MessageAttachment | null>(null);
+    const [hasMore, setHasMore] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const boxRef = useRef<HTMLDivElement | null>(null);
+    const bottomRef = useRef<HTMLDivElement | null>(null);
+    const lastTypingAt = useRef(0);
 
-    useEffect(() => {
-        Object(window).Echo.private(`user.${user.id}`).listen('.SendMessage', (e: any) => {
-            if (e.message.from == activeUser?.id) {
-                setMessages(msg => {
-                    return [...msg, {
-                        id: e.message.id,
-                        to: e.message.to,
-                        from: e.message.from,
-                        message: e.message.message,
-                        created_at: e.message.created_at,
-                        updated_at: e.message.updated_at,
-                        deleted_at: null,
-                        seen_by: null
-                    }];
-                });
-                document.querySelectorAll('.message:last-child')[0]?.scrollIntoView();
-            }
-        });
-    }, [])
+    const isNearBottom = () => { const el = boxRef.current; return !el || el.scrollHeight - el.scrollTop - el.clientHeight < 120; };
+    const scrollBottom = (smooth = false) => bottomRef.current?.scrollIntoView({ block: 'end', behavior: smooth ? 'smooth' : 'auto' });
 
     useEffect(() => {
-        form.setData('to', activeUser?.id)
-        axios.get(route('load.messages', { 'user_id': activeUser?.id ?? 0 })).then(response => {
-            setMessages(response.data.messages);
-            document.querySelectorAll('.message:last-child')[0]?.scrollIntoView();
+        setMessages([]); setAttachments([]); setError(null); setNewCount(0); setHasMore(false);
+        axios.get(route('load.messages', {conversation_hash: conversation.hash})).then(r => {
+            setMessages(r.data.messages);
+            setHasMore(Boolean(r.data.has_more));
+            window.setTimeout(() => scrollBottom(false), 40);
         });
-    }, [activeUser]);
+    }, [conversation.hash]);
 
-    const form = useForm({
-        message: '',
-        from: user.id,
-        to: activeUser?.id
-    });
-    
-    const onSubmit = (e: React.FormEvent) => {
+    useEffect(() => {
+        if (!incomingMessage || incomingMessage.conversation?.hash !== conversation.hash) return;
+        const shouldScroll = isNearBottom();
+        setMessages(current => current.some(m => m.id === incomingMessage.id) ? current : [...current, incomingMessage]);
+        if (shouldScroll) window.setTimeout(() => scrollBottom(true), 40); else setNewCount(c => c + 1);
+    }, [incomingMessage, conversation.hash]);
+
+    useEffect(() => {
+        if (typing && isNearBottom()) window.setTimeout(() => scrollBottom(true), 40);
+    }, [typing]);
+
+    const loadOlder = () => {
+        if (!hasMore || loadingMore || messages.length === 0) return;
+        const el = boxRef.current;
+        const previousHeight = el?.scrollHeight ?? 0;
+        setLoadingMore(true);
+        axios.get(route('load.messages', {conversation_hash: conversation.hash, before_id: messages[0].id})).then(r => {
+            setMessages(current => [...r.data.messages, ...current]);
+            setHasMore(Boolean(r.data.has_more));
+            window.setTimeout(() => { if (el) el.scrollTop = el.scrollHeight - previousHeight; }, 20);
+        }).finally(() => setLoadingMore(false));
+    };
+
+    const sendTyping = () => { const now = Date.now(); if (now - lastTypingAt.current < 1200) return; lastTypingAt.current = now; axios.post(route('typing.store'), {conversation_hash: conversation.hash}).catch(() => {}); };
+    const submit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (Object(e.target)[0].value.length > 0) {
-            form.data.message = Object(e.target)[0].value;
-            if (!submitProcessing) {
-                Object(document.querySelectorAll('#form_messages'))[0].value = '';
-                submitMessage();   
-            }
-        }
-    }
+        const text = draft.trim();
+        if ((!text && attachments.length === 0) || processing) return;
+        setProcessing(true); setError(null);
+        try {
+            const payload = new FormData();
+            payload.append('conversation_hash', conversation.hash);
+            payload.append('message', text);
+            attachments.forEach(file => payload.append('attachments[]', file));
+            const r = await axios.post(route('store.messages'), payload, {headers:{'Content-Type':'multipart/form-data'}});
+            setMessages(current => [...current, r.data.message]);
+            onConversationMessage(r.data.message);
+            setDraft(''); setAttachments([]);
+            window.setTimeout(() => scrollBottom(true), 40);
+        } catch (err: any) { setError(err.response?.data?.message ?? 'Unable to send message.'); }
+        finally { setProcessing(false); }
+    };
 
-    const submitMessage = async () => {
-        form.post(route('store.messages'), {
-            onProgress: () => {
-                setSubmitProcessing(true);
-            },
-            onSuccess: () => {
-                setMessages(msg => {
-                    return [...msg, {
-                        id: msg.length,
-                        to: form.data.to ?? activeUser?.id ?? 0,
-                        from: user.id,
-                        message: form.data.message,
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString(),
-                        deleted_at: null,
-                        seen_by: null
-                    }];
-                });
-                document.querySelectorAll('.message:last-child')[0].scrollIntoView();
-                form.setData('message', '');
-                setSubmitProcessing(false);
-            }
-        })
-    }
-
-    return (
-        <div className="h-full ml-4">
-            {activeUser ? (
-                <>
-                    <ChatHeader user={activeUser} />
-                    <div className="sm:p-4 flex h-[80%] overflow-y-auto border-[#ddd]" id="chatbox">
-                        <MessagesList messages={messages} />
-                    </div>
-                    <Form onSubmit={onSubmit} form={form} />
-                </>
-            ) : (
-                <div className="h-full border-l text-center text-xl pt-16">
-                    <h2>No messages to show</h2>
-                </div>
-            )}
-            
+    return <div className="relative flex h-full min-h-0 flex-col">
+        <ChatHeader conversation={conversation} onBack={onBack} onBlocked={onConversationBlocked} onDeleted={() => { setMessages([]); }} />
+        <div ref={boxRef} onScroll={() => { if ((boxRef.current?.scrollTop ?? 0) < 80) loadOlder(); if (isNearBottom()) setNewCount(0); }} className="min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-4">
+            {loadingMore && <div className="mb-3 text-center text-xs text-slate-400">Loading older messages...</div>}
+            <MessagesList messages={messages} onImageClick={setPreview} />
+            {typing && <div className="mt-2 flex justify-start"><div className="typing-bubble"><span /><span /><span /></div></div>}
+            <div ref={bottomRef} />
         </div>
-    )
+        {newCount > 0 && <button type="button" onClick={() => { setNewCount(0); scrollBottom(true); }} className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-full bg-TBL_SECONDARY px-4 py-2 text-xs font-semibold text-white shadow-lg">↓ {newCount} new</button>}
+        <Form onSubmit={submit} value={draft} onChange={v => { setDraft(v); sendTyping(); }} attachments={attachments} onAttachmentsChange={files => setAttachments(current => [...current, ...files].slice(0,4))} onRemoveAttachment={i => setAttachments(current => current.filter((_, idx) => idx !== i))} disabled={processing} error={error} />
+        {preview && <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/80 p-4" onClick={() => setPreview(null)}><button className="absolute right-5 top-5 rounded-full bg-white/10 px-3 py-2 text-white">Close</button><img src={preview.url} alt={preview.original_name ?? 'Image preview'} className="max-h-[88vh] max-w-[92vw] rounded-lg object-contain" /></div>}
+    </div>;
 }

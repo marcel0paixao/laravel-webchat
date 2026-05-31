@@ -9,7 +9,7 @@ const FormLabel = ({children, className = '', ...props}: PropsWithChildren<Props
 
     return (
         <label htmlFor={props.htmlFor}
-               className={classNames("block font-normal text-base text-TBL_MENU_COLOR leading-7", className)}>
+               className={classNames("block font-normal text-base leading-7 text-slate-700 dark:text-slate-200", className)}>
             {children}
         </label>
     );

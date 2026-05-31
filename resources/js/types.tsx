@@ -1,81 +1,14 @@
 import React from "react";
-
-// Redecalare forwardRef
-declare module "react" {
-    function forwardRef<T, P = {}>(
-        render: (props: P, ref: React.Ref<T>) => React.ReactElement | null
-    ): (props: P & React.RefAttributes<T>) => React.ReactElement | null;
-}
-
+declare module "react" { function forwardRef<T, P = {}>(render: (props: P, ref: React.Ref<T>) => React.ReactElement | null): (props: P & React.RefAttributes<T>) => React.ReactElement | null; }
 type DateTime = string;
-
 export type Nullable<T> = T | null;
-
-export type InertiaSharedProps<T = {}> = T & {
-    jetstream: {
-      canCreateTeams: boolean;
-      canManageTwoFactorAuthentication: boolean;
-      canUpdatePassword: boolean;
-      canUpdateProfileInformation: boolean;
-      flash: any;
-      hasAccountDeletionFeatures: boolean;
-      hasApiFeatures: boolean;
-      hasTeamFeatures: boolean;
-      hasTermsAndPrivacyPolicyFeature: boolean;
-      managesProfilePhotos: boolean;
-    };
-    user: User & {
-      all_teams?: Team[];
-      current_team?: Team;
-    };
-    errorBags: any;
-    errors: any;
-    urlPrev?: string;
-  };
-
-export interface Team {
-    id: number;
-    name: string;
-    personal_team: boolean;
-    created_at: DateTime;
-    updated_at: DateTime;
-}
-
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    current_team_id: Nullable<number>;
-    profile_photo_path: Nullable<string>;
-    profile_photo_url: string;
-    profile_photo_thumb_url: string;
-    two_factor_enabled: boolean;
-    email_verified_at: Nullable<DateTime>;
-    last_message: Message;
-    created_at: DateTime;
-    updated_at: DateTime;
-  }
-
-  export interface Message {
-    id: number,
-    from: number,
-    to: number,
-    message: string,
-    created_at: DateTime,
-    updated_at: DateTime,
-    deleted_at: DateTime | null,
-    seen_by: Array<User> | null
-  }
-  
-  export interface ChatRoom {
-    members: Array<User>,
-    admin: Array<User>,
-    created_by: User,
-    created_at: DateTime,
-    updated_at: DateTime,
-    deleted_at: DateTime
-  }
-
-  export interface window{
-    Echo: any
-  }
+export type InertiaSharedProps<T = {}> = T & { jetstream: any; user: User; errorBags: any; errors: any; flash?: any; urlPrev?: string; };
+export interface Team { id: number; name: string; personal_team: boolean; created_at: DateTime; updated_at: DateTime; }
+export interface User { id: number; name: string; username: string; handle: string; bio: Nullable<string>; phone?: string; email: string; current_team_id: Nullable<number>; profile_photo_path: Nullable<string>; profile_photo_url: string; two_factor_enabled: boolean; email_verified_at: Nullable<DateTime>; phone_verified_at?: Nullable<DateTime>; is_online: boolean; friendship_status?: 'pending' | 'accepted' | null; friendship_direction?: 'incoming' | 'outgoing' | null; last_message: Message | null; created_at: DateTime; updated_at: DateTime; }
+export interface MessageAttachment { id: number; message_id: number; disk: string; path: string; original_name: Nullable<string>; mime_type: Nullable<string>; size: number; media_type: 'image' | 'video' | 'audio' | 'file'; width: Nullable<number>; height: Nullable<number>; expires_at: Nullable<DateTime>; url: string; }
+export interface MessageStatus { id: number; message_id: number; user_id: number; delivered_at: Nullable<DateTime>; read_at: Nullable<DateTime>; }
+export interface Message { id: number; conversation_id?: number; from: number; to: Nullable<number>; message: Nullable<string>; type: string; metadata?: any; attachments: MessageAttachment[]; statuses?: MessageStatus[]; sender?: User; conversation?: Conversation; created_at: DateTime; updated_at: DateTime; deleted_at: DateTime | null; seen_by?: Array<User> | null; }
+export interface Conversation { id: number; hash: string; type: 'direct' | 'group'; name: string; avatar_path: Nullable<string>; participants: User[]; partner: Nullable<User>; last_message: Nullable<Message>; created_at: DateTime; updated_at: DateTime; }
+export interface AppNotification { id: number; user_id: number; actor_id: Nullable<number>; type: 'friend_request_created' | 'friend_request_accepted' | string; title: string; body: Nullable<string>; data: any; read_at: Nullable<DateTime>; actor?: User; created_at: DateTime; updated_at: DateTime; }
+export interface ChatRoom { members: Array<User>; admin: Array<User>; created_by: User; created_at: DateTime; updated_at: DateTime; deleted_at: DateTime; }
+export interface window { Echo: any; }

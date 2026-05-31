@@ -7,8 +7,8 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function home(?string $hash = null)
     {
-        return Inertia::render('Home');
+        return Inertia::render('Home', ['conversationHash' => $hash]);
     }
 }

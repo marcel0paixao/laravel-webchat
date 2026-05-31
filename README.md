@@ -1,66 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Webchats
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A portfolio-grade social messenger built with Laravel 9, Jetstream/Fortify, Inertia, React, MySQL, Redis, Laravel WebSockets and MinIO object storage.
 
-## About Laravel
+## Highlights
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Direct realtime chat between friends only.
+- Online/offline presence, typing indicators and live conversation previews.
+- Smart message scrolling: new messages auto-scroll only when the reader is near the bottom, otherwise a down button appears.
+- Text, image, audio, video and document attachments.
+- Image preview modal instead of opening images in a new tab.
+- Temporary chat media stored in MinIO and pruned after one week.
+- Permanent profile photos remain on the public profile-photo disk until replaced.
+- Immutable `@handle` registration.
+- Email verification through Laravel Fortify.
+- SMS verification through a pluggable provider. Local development logs the code; production can use AWS SNS.
+- Friend, unfriend, block and report flows.
+- Individual profile pages and @handle profile search.
+- Dark mode with persisted user preference.
+- Docker development stack optimized to avoid high-CPU polling watchers.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Quick Start
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+docker compose up -d --build
+```
 
-## Learning Laravel
+Open the app at [http://localhost:8080](http://localhost:8080).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+MinIO console is available at [http://localhost:9001](http://localhost:9001):
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- User: `minioadmin`
+- Password: `minioadmin`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Useful Commands
 
-## Laravel Sponsors
+```bash
+docker compose exec app php artisan test
+docker compose exec app php artisan migrate:fresh --seed
+docker compose exec app php artisan attachments:prune-expired
+docker compose logs -f app web websockets node
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Services
 
-### Premium Partners
+- App: `http://localhost:8080`
+- WebSocket server: `localhost:6001`
+- MySQL: `localhost:3307`
+- Redis: `localhost:6379`
+- MinIO API: `localhost:9000`
+- MinIO console: `localhost:9001`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Verification
 
-## Contributing
+Email verification is enabled with Fortify. SMS verification defaults to the `log` provider, so local codes are written to Laravel logs. To use AWS SNS, set:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```env
+SMS_PROVIDER=sns
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_DEFAULT_REGION=...
+```
 
-## Code of Conduct
+## Performance Notes
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The Docker `node` service runs a one-time asset build and then idles. It intentionally does not use `watch-poll`, because polling file watchers are expensive on macOS and were the main source of the high CPU usage.
 
-## Security Vulnerabilities
+When actively editing frontend assets, run a watcher manually only while needed:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker compose exec node npm run watch
+```
 
-## License
+## Roadmap
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Group conversation creation and moderation UI.
+- WebRTC voice and video calls with TURN/STUN configuration.
+- Feed posts, comments, reactions and privacy controls.
+- Production queue workers and async media processing.
+- CI pipeline and deployment profile.

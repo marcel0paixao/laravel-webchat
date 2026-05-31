@@ -2,14 +2,12 @@
 
 namespace App\Events\Chat;
 
-use Illuminate\Broadcasting\Channel;
+use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Message;
 
 class SendMessage implements ShouldBroadcastNow
 {
@@ -18,22 +16,12 @@ class SendMessage implements ShouldBroadcastNow
     public $message;
     public $userNotification;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
     public function __construct(Message $message, int $userNotification)
     {
         $this->message = $message;
         $this->userNotification = $userNotification;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
         return new PrivateChannel('user.' . $this->userNotification);
@@ -46,8 +34,6 @@ class SendMessage implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        return [
-            'message' => $this->message
-        ];
+        return ['message' => $this->message->loadMissing('attachments', 'statuses', 'sender', 'conversation')->toArray()];
     }
 }

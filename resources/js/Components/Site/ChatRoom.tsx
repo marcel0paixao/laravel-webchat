@@ -1,13 +1,2 @@
 import React, { PropsWithChildren } from "react";
-
-interface Props{
-    
-}
-
-export default function ChatRoom({children, ...props}: PropsWithChildren<Props>){
-    return (
-        <div className="border-l border-r bg-white border-[#ddd] w-full rounded-lg h-[750px] p-4 flex">
-            {children}
-        </div>
-    )
-}
+export default function ChatRoom({children}: PropsWithChildren<{}>){ return <div className="flex h-full min-h-0 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">{children}</div>; }
