@@ -28,7 +28,7 @@ export default function Index({reports}: {reports: {data: Report[]}}) {
                 {reports.data.length === 0 && <p className="py-12 text-center text-sm text-slate-500 dark:text-slate-400">No reports yet.</p>}
                 {reports.data.map(report => <InertiaLink key={report.id} href={route('admin.reports.show', {report: report.id})} className="block rounded-md border border-slate-200 p-4 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
                     <div className="flex items-start gap-3">
-                        <span className={(report.status === 'open' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200') + ' rounded-full px-2.5 py-1 text-xs font-bold uppercase'}>{report.status}</span>
+                        <span className={(report.status === 'open' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/20 dark:text-emerald-100') + ' rounded-full px-2.5 py-1 text-xs font-bold uppercase'}>{report.status}</span>
                         <div className="min-w-0 flex-1">
                             <p className="text-sm font-bold text-slate-900 dark:text-white">{report.target_type === 'group' ? `Group: ${report.conversation?.name ?? report.conversation?.hash}` : `User: ${report.reported?.name ?? 'Unknown'}`}</p>
                             <p className="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">{report.reason}</p>

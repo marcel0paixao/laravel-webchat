@@ -77,9 +77,10 @@ class AdminModerationTest extends TestCase
         Message::create(['conversation_id'=>$group->id,'from'=>$owner->id,'to'=>$owner->id,'message'=>'Evidence','type'=>'text']);
         $report = UserReport::create(['reporter_id'=>$member->id,'reported_id'=>$owner->id,'conversation_id'=>$group->id,'target_type'=>'group','reason'=>'Scam','status'=>'open']);
 
-        $this->actingAs($admin)->get('/admin/reports/'.$report->id)->assertOk();
+        $this->actingAs($admin)->get('/admin/reports/'.$report->id)->assertOk()->assertDontSee('Ban user');
         $this->actingAs($admin)->post('/admin/reports/'.$report->id.'/ban-group', ['reason'=>'Scam confirmed'])->assertRedirect();
         $this->assertNotNull($group->fresh()->banned_at);
+        $this->assertNull($owner->fresh()->banned_at);
         $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_banned']);
 
         Sanctum::actingAs($member);
@@ -90,12 +91,21 @@ class AdminModerationTest extends TestCase
         $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_unbanned']);
     }
 
-    public function test_admin_cannot_block_users_or_edit_own_profile()
+    public function test_admin_cannot_use_social_account_actions()
     {
         $admin = User::factory()->create(['username'=>'no-block-admin','phone'=>'+20000000008','email_verified_at'=>now(),'phone_verified_at'=>now(),'is_admin'=>true]);
         $user = User::factory()->create(['username'=>'cannot-be-blocked-by-admin','phone'=>'+20000000009','email_verified_at'=>now(),'phone_verified_at'=>now()]);
+        $conversation = Conversation::create(['type'=>'group','name'=>'Admin blocked from chat','created_by'=>$user->id]);
+        ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$admin->id,'role'=>'member','joined_at'=>now()]);
+
+        $this->actingAs($admin)->get('/')->assertRedirect('/admin/reports');
+        $this->actingAs($admin)->get('/home')->assertRedirect('/admin/reports');
+        $this->actingAs($admin)->get('/chat/'.$conversation->hash)->assertRedirect('/admin/reports');
         Sanctum::actingAs($admin);
         $this->postJson('/api/blocks/'.$user->id)->assertForbidden();
+        Sanctum::actingAs($user);
+        $this->postJson('/api/blocks/'.$admin->id)->assertNotFound();
         $this->actingAs($admin)->post('/profile', ['name'=>'Changed','bio'=>'Nope'])->assertForbidden();
+        $this->actingAs($admin)->delete('/user', ['password'=>'password'])->assertForbidden();
     }
 }

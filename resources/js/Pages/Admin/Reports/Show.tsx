@@ -22,11 +22,13 @@ export default function Show({report, conversation, messages}: {report: Report; 
     const [details, setDetails] = useState(report.details ?? '');
     const target = report.target_type === 'group' ? (conversation?.name ?? 'Group') : (report.reported?.name ?? 'User');
     const post = (href: string, data: any = {}) => Inertia.post(href, data, {preserveScroll: true});
+    const isUserReport = report.target_type === 'user';
+    const isGroupReport = report.target_type === 'group' && conversation?.type === 'group';
 
     return <AppLayout title={`Report #${report.id}`}>
         <div className="mx-auto grid h-full max-w-7xl gap-4 overflow-hidden lg:grid-cols-[24rem,1fr]">
             <section className="overflow-y-auto rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-                <span className={(report.status === 'open' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-200') + ' rounded-full px-2.5 py-1 text-xs font-bold uppercase'}>{report.status}</span>
+                <span className={(report.status === 'open' ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-200' : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/20 dark:text-emerald-100') + ' rounded-full px-2.5 py-1 text-xs font-bold uppercase'}>{report.status}</span>
                 <h1 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">{target}</h1>
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Reported by {report.reporter.name}</p>
                 <div className="mt-5 space-y-4">
@@ -40,10 +42,10 @@ export default function Show({report, conversation, messages}: {report: Report; 
                     </div>
                 </div>
                 <div className="mt-5 grid gap-2">
-                    {report.reported && !report.reported.banned_at && <button type="button" onClick={() => post(route('admin.reports.ban-user', {report: report.id}), {reason, details})} className="rounded-md bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700">Ban user</button>}
-                    {report.reported?.banned_at && <button type="button" onClick={() => post(route('admin.reports.unban-user', {report: report.id}))} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700">Unban user</button>}
-                    {conversation?.type === 'group' && !conversation.banned_at && <button type="button" onClick={() => post(route('admin.reports.ban-group', {report: report.id}), {reason})} className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Ban group</button>}
-                    {conversation?.type === 'group' && conversation.banned_at && <button type="button" onClick={() => post(route('admin.reports.unban-group', {report: report.id}))} className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300">Unban group</button>}
+                    {isUserReport && report.reported && !report.reported.banned_at && <button type="button" onClick={() => post(route('admin.reports.ban-user', {report: report.id}), {reason, details})} className="rounded-md bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700">Ban user</button>}
+                    {isUserReport && report.reported?.banned_at && <button type="button" onClick={() => post(route('admin.reports.unban-user', {report: report.id}))} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700">Unban user</button>}
+                    {isGroupReport && !conversation?.banned_at && <button type="button" onClick={() => post(route('admin.reports.ban-group', {report: report.id}), {reason})} className="rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Ban group</button>}
+                    {isGroupReport && conversation?.banned_at && <button type="button" onClick={() => post(route('admin.reports.unban-group', {report: report.id}))} className="rounded-md border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-500/40 dark:bg-emerald-500/10 dark:text-emerald-300">Unban group</button>}
                     <button type="button" onClick={() => post(route('admin.reports.dismiss', {report: report.id}))} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">Dismiss report</button>
                 </div>
                 {report.resolution && <p className="mt-4 rounded-md bg-slate-100 p-3 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">Resolution: {report.resolution}</p>}

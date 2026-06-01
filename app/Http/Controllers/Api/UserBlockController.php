@@ -21,7 +21,8 @@ class UserBlockController extends Controller
     public function store(int $id)
     {
         abort_if((bool) Auth::user()?->is_admin, 403);
-        abort_if((int)Auth::id() === $id || !User::whereKey($id)->exists(), 404);
+        $target = User::findOrFail($id);
+        abort_if((int)Auth::id() === $id || (bool) $target->is_admin, 404);
         Friendship::between(Auth::id(), $id)->delete();
         UserBlock::firstOrCreate(['blocker_id' => Auth::id(), 'blocked_id' => $id]);
         return response()->json([

@@ -13,7 +13,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     }
 });
 
-Route::get('/', fn() => auth()->check() ? redirect()->route('Home') : redirect()->route('login'));
+Route::get('/', fn() => auth()->check() ? redirect()->route(auth()->user()->is_admin ? 'admin.reports.index' : 'Home') : redirect()->route('login'));
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'not.banned'])->group(function () {
     Route::get('/banned', BannedController::class)->name('banned');

@@ -14,6 +14,8 @@ class DeleteUser implements DeletesUsers
      */
     public function delete($user)
     {
+        abort_if((bool) $user->is_admin, 403);
+
         $user->deleteProfilePhoto();
         $user->tokens->each->delete();
         $user->delete();
