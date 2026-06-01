@@ -6,12 +6,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import route from 'ziggy-js';
 
 const historyKey = 'webchats.profileSearchHistory';
+type RecentProfile = Pick<User, 'id' | 'name' | 'username' | 'handle' | 'profile_photo_path' | 'profile_photo_url'>;
 
 export default function Search() {
     const [handle,setHandle]=useState('');
     const [users,setUsers]=useState<User[]>([]);
-    const [history,setHistory]=useState<string[]>(() => {
-        try { return JSON.parse(localStorage.getItem(historyKey) || '[]'); } catch { return []; }
+    const [history,setHistory]=useState<RecentProfile[]>(() => {
+        try { return JSON.parse(localStorage.getItem(historyKey) || '[]').filter((item: any) => item && typeof item === 'object' && item.id); } catch { return []; }
     });
     const normalized = useMemo(() => handle.trim().replace(/^@/, '').toLowerCase(), [handle]);
 
@@ -21,9 +22,9 @@ export default function Search() {
         return()=>window.clearTimeout(id);
     },[normalized]);
 
-    const remember = (term: string) => {
-        if (!term) return;
-        const next = [term, ...history.filter(item => item !== term)].slice(0, 8);
+    const remember = (user: User) => {
+        const item = {id:user.id,name:user.name,username:user.username,handle:user.handle,profile_photo_path:user.profile_photo_path,profile_photo_url:user.profile_photo_url};
+        const next = [item, ...history.filter(existing => existing.id !== user.id)].slice(0, 8);
         setHistory(next);
         localStorage.setItem(historyKey, JSON.stringify(next));
     };
@@ -38,14 +39,17 @@ export default function Search() {
             <input className="mt-4 h-11 w-full rounded-md border-slate-300 bg-white px-3 text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500" value={handle} onChange={e=>setHandle(e.currentTarget.value)} placeholder="Search by @handle" autoFocus />
             {!normalized && history.length > 0 && <div className="mt-4">
                 <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Recent searches</p>
-                <div className="flex flex-wrap gap-2">{history.map(item => <button key={item} onClick={()=>setHandle(`@${item}`)} className="rounded-full border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">@{item}</button>)}</div>
+                <div className="space-y-2">{history.map(user => <InertiaLink key={user.id} href={route('profiles.show',{username:user.username})} className="flex items-center gap-3 rounded-md border border-slate-200 p-3 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800">
+                    {user.profile_photo_path ? <img src={user.profile_photo_url} className="h-11 w-11 rounded-full object-cover" /> : <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-xs font-bold text-white">{initials(user.name)}</span>}
+                    <span className="min-w-0"><span className="block truncate font-semibold text-slate-900 dark:text-white">{user.name}</span><span className="text-sm text-slate-500">{user.handle}</span></span>
+                </InertiaLink>)}</div>
             </div>}
             {!normalized && history.length === 0 && <p className="mt-6 text-sm text-slate-400">Type a @handle to search profiles.</p>}
             {normalized && <ul className="mt-4 space-y-2">{users.map(user=><li key={user.id} className="flex items-center gap-3 rounded-md border border-slate-200 p-3 dark:border-slate-800">
                 {user.profile_photo_path ? <img src={user.profile_photo_url} className="h-11 w-11 rounded-full object-cover" /> : <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-xs font-bold text-white">{initials(user.name)}</span>}
-                <div className="min-w-0"><InertiaLink onClick={()=>remember(normalized)} href={route('profiles.show',{username:user.username})} className="font-semibold text-slate-900 dark:text-white">{user.name}</InertiaLink><p className="text-sm text-slate-500">{user.handle}</p></div>
+                <div className="min-w-0"><InertiaLink onClick={()=>remember(user)} href={route('profiles.show',{username:user.username})} className="font-semibold text-slate-900 dark:text-white">{user.name}</InertiaLink><p className="text-sm text-slate-500">{user.handle}</p></div>
                 {user.friendship_status==='accepted' && <span className="ml-auto text-sm text-emerald-500">Friends</span>}
-                {user.friendship_status==='pending' && user.friendship_direction==='incoming' && <InertiaLink onClick={()=>remember(normalized)} href={route('profiles.show',{username:user.username})} className="ml-auto rounded-md border border-purple-300 px-3 py-2 text-sm font-semibold text-purple-700 dark:border-purple-500/40 dark:text-purple-200">Respond</InertiaLink>}
+                {user.friendship_status==='pending' && user.friendship_direction==='incoming' && <InertiaLink onClick={()=>remember(user)} href={route('profiles.show',{username:user.username})} className="ml-auto rounded-md border border-purple-300 px-3 py-2 text-sm font-semibold text-purple-700 dark:border-purple-500/40 dark:text-purple-200">Respond</InertiaLink>}
                 {user.friendship_status==='pending' && user.friendship_direction==='outgoing' && <button onClick={()=>cancel(user.id)} className="ml-auto rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel request</button>}
                 {user.is_blocked_by_me && <button onClick={()=>unblock(user.id)} className="ml-auto rounded-md bg-TBL_SECONDARY px-3 py-2 text-sm font-semibold text-white">Unblock</button>}
                 {!user.friendship_status && !user.is_blocked_by_me && !user.is_blocked_by_them && <button onClick={()=>add(user.id)} className="ml-auto rounded-md bg-TBL_SECONDARY px-3 py-2 text-sm font-semibold text-white">Add friend</button>}

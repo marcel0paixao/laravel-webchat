@@ -7,6 +7,9 @@ function label(a: MessageAttachment) { return a.media_type === 'image' ? 'Image 
 function seen(message: Message) { return message.statuses?.some(status => status.read_at) ? 'Seen' : 'Sent'; }
 
 export default function MessageBox({byOwn,date,message,showSender,onImageClick}: Props) {
+    if (message.type === 'system') {
+        return <li className="flex justify-center"><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-300">{message.message}</span></li>;
+    }
     return <li className={(byOwn ? 'justify-end' : 'justify-start') + ' message flex w-full'}>
         <div className={(byOwn ? 'message-own border-TBL_SECONDARY bg-TBL_SECONDARY text-white' : 'message-other border-slate-200 bg-slate-100 text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white') + ' relative max-w-[85%] rounded-2xl border px-3 py-2 text-sm shadow-sm'}>
             {showSender && message.sender && !byOwn && <p className="mb-1 text-[11px] font-bold text-purple-300">{message.sender.name}</p>}

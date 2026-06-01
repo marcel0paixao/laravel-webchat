@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Chat\MessagesRead;
 use App\Events\Chat\SendMessage;
 use App\Http\Controllers\Controller;
 use App\Models\{Conversation, ConversationParticipant, Friendship, Message, MessageStatus, User, UserBlock};
@@ -20,7 +21,7 @@ class MessageController extends Controller
         $currentUserId = Auth::id();
 
         if (!empty($validated['conversation_hash'])) {
-            $conversation = $this->conversationForUser($validated['conversation_hash']);
+            $conversation = $this->conversationForUser($validated['conversation_hash'], true);
         } else {
             $otherUserId = (int) $validated['user_id'];
             if (!Friendship::areFriends($currentUserId, $otherUserId)) {
@@ -41,10 +42,21 @@ class MessageController extends Controller
 
         if (empty($validated['before_id'])) {
             $this->markIncomingAsRead($conversation, $currentUserId);
+            $this->broadcastReadReceipt($conversation);
             $messages->each(fn(Message $message) => $message->load('statuses'));
         }
 
         return response()->json(['messages' => $messages, 'has_more' => $messages->count() === 30]);
+    }
+
+    public function read(Request $request)
+    {
+        $validated = $request->validate(['conversation_hash' => ['required', 'string', 'exists:conversations,hash']]);
+        $conversation = $this->conversationForUser($validated['conversation_hash'], true);
+        $this->markIncomingAsRead($conversation, Auth::id());
+        $this->broadcastReadReceipt($conversation);
+
+        return response()->noContent();
     }
 
     public function store(Request $request)
@@ -137,10 +149,15 @@ class MessageController extends Controller
         return $conversation;
     }
 
-    private function conversationForUser(string $hash): Conversation
+    private function conversationForUser(string $hash, bool $allowFormerGroupMember = false): Conversation
     {
         return Conversation::where('hash', $hash)
-            ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id())->whereNull('left_at'))
+            ->whereHas('participants', function ($q) use ($allowFormerGroupMember) {
+                $q->where('user_id', Auth::id());
+                if (!$allowFormerGroupMember) {
+                    $q->whereNull('left_at');
+                }
+            })
             ->firstOrFail();
     }
 
@@ -202,5 +219,11 @@ class MessageController extends Controller
     {
         return UserBlock::where(fn($q) => $q->where('blocker_id', $a)->where('blocked_id', $b))
             ->orWhere(fn($q) => $q->where('blocker_id', $b)->where('blocked_id', $a))->exists();
+    }
+
+    private function broadcastReadReceipt(Conversation $conversation): void
+    {
+        $conversation->participants()->where('user_id', '!=', Auth::id())->whereNull('left_at')->pluck('user_id')
+            ->each(fn($userId) => Event::dispatch(new MessagesRead($conversation->hash, Auth::id(), (int) $userId)));
     }
 }

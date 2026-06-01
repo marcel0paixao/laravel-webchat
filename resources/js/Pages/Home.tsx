@@ -18,6 +18,7 @@ export default function Home({conversationHash = null}: Props) {
     const [friends, setFriends] = useState<User[]>([]);
     const [activeConversation, setActiveConversation] = useState<Conversation | null>(null);
     const [incomingMessage, setIncomingMessage] = useState<Message | null>(null);
+    const [readReceipt, setReadReceipt] = useState<{conversation_hash: string; reader_id: number; read_at: string} | null>(null);
     const [typingConversationHash, setTypingConversationHash] = useState<string | null>(null);
 
     const loadConversations = useCallback(() => axios.get(route('conversations.index')).then(r => {
@@ -57,12 +58,13 @@ export default function Home({conversationHash = null}: Props) {
         if (!Object(window).Echo) return;
         const channel = Object(window).Echo.private(`user.${user.id}`);
         channel.listen('.SendMessage', (e: {message: Message}) => { updatePreview(e.message); setIncomingMessage(e.message); });
+        channel.listen('.MessagesRead', (e: {conversation_hash: string; reader_id: number; read_at: string}) => setReadReceipt(e));
         channel.listen('.UserTyping', (e: {from: number; conversation_hash?: string}) => {
             const hash = e.conversation_hash ?? null;
             setTypingConversationHash(hash);
             window.setTimeout(() => setTypingConversationHash(current => current === hash ? null : current), 2200);
         });
-        return () => { channel.stopListening('.SendMessage'); channel.stopListening('.UserTyping'); };
+        return () => { channel.stopListening('.SendMessage'); channel.stopListening('.MessagesRead'); channel.stopListening('.UserTyping'); };
     }, [updatePreview, user.id]);
 
     const createGroup = (name: string, userIds: number[]) => axios.post(route('conversations.groups.store'), {name, user_ids: userIds}).then(r => {
@@ -75,7 +77,7 @@ export default function Home({conversationHash = null}: Props) {
             <UsersList conversations={conversations} active={activeConversation} friends={friends} onSelect={selectConversation} onCreateGroup={createGroup} typingConversationHash={typingConversationHash} />
         </div>
         <div className={`min-h-0 flex-1 ${activeConversation ? 'block' : 'hidden md:block'}`}>
-            {activeConversation ? <Chat conversation={activeConversation} onBack={() => { setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} incomingMessage={incomingMessage} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationBlocked={() => { const hash = activeConversation.hash; setConversations(current => current.filter(c => c.hash !== hash)); setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
+            {activeConversation ? <Chat conversation={activeConversation} onBack={() => { setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} incomingMessage={incomingMessage} readReceipt={readReceipt} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationBlocked={() => { const hash = activeConversation.hash; setConversations(current => current.filter(c => c.hash !== hash)); setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
         </div>
     </ChatRoom></OuterCenteredContainer></AppLayout>;
 }

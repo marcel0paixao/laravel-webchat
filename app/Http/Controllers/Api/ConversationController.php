@@ -1,10 +1,13 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Events\Chat\SendMessage;
+use App\Events\UserNotificationSent;
 use App\Http\Controllers\Controller;
-use App\Models\{Conversation, ConversationParticipant, Friendship, Message, User, UserBlock};
+use App\Models\{AppNotification, Conversation, ConversationParticipant, Friendship, Message, User, UserBlock, UserReport};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 
 class ConversationController extends Controller
 {
@@ -23,7 +26,7 @@ class ConversationController extends Controller
 
     public function show(string $hash)
     {
-        $conversation = $this->conversationForUser($hash)->load('users');
+        $conversation = $this->conversationForUser($hash, true)->load('users');
         return response()->json(['conversation' => $this->serialize($conversation)]);
     }
 
@@ -57,6 +60,11 @@ class ConversationController extends Controller
                 ['role' => 'member', 'joined_at' => now()]
             );
         }
+        $message = $this->systemMessage($conversation, Auth::user()->name . ' created the group.');
+        $this->broadcastConversationMessage($conversation, $message, collect([$conversation->created_by])->merge($memberIds)->values());
+        foreach ($memberIds as $memberId) {
+            $this->notify($memberId, 'group_added', Auth::user()->name . ' added you to ' . $conversation->name . '.', ['conversation_hash' => $conversation->hash]);
+        }
 
         return response()->json(['conversation' => $this->serialize($conversation->load('users'))], 201);
     }
@@ -82,13 +90,27 @@ class ConversationController extends Controller
         return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
 
+    public function demoteMember(string $hash, User $user)
+    {
+        $conversation = $this->groupForUser($hash);
+        abort_unless($this->currentRole($conversation) === 'owner', 403);
+        $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
+        abort_unless($participant->role === 'admin', 422);
+        $participant->update(['role' => 'member']);
+
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
+    }
+
     public function removeMember(string $hash, User $user)
     {
         $conversation = $this->groupForUser($hash);
         abort_unless($this->currentRole($conversation) !== 'member', 403);
         $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
         abort_if($participant->role === 'owner', 422);
+        $recipients = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
         $participant->update(['left_at' => now()]);
+        $message = $this->systemMessage($conversation, $user->name . ' was removed from the group.');
+        $this->broadcastConversationMessage($conversation, $message, $recipients);
 
         return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
@@ -110,10 +132,29 @@ class ConversationController extends Controller
         return response()->noContent();
     }
 
-    private function conversationForUser(string $hash): Conversation
+    public function reportGroup(Request $request, string $hash)
+    {
+        $conversation = $this->conversationForUser($hash, true);
+        abort_unless($conversation->type === 'group', 404);
+        $validated = $request->validate(['reason' => ['nullable', 'string', 'max:120'], 'details' => ['nullable', 'string', 'max:2000']]);
+        UserReport::create([
+            'reporter_id' => Auth::id(),
+            'reported_id' => $conversation->created_by ?: Auth::id(),
+            'reason' => $validated['reason'] ?? 'group_report',
+            'details' => trim(($validated['details'] ?? '') . "\n\nGroup: " . $conversation->hash),
+        ]);
+        return response()->json(['message' => 'Report received.'], 201);
+    }
+
+    private function conversationForUser(string $hash, bool $allowFormerGroupMember = false): Conversation
     {
         return Conversation::where('hash', $hash)
-            ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id())->whereNull('left_at'))
+            ->whereHas('participants', function ($q) use ($allowFormerGroupMember) {
+                $q->where('user_id', Auth::id());
+                if (!$allowFormerGroupMember) {
+                    $q->whereNull('left_at');
+                }
+            })
             ->firstOrFail();
     }
 
@@ -128,6 +169,40 @@ class ConversationController extends Controller
     private function currentRole(Conversation $conversation): string
     {
         return (string) ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', Auth::id())->whereNull('left_at')->value('role');
+    }
+
+    private function currentLeftAt(Conversation $conversation)
+    {
+        return ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', Auth::id())->value('left_at');
+    }
+
+    private function systemMessage(Conversation $conversation, string $text): Message
+    {
+        return Message::create([
+            'conversation_id' => $conversation->id,
+            'from' => Auth::id(),
+            'to' => Auth::id(),
+            'message' => $text,
+            'type' => 'system',
+        ])->load('attachments', 'statuses', 'sender', 'conversation');
+    }
+
+    private function broadcastConversationMessage(Conversation $conversation, Message $message, $recipientIds): void
+    {
+        collect($recipientIds)->unique()->each(fn($userId) => Event::dispatch(new SendMessage($message, (int) $userId)));
+    }
+
+    private function notify(int $userId, string $type, string $body, array $data): void
+    {
+        $notification = AppNotification::create([
+            'user_id' => $userId,
+            'actor_id' => Auth::id(),
+            'type' => $type,
+            'title' => 'Group update',
+            'body' => $body,
+            'data' => $data,
+        ]);
+        event(new UserNotificationSent($notification));
     }
 
     public function serialize(Conversation $conversation): array
@@ -157,6 +232,7 @@ class ConversationController extends Controller
             'participants' => $users->values(),
             'partner' => $partner,
             'current_user_role' => $conversation->type === 'group' ? $this->currentRole($conversation) : null,
+            'current_user_left_at' => $conversation->type === 'group' ? $this->currentLeftAt($conversation) : null,
             'last_message' => $last,
             'created_at' => $conversation->created_at,
             'updated_at' => $conversation->updated_at,

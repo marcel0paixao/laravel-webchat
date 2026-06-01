@@ -168,6 +168,13 @@ class SocialMessagingTest extends TestCase
         $this->patchJson('/api/conversations/groups/'.$conversation->hash, ['name'=>'New name'])->assertOk()->assertJsonPath('conversation.name', 'New name');
         $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$member->id.'/promote')->assertOk();
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'admin']);
+        $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$member->id.'/demote')->assertOk();
+        $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'member']);
+        $this->deleteJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$other->id)->assertOk();
+        Sanctum::actingAs($other);
+        $this->getJson('/api/messages/load?conversation_hash='.$conversation->hash)->assertOk();
+        $this->postJson('/api/messages/store', ['conversation_hash'=>$conversation->hash, 'message'=>'Nope'])->assertNotFound();
+        Sanctum::actingAs($owner);
         $this->deleteJson('/api/conversations/groups/'.$conversation->hash.'/leave')->assertNoContent();
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$owner->id]);
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'role'=>'owner','left_at'=>null]);
