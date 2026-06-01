@@ -37,12 +37,19 @@ export default function Header() {
         axios.get(route('notifications.index')).then(r => { setNotifications(r.data.notifications); setUnread(r.data.unread_count); });
     }, []);
     const initials = (name?: string | null) => (name ?? '?').split(' ').filter(Boolean).slice(0,2).map(part => part[0]).join('').toUpperCase();
-    const profileUrl = (notification: AppNotification) => notification.actor?.username ? route('profiles.show', {username: notification.actor.username}) : route('profiles.search');
+    const isModeration = (notification: AppNotification) => ['account_banned', 'account_unbanned', 'group_banned', 'group_unbanned'].includes(notification.type);
+    const notificationUrl = (notification: AppNotification) => {
+        if (notification.type === 'account_banned') return route('banned');
+        if ((notification.type === 'group_banned' || notification.type === 'group_unbanned') && notification.data?.conversation_hash) return route('chat.show', {hash: notification.data.conversation_hash});
+        if (isModeration(notification)) return route('Home');
+        if (notification.actor?.username && !notification.actor?.is_admin) return route('profiles.show', {username: notification.actor.username});
+        return route('profiles.search');
+    };
     const notificationText = (notification: AppNotification) => notification.body ?? notification.title;
     const isFriendRequest = (notification: AppNotification) => notification.type === 'friend_request_created' && notification.actor_id;
     const actorAvatar = (notification: AppNotification) => notification.actor?.profile_photo_path
         ? <img src={notification.actor.profile_photo_url} className="h-10 w-10 rounded-full object-cover" />
-        : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-xs font-bold text-white">{initials(notification.actor?.name)}</span>;
+        : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-xs font-bold text-white">{isModeration(notification) ? 'MOD' : initials(notification.actor?.name)}</span>;
     const removeNotification = (notification: AppNotification) => {
         if (!notification.read_at) setUnread(current => Math.max(0, current - 1));
         setNotifications(current => current.filter(item => item.id !== notification.id));
@@ -88,6 +95,9 @@ export default function Header() {
             if (e.notification.type === 'account_banned') {
                 window.setTimeout(() => Inertia.visit(route('banned')), 800);
             }
+            if ((e.notification.type === 'group_banned' || e.notification.type === 'group_unbanned') && e.notification.data?.conversation_hash) {
+                window.dispatchEvent(new CustomEvent('webchats:conversation-moderated', { detail: { hash: e.notification.data.conversation_hash } }));
+            }
             if (e.notification.actor_id && e.notification.type === 'friend_request_accepted') {
                 emitFriendshipUpdate(e.notification.actor_id, 'accepted', null);
             }
@@ -122,8 +132,8 @@ export default function Header() {
                 {notifications.length === 0 && <p className="px-2 py-8 text-center text-sm text-slate-500 dark:text-slate-400">No notifications yet.</p>}
                 {notifications.map(notification => <div key={notification.id} className={(notification.read_at ? '' : 'bg-purple-50/70 dark:bg-purple-500/10 ') + 'rounded-md px-2 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-700'}>
                     <div className="flex gap-3">
-                        <InertiaLink href={profileUrl(notification)} onClick={() => markRead(notification)} className="shrink-0">{actorAvatar(notification)}</InertiaLink>
-                        <InertiaLink href={profileUrl(notification)} onClick={() => markRead(notification)} className="min-w-0 flex-1">
+                        <InertiaLink href={notificationUrl(notification)} onClick={() => markRead(notification)} className="shrink-0">{actorAvatar(notification)}</InertiaLink>
+                        <InertiaLink href={notificationUrl(notification)} onClick={() => markRead(notification)} className="min-w-0 flex-1">
                             <span className="block text-sm font-semibold text-slate-900 dark:text-white">{notification.title}</span>
                             <span className="block text-sm leading-5 text-slate-600 dark:text-slate-300">{notificationText(notification)}</span>
                         </InertiaLink>
@@ -143,8 +153,8 @@ export default function Header() {
         </div>}
         {toast && <div className="fixed bottom-5 left-5 z-50 w-[min(22rem,calc(100vw-2.5rem))] rounded-lg border border-slate-200 bg-white p-3 shadow-2xl transition hover:-translate-y-0.5 dark:border-slate-700 dark:bg-slate-800">
             <div className="flex gap-3">
-                <InertiaLink href={profileUrl(toast)} onClick={() => markRead(toast)} className="shrink-0">{actorAvatar(toast)}</InertiaLink>
-                <InertiaLink href={profileUrl(toast)} onClick={() => markRead(toast)} className="min-w-0 flex-1">
+                <InertiaLink href={notificationUrl(toast)} onClick={() => markRead(toast)} className="shrink-0">{actorAvatar(toast)}</InertiaLink>
+                <InertiaLink href={notificationUrl(toast)} onClick={() => markRead(toast)} className="min-w-0 flex-1">
                     <span className="block text-sm font-bold text-slate-900 dark:text-white">{toast.title}</span>
                     <span className="block text-sm leading-5 text-slate-600 dark:text-slate-300">{notificationText(toast)}</span>
                 </InertiaLink>

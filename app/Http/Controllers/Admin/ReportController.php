@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\Chat\SendMessage;
 use App\Events\UserNotificationSent;
 use App\Http\Controllers\Controller;
 use App\Models\{AppNotification, Conversation, Message, UserReport};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth, Event};
 use Inertia\Inertia;
 
 class ReportController extends Controller
@@ -85,8 +86,10 @@ class ReportController extends Controller
             'ban_reason' => $validated['reason'] ?? $report->reason ?? 'Moderation decision',
         ])->save();
         $this->resolve($report, 'group_banned');
-        $conversation->participants()->whereNull('left_at')->pluck('user_id')
-            ->each(fn($userId) => $this->notify((int) $userId, 'group_banned', $conversation->name . ' was banned by moderation.', ['conversation_hash' => $conversation->hash, 'report_id' => $report->id]));
+        $recipientIds = $conversation->participants()->whereNull('left_at')->pluck('user_id');
+        $message = $this->systemMessage($conversation, $conversation->name . ' was banned by moderation.');
+        $this->broadcastConversationMessage($message, $recipientIds);
+        $recipientIds->each(fn($userId) => $this->notify((int) $userId, 'group_banned', $conversation->name . ' was banned by moderation.', ['conversation_hash' => $conversation->hash, 'report_id' => $report->id]));
 
         return back();
     }
@@ -97,8 +100,10 @@ class ReportController extends Controller
         abort_unless($conversation && $conversation->type === 'group', 404);
         $conversation->forceFill(['banned_at' => null, 'ban_reason' => null])->save();
         $this->resolve($report, 'group_unbanned');
-        $conversation->participants()->whereNull('left_at')->pluck('user_id')
-            ->each(fn($userId) => $this->notify((int) $userId, 'group_unbanned', $conversation->name . ' was unbanned by moderation.', ['conversation_hash' => $conversation->hash, 'report_id' => $report->id]));
+        $recipientIds = $conversation->participants()->whereNull('left_at')->pluck('user_id');
+        $message = $this->systemMessage($conversation, $conversation->name . ' was unbanned by moderation.');
+        $this->broadcastConversationMessage($message, $recipientIds);
+        $recipientIds->each(fn($userId) => $this->notify((int) $userId, 'group_unbanned', $conversation->name . ' was unbanned by moderation.', ['conversation_hash' => $conversation->hash, 'report_id' => $report->id]));
 
         return back();
     }
@@ -132,13 +137,29 @@ class ReportController extends Controller
     {
         $notification = AppNotification::create([
             'user_id' => $userId,
-            'actor_id' => Auth::id(),
+            'actor_id' => null,
             'type' => $type,
             'title' => 'Moderation update',
             'body' => $body,
             'data' => $data,
         ]);
         event(new UserNotificationSent($notification));
+    }
+
+    private function systemMessage(Conversation $conversation, string $text): Message
+    {
+        return Message::create([
+            'conversation_id' => $conversation->id,
+            'from' => Auth::id(),
+            'to' => Auth::id(),
+            'message' => $text,
+            'type' => 'system',
+        ])->load('attachments', 'statuses', 'sender', 'conversation');
+    }
+
+    private function broadcastConversationMessage(Message $message, $recipientIds): void
+    {
+        collect($recipientIds)->unique()->each(fn($userId) => Event::dispatch(new SendMessage($message, (int) $userId)));
     }
 
     private function serialize(UserReport $report): array

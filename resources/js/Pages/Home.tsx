@@ -32,7 +32,6 @@ export default function Home({conversationHash = null}: Props) {
 
     useEffect(() => { loadConversations(); loadFriends(); const id = window.setInterval(loadConversations, 30000); return () => window.clearInterval(id); }, [loadConversations, loadFriends]);
     useEffect(() => { if (!conversationHash) return; axios.get(route('conversations.show', {hash: conversationHash})).then(r => setActiveConversation(r.data.conversation)); }, [conversationHash]);
-
     const selectConversation = (conversation: Conversation) => {
         axios.get(route('conversations.show', {hash: conversation.hash})).then(r => setActiveConversation(r.data.conversation));
         Inertia.visit(route('chat.show', {hash: conversation.hash}), { preserveState: true, preserveScroll: true });
@@ -61,6 +60,15 @@ export default function Home({conversationHash = null}: Props) {
         setConversations(current => current.map(item => item.hash === conversation.hash ? conversation : item));
         setActiveConversation(current => current && current.hash === conversation.hash ? conversation : current);
     }, []);
+    useEffect(() => {
+        const listener = (event: Event) => {
+            const hash = (event as CustomEvent).detail?.hash;
+            if (!hash) return;
+            axios.get(route('conversations.show', {hash})).then(r => updateConversation(r.data.conversation)).catch(() => {});
+        };
+        window.addEventListener('webchats:conversation-moderated', listener);
+        return () => window.removeEventListener('webchats:conversation-moderated', listener);
+    }, [updateConversation]);
 
     useEffect(() => {
         if (!Object(window).Echo) return;

@@ -54,7 +54,7 @@ class AdminModerationTest extends TestCase
         $this->actingAs($admin)->post('/admin/reports/'.$report->id.'/ban-user', ['reason'=>'Spam confirmed','details'=>'Many reports.'])
             ->assertRedirect();
         $this->assertNotNull($reported->fresh()->banned_at);
-        $this->assertDatabaseHas('app_notifications', ['user_id'=>$reported->id,'type'=>'account_banned']);
+        $this->assertDatabaseHas('app_notifications', ['user_id'=>$reported->id,'type'=>'account_banned','actor_id'=>null]);
 
         $reported = $reported->fresh();
         $this->actingAs($reported)->get('/home')->assertRedirect('/banned');
@@ -63,7 +63,7 @@ class AdminModerationTest extends TestCase
 
         $this->actingAs($admin)->post('/admin/reports/'.$report->id.'/unban-user')->assertRedirect();
         $this->assertNull($reported->fresh()->banned_at);
-        $this->assertDatabaseHas('app_notifications', ['user_id'=>$reported->id,'type'=>'account_unbanned']);
+        $this->assertDatabaseHas('app_notifications', ['user_id'=>$reported->id,'type'=>'account_unbanned','actor_id'=>null]);
     }
 
     public function test_admin_can_ban_group_and_messages_are_blocked()
@@ -81,14 +81,16 @@ class AdminModerationTest extends TestCase
         $this->actingAs($admin)->post('/admin/reports/'.$report->id.'/ban-group', ['reason'=>'Scam confirmed'])->assertRedirect();
         $this->assertNotNull($group->fresh()->banned_at);
         $this->assertNull($owner->fresh()->banned_at);
-        $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_banned']);
+        $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_banned','actor_id'=>null]);
+        $this->assertDatabaseHas('messages', ['conversation_id'=>$group->id,'type'=>'system','message'=>'Reported group was banned by moderation.']);
 
         Sanctum::actingAs($member);
         $this->postJson('/api/messages/store', ['conversation_hash'=>$group->hash,'message'=>'hello'])->assertForbidden();
 
         $this->actingAs($admin)->post('/admin/reports/'.$report->id.'/unban-group')->assertRedirect();
         $this->assertNull($group->fresh()->banned_at);
-        $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_unbanned']);
+        $this->assertDatabaseHas('app_notifications', ['user_id'=>$owner->id,'type'=>'group_unbanned','actor_id'=>null]);
+        $this->assertDatabaseHas('messages', ['conversation_id'=>$group->id,'type'=>'system','message'=>'Reported group was unbanned by moderation.']);
     }
 
     public function test_admin_cannot_use_social_account_actions()
@@ -101,7 +103,9 @@ class AdminModerationTest extends TestCase
         $this->actingAs($admin)->get('/')->assertRedirect('/admin/reports');
         $this->actingAs($admin)->get('/home')->assertRedirect('/admin/reports');
         $this->actingAs($admin)->get('/chat/'.$conversation->hash)->assertRedirect('/admin/reports');
+        $this->actingAs($user)->get('/@'.$admin->username)->assertNotFound();
         Sanctum::actingAs($admin);
+        $this->getJson('/api/profiles/search?handle=@no-block-admin')->assertOk()->assertJsonPath('users', []);
         $this->postJson('/api/blocks/'.$user->id)->assertForbidden();
         Sanctum::actingAs($user);
         $this->postJson('/api/blocks/'.$admin->id)->assertNotFound();
