@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = [
         'name', 'username', 'email', 'phone', 'bio', 'password', 'last_seen_at', 'phone_verified_at',
+        'is_admin', 'banned_at', 'ban_reason', 'ban_details',
     ];
 
     protected $hidden = [
@@ -30,6 +31,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'phone_verified_at' => 'datetime',
         'last_seen_at' => 'datetime',
+        'is_admin' => 'boolean',
+        'banned_at' => 'datetime',
     ];
 
     protected $appends = [

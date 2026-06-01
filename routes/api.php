@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', fn(Request $request) => $request->user());
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'not.banned'])->group(function () {
     Route::get('/users', [\App\Http\Controllers\Api\UserController::class, 'all'])->name('load.users');
     Route::get('/conversations', [\App\Http\Controllers\Api\ConversationController::class, 'index'])->name('conversations.index');
     Route::get('/conversations/{hash}', [\App\Http\Controllers\Api\ConversationController::class, 'show'])->name('conversations.show');

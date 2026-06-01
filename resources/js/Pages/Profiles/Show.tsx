@@ -1,4 +1,6 @@
 import AppLayout from '@/Layouts/AppLayout';
+import ReportDialog from '@/Components/Site/ReportDialog';
+import useTypedPage from '@/Hooks/useTypedPage';
 import { Conversation, User } from '@/types';
 import { Inertia } from '@inertiajs/inertia';
 import { useForm } from '@inertiajs/inertia-react';
@@ -7,9 +9,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import route from 'ziggy-js';
 
 export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
+    const { user: currentUser } = useTypedPage().props;
     const [user,setUser]=useState(profile);
     const [menu,setMenu]=useState(false);
     const [requestMenu,setRequestMenu]=useState(false);
+    const [reportOpen,setReportOpen]=useState(false);
     const [photoPreview, setPhotoPreview] = useState(profile.profile_photo_url);
     const fileRef = useRef<HTMLInputElement | null>(null);
     const actionsRef = useRef<HTMLDivElement | null>(null);
@@ -25,7 +29,7 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
     const unfriend=()=>axios.delete(route('friends.destroy',{id:user.id})).then(()=>setUser(current => ({...current, friendship_status:null, friendship_direction:null})));
     const block=()=>axios.post(route('block.users',{id:user.id})).then(r=>{ setBlockedByMe(true); setMenu(false); setUser(current => ({...current, friendship_status: r.data.friendship_status ?? null, friendship_direction: r.data.friendship_direction ?? null, is_blocked_by_me: true})); });
     const unblock=()=>axios.delete(route('unblock.users',{id:user.id})).then(r=>{ setBlockedByMe(false); setMenu(false); setUser(current => ({...current, friendship_status: r.data.friendship_status ?? null, friendship_direction: r.data.friendship_direction ?? null, is_blocked_by_me: false})); });
-    const report=()=>axios.post(route('reports.store',{id:user.id, reason:'profile_report'})).then(()=>setMenu(false));
+    const report=()=>{ setMenu(false); setReportOpen(true); };
     const chat=()=>axios.post(route('conversations.direct',{user:user.id})).then((r:{data:{conversation:Conversation}})=>Inertia.visit(route('chat.show',{hash:r.data.conversation.hash})));
     const save=(e:React.FormEvent)=>{ e.preventDefault(); form.post(route('profiles.update'), { forceFormData: true, onSuccess: () => setUser(current => ({...current, name: form.data.name, bio: form.data.bio, profile_photo_url: photoPreview})) }); };
     const initials = (form.data.name || user.name).split(' ').filter(Boolean).slice(0,2).map(part => part[0]).join('').toUpperCase();
@@ -82,10 +86,11 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
                     {blockedByMe && <button onClick={unblock} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Unblock</button>}
                     {canInteract && !user.friendship_status && <button onClick={add} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Add friend</button>}
                     {canInteract && <button onClick={()=>setMenu(v=>!v)} className="rounded-md border border-slate-300 px-3 py-2 text-slate-700 dark:border-slate-700 dark:text-slate-200">...</button>}
-                    {menu&&<div className="absolute right-0 top-11 z-10 w-44 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">{user.friendship_status==='accepted'&&<button type="button" onClick={unfriend} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Unfriend</button>}<button type="button" onClick={block} className="block w-full rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700">Block</button><button type="button" onClick={report} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Report</button></div>}
+                    {menu&&<div className="absolute right-0 top-11 z-10 w-44 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">{user.friendship_status==='accepted'&&<button type="button" onClick={unfriend} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Unfriend</button>}{!currentUser.is_admin&&<button type="button" onClick={block} className="block w-full rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700">Block</button>}<button type="button" onClick={report} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Report</button></div>}
                 </div>}
             </div>
-            {isSelf && <form onSubmit={save} className="mt-8 space-y-4">
+            {isSelf && currentUser.is_admin && <div className="mt-8 rounded-md border border-purple-200 bg-purple-50 p-4 text-sm text-purple-900 dark:border-purple-500/30 dark:bg-purple-500/10 dark:text-purple-100">Admin accounts cannot edit their own profile from the social profile page.</div>}
+            {isSelf && !currentUser.is_admin && <form onSubmit={save} className="mt-8 space-y-4">
                 <div><label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Name</label><input value={form.data.name} onChange={e=>form.setData('name', e.currentTarget.value)} className="mt-1 h-11 w-full rounded-md border-slate-300 bg-white px-3 text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white" /></div>
                 <div><label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Handle</label><input value={user.handle} disabled className="mt-1 h-11 w-full rounded-md border-slate-300 bg-slate-50 px-3 text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400" /></div>
                 <div><label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Bio</label><textarea value={form.data.bio} onChange={e=>form.setData('bio', e.currentTarget.value)} rows={5} className="mt-1 w-full rounded-md border-slate-300 bg-white px-3 py-2 text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white" /></div>
@@ -93,5 +98,6 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
                 <button disabled={form.processing} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">Save profile</button>
             </form>}
         </div>
+        <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} title={`Report ${user.name}`} endpoint={route('reports.store', {id:user.id})} />
     </AppLayout>;
 }

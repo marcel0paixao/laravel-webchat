@@ -25,8 +25,9 @@ export default function Chat({conversation, onBack, incomingMessage, readReceipt
     const lastTypingAt = useRef(0);
     const blocked = Boolean(meta.partner?.is_blocked_by_me || meta.partner?.is_blocked_by_them);
     const removedFromGroup = Boolean(meta.current_user_left_at);
-    const canSend = !removedFromGroup && !blocked && (meta.type === 'group' || meta.partner?.friendship_status === 'accepted');
-    const disabledMessage = removedFromGroup ? 'You were removed from this group. You can still read previous messages.' : (blocked ? 'This conversation is blocked.' : 'You can only message friends.');
+    const groupBanned = Boolean(meta.banned_at);
+    const canSend = !groupBanned && !removedFromGroup && !blocked && (meta.type === 'group' || meta.partner?.friendship_status === 'accepted');
+    const disabledMessage = groupBanned ? 'This group was banned by moderation. History remains available.' : (removedFromGroup ? 'You were removed from this group. You can still read previous messages.' : (blocked ? 'This conversation is blocked.' : 'You can only message friends.'));
 
     const isNearBottom = () => { const el = boxRef.current; return !el || el.scrollHeight - el.scrollTop - el.clientHeight < 120; };
     const scrollBottom = (smooth = false) => bottomRef.current?.scrollIntoView({ block: 'end', behavior: smooth ? 'smooth' : 'auto' });

@@ -7,7 +7,8 @@ use Illuminate\Support\Str;
 class Conversation extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['hash', 'type', 'direct_hash', 'name', 'avatar_path', 'created_by'];
+    protected $fillable = ['hash', 'type', 'direct_hash', 'name', 'avatar_path', 'banned_at', 'ban_reason', 'created_by'];
+    protected $casts = ['banned_at' => 'datetime'];
     protected static function booted()
     {
         static::creating(function (Conversation $conversation) {

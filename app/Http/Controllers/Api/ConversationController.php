@@ -188,12 +188,15 @@ class ConversationController extends Controller
     {
         $conversation = $this->conversationForUser($hash, true);
         abort_unless($conversation->type === 'group', 404);
-        $validated = $request->validate(['reason' => ['nullable', 'string', 'max:120'], 'details' => ['nullable', 'string', 'max:2000']]);
+        $validated = $request->validate(['reason' => ['required', 'string', 'max:120'], 'details' => ['nullable', 'string', 'max:2000']]);
         UserReport::create([
             'reporter_id' => Auth::id(),
             'reported_id' => $conversation->created_by ?: Auth::id(),
-            'reason' => $validated['reason'] ?? 'group_report',
-            'details' => trim(($validated['details'] ?? '') . "\n\nGroup: " . $conversation->hash),
+            'conversation_id' => $conversation->id,
+            'target_type' => 'group',
+            'reason' => $validated['reason'],
+            'details' => $validated['details'] ?? null,
+            'status' => 'open',
         ]);
         return response()->json(['message' => 'Report received.'], 201);
     }
@@ -285,6 +288,8 @@ class ConversationController extends Controller
             'partner' => $partner,
             'current_user_role' => $conversation->type === 'group' ? $this->currentRole($conversation) : null,
             'current_user_left_at' => $conversation->type === 'group' ? $this->currentLeftAt($conversation) : null,
+            'banned_at' => $conversation->banned_at,
+            'ban_reason' => $conversation->ban_reason,
             'last_message' => $last,
             'created_at' => $conversation->created_at,
             'updated_at' => $conversation->updated_at,

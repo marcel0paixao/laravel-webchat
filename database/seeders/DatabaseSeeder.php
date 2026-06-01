@@ -2,103 +2,32 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\{Friendship, User};
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $password = Hash::make('password');
+        $users = [
+            ['name' => 'Demo One', 'username' => 'demo_one', 'email' => 'demo1@example.com', 'phone' => '+5511999000001'],
+            ['name' => 'Demo Two', 'username' => 'demo_two', 'email' => 'demo2@example.com', 'phone' => '+5511999000002'],
+            ['name' => 'Demo Three', 'username' => 'demo_three', 'email' => 'demo3@example.com', 'phone' => '+5511999000003'],
+            ['name' => 'Demo Four', 'username' => 'demo_four', 'email' => 'demo4@example.com', 'phone' => '+5511999000004'],
+            ['name' => 'Admin Demo', 'username' => 'admin_demo', 'email' => 'admin@example.com', 'phone' => '+5511999000005', 'is_admin' => true],
+        ];
 
-        \App\Models\User::create([
-            'name' => 'Marcelo',
-            'email' => 'Marcelo@marcelo.com',
-            'password' => Hash::make('12345678')
-        ]);
+        $created = collect($users)->map(fn(array $data) => User::updateOrCreate(
+            ['email' => $data['email']],
+            $data + ['password' => $password, 'email_verified_at' => now(), 'phone_verified_at' => now()]
+        ));
 
-        \App\Models\User::create([
-            'name' => 'Rodrigo',
-            'email' => 'Rodrigo@rodrigo.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Cloe',
-            'email' => 'Cloe@cloe.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Marcelo2',
-            'email' => 'Marcelo2@marcelo.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Adm',
-            'email' => 'adm@adm.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Usuario',
-            'email' => 'Usuario@usuario.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\User::create([
-            'name' => 'Ana',
-            'email' => 'Ana@ana.com',
-            'password' => Hash::make('12345678')
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 1,
-            'to' => 2,
-            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, incidunt. Aliquam facilis optio excepturi dolorum.'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 1,
-            'to' => 3,
-            'message' => 'Lorem ipsum dolor sit amet.'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 1,
-            'to' => 4,
-            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 4,
-            'to' => 1,
-            'message' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure quo error provident corporis consectetur quam maxime est laboriosam, magni facere minus facilis dolores ea architecto!'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 2,
-            'to' => 5,
-            'message' => 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero ad labore ipsam rerum? Beatae, sunt reprehenderit consectetur cum delectus ullam, ipsa aperiam at commodi quaerat minus nisi dolores error, assumenda sit modi minima? Quae optio explicabo, sequi laudantium repellendus harum consequuntur rem quaerat ducimus dolore voluptas, qui molestiae non labore? Est aut dignissimos neque, dolorum, sunt vitae quidem dolorem assumenda at deserunt quae quo distinctio tempora, doloribus fuga iure?'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 6,
-            'to' => 7,
-            'message' => 'Lorem, ipsum dolor.'
-        ]);
-
-        \App\Models\Message::create([
-            'from' => 7,
-            'to' => 1,
-            'message' => 'Lorem, ipsum dolor. aaaaaa aaaaaa aaaaaa '
-        ]);
+        $first = $created->first();
+        $created->skip(1)->each(fn(User $user) => Friendship::updateOrCreate(
+            ['requester_id' => $first->id, 'addressee_id' => $user->id],
+            ['status' => Friendship::ACCEPTED, 'accepted_at' => now()]
+        ));
     }
 }

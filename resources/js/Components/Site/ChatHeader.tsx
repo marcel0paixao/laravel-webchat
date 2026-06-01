@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import route from 'ziggy-js';
 import useTypedPage from '@/Hooks/useTypedPage';
+import ReportDialog from './ReportDialog';
 
 interface Props { conversation: Conversation; onBack: () => void; onDeleted: () => void; onBlocked: () => void; onConversationUpdated: (conversation: Conversation) => void; }
 
@@ -21,6 +22,7 @@ export default function ChatHeader({conversation,onBack,onDeleted,onBlocked,onCo
     const [selectedToAdd,setSelectedToAdd]=useState<number[]>([]);
     const [adding,setAdding]=useState(false);
     const [addError,setAddError]=useState<string | null>(null);
+    const [reportOpen,setReportOpen]=useState(false);
     useEffect(() => {
         setGroupName(conversation.name);
         setParticipants(conversation.participants);
@@ -74,7 +76,7 @@ export default function ChatHeader({conversation,onBack,onDeleted,onBlocked,onCo
     const demote = (id: number) => axios.post(route('conversations.groups.members.demote', {hash: conversation.hash, user: id})).then(r => sync(r.data.conversation));
     const removeMember = (id: number) => axios.delete(route('conversations.groups.members.remove', {hash: conversation.hash, user: id})).then(r => sync(r.data.conversation));
     const leaveGroup = () => axios.delete(route('conversations.groups.leave', {hash: conversation.hash})).then(r => { setMenu(false); setMembersOpen(false); sync(r.data.conversation); });
-    const reportGroup = () => axios.post(route('conversations.groups.report', {hash: conversation.hash}), {reason:'group_report'}).then(()=>setMenu(false));
+    const reportGroup = () => { setMenu(false); setReportOpen(true); };
 
     return <header ref={headerRef} className="relative flex h-16 items-center border-b border-slate-200 px-3 dark:border-slate-800">
         <button type="button" className="mr-2 inline-flex h-10 w-10 items-center justify-center rounded-full text-TBL_SECONDARY md:hidden" onClick={onBack}><ArrowLeftIcon className="h-5 w-5" /></button>
@@ -134,5 +136,6 @@ export default function ChatHeader({conversation,onBack,onDeleted,onBlocked,onCo
             </div>
             <button type="button" onClick={leaveGroup} className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300"><LogoutIcon className="h-4 w-4" />Leave group</button>
         </div>}
+        <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} title={`Report ${conversation.name}`} endpoint={route('conversations.groups.report', {hash: conversation.hash})} />
     </header>;
 }

@@ -29,6 +29,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        abort_if((bool) $request->user()->is_admin, 403);
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:1000'],

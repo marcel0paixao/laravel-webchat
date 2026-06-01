@@ -6,6 +6,7 @@ import useTypedPage from '@/Hooks/useTypedPage';
 import Logo from './Logo';
 import axios from 'axios';
 import { AppNotification } from '@/types';
+import { Inertia } from '@inertiajs/inertia';
 
 export default function Header() {
     const { user } = useTypedPage().props;
@@ -84,6 +85,9 @@ export default function Header() {
             setNotifications(current => [e.notification, ...current].slice(0, 30));
             setUnread(current => current + 1);
             setToast(e.notification);
+            if (e.notification.type === 'account_banned') {
+                window.setTimeout(() => Inertia.visit(route('banned')), 800);
+            }
             if (e.notification.actor_id && e.notification.type === 'friend_request_accepted') {
                 emitFriendshipUpdate(e.notification.actor_id, 'accepted', null);
             }
@@ -133,6 +137,7 @@ export default function Header() {
         </div>}
         {menu && <div className="absolute right-4 top-14 z-30 w-48 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
             <InertiaLink href={profileHref} className="block rounded px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Profile</InertiaLink>
+            {user.is_admin && <InertiaLink href={route('admin.reports.index')} className="block rounded px-3 py-2 text-sm text-purple-700 hover:bg-purple-50 dark:text-purple-200 dark:hover:bg-slate-700">Admin panel</InertiaLink>}
             <InertiaLink href={route('settings.privacy')} className="block rounded px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Settings</InertiaLink>
             <InertiaLink method="post" as="button" href={route('logout')} className="block w-full rounded px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50 dark:text-red-300 dark:hover:bg-slate-700">Log out</InertiaLink>
         </div>}

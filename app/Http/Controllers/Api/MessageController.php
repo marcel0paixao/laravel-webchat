@@ -77,6 +77,9 @@ class MessageController extends Controller
 
         if (!empty($validated['conversation_hash'])) {
             $conversation = $this->conversationForUser($validated['conversation_hash']);
+            if ($conversation->banned_at) {
+                return response()->json(['message' => 'This group was banned by moderation.'], 403);
+            }
             $to = $conversation->type === 'direct'
                 ? (int) $conversation->participants()->where('user_id', '!=', Auth::id())->value('user_id')
                 : null;
