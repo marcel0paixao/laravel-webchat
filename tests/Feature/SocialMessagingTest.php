@@ -159,14 +159,20 @@ class SocialMessagingTest extends TestCase
         $owner = User::factory()->create(['username'=>'group-owner','phone'=>'+10000000013','email_verified_at'=>now(),'phone_verified_at'=>now()]);
         $member = User::factory()->create(['username'=>'group-member','phone'=>'+10000000014','email_verified_at'=>now(),'phone_verified_at'=>now()]);
         $other = User::factory()->create(['username'=>'group-other','phone'=>'+10000000015','email_verified_at'=>now(),'phone_verified_at'=>now()]);
+        $newMember = User::factory()->create(['username'=>'group-new','phone'=>'+10000000016','email_verified_at'=>now(),'phone_verified_at'=>now()]);
         $conversation = Conversation::create(['type'=>'group','name'=>'Old name','created_by'=>$owner->id]);
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$owner->id,'role'=>'owner','joined_at'=>now()]);
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'member','joined_at'=>now()]);
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$other->id,'role'=>'member','joined_at'=>now()]);
+        Friendship::create(['requester_id'=>$owner->id,'addressee_id'=>$newMember->id,'status'=>'accepted','accepted_at'=>now()]);
         Message::create(['conversation_id'=>$conversation->id,'from'=>$owner->id,'to'=>$owner->id,'message'=>'Original group history','type'=>'text']);
         Sanctum::actingAs($owner);
 
         $this->patchJson('/api/conversations/groups/'.$conversation->hash, ['name'=>'New name'])->assertOk()->assertJsonPath('conversation.name', 'New name');
+        $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members', ['user_ids'=>[$newMember->id]])->assertOk()->assertJsonFragment(['id'=>$newMember->id]);
+        $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$newMember->id,'role'=>'member','left_at'=>null]);
+        $this->assertDatabaseHas('messages', ['conversation_id'=>$conversation->id,'message'=>$owner->name.' added '.$newMember->name.' to the group.','type'=>'system']);
+        $this->assertDatabaseHas('app_notifications', ['user_id'=>$newMember->id,'type'=>'group_added']);
         $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$member->id.'/promote')->assertOk();
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'admin']);
         $this->assertDatabaseHas('messages', ['conversation_id'=>$conversation->id,'message'=>$member->name.' is now an admin.','type'=>'system']);

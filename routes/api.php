@@ -12,6 +12,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/conversations/direct/{user}', [\App\Http\Controllers\Api\ConversationController::class, 'direct'])->name('conversations.direct');
     Route::post('/conversations/groups', [\App\Http\Controllers\Api\ConversationController::class, 'storeGroup'])->name('conversations.groups.store');
     Route::patch('/conversations/groups/{hash}', [\App\Http\Controllers\Api\ConversationController::class, 'updateGroup'])->name('conversations.groups.update');
+    Route::post('/conversations/groups/{hash}/members', [\App\Http\Controllers\Api\ConversationController::class, 'addMembers'])->name('conversations.groups.members.add');
     Route::post('/conversations/groups/{hash}/members/{user}/promote', [\App\Http\Controllers\Api\ConversationController::class, 'promoteMember'])->name('conversations.groups.members.promote');
     Route::post('/conversations/groups/{hash}/members/{user}/demote', [\App\Http\Controllers\Api\ConversationController::class, 'demoteMember'])->name('conversations.groups.members.demote');
     Route::delete('/conversations/groups/{hash}/members/{user}', [\App\Http\Controllers\Api\ConversationController::class, 'removeMember'])->name('conversations.groups.members.remove');

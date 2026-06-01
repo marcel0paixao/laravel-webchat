@@ -57,6 +57,10 @@ export default function Home({conversationHash = null}: Props) {
         setConversations(current => current.map(item => item.hash === conversation.hash ? {...item, last_message: null} : item));
         setActiveConversation(current => current && current.hash === conversation.hash ? {...current, last_message: null} : current);
     }, []);
+    const updateConversation = useCallback((conversation: Conversation) => {
+        setConversations(current => current.map(item => item.hash === conversation.hash ? conversation : item));
+        setActiveConversation(current => current && current.hash === conversation.hash ? conversation : current);
+    }, []);
 
     useEffect(() => {
         if (!Object(window).Echo) return;
@@ -81,7 +85,7 @@ export default function Home({conversationHash = null}: Props) {
             <UsersList conversations={conversations} active={activeConversation} friends={friends} onSelect={selectConversation} onCreateGroup={createGroup} typingConversationHash={typingConversationHash} />
         </div>
         <div className={`min-h-0 flex-1 ${activeConversation ? 'block' : 'hidden md:block'}`}>
-            {activeConversation ? <Chat conversation={activeConversation} onBack={() => { setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} incomingMessage={incomingMessage} readReceipt={readReceipt} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationCleared={clearPreview} onConversationBlocked={() => { const hash = activeConversation.hash; setConversations(current => current.filter(c => c.hash !== hash)); setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
+            {activeConversation ? <Chat conversation={activeConversation} onBack={() => { setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} incomingMessage={incomingMessage} readReceipt={readReceipt} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationUpdated={updateConversation} onConversationCleared={clearPreview} onConversationBlocked={() => { const hash = activeConversation.hash; setConversations(current => current.filter(c => c.hash !== hash)); setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
         </div>
     </ChatRoom></OuterCenteredContainer></AppLayout>;
 }

@@ -79,6 +79,46 @@ class ConversationController extends Controller
         return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
 
+    public function addMembers(Request $request, string $hash)
+    {
+        $conversation = $this->groupForUser($hash);
+        abort_unless($this->currentRole($conversation) !== 'member', 403);
+        $validated = $request->validate([
+            'user_ids' => ['required', 'array', 'min:1', 'max:20'],
+            'user_ids.*' => ['integer', 'exists:users,id'],
+        ]);
+
+        $activeIds = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
+        $memberIds = collect($validated['user_ids'])
+            ->map(fn($id) => (int) $id)
+            ->unique()
+            ->reject(fn($id) => $id === (int) Auth::id() || $activeIds->contains($id))
+            ->values();
+        abort_if($memberIds->isEmpty(), 422, 'Choose at least one user who is not already in this group.');
+
+        foreach ($memberIds as $memberId) {
+            abort_unless(Friendship::areFriends(Auth::id(), $memberId), 403);
+        }
+
+        $addedUsers = User::whereIn('id', $memberIds)->get();
+        foreach ($memberIds as $memberId) {
+            ConversationParticipant::updateOrCreate(
+                ['conversation_id' => $conversation->id, 'user_id' => $memberId],
+                ['role' => 'member', 'joined_at' => now(), 'left_at' => null]
+            );
+        }
+
+        $names = $addedUsers->pluck('name')->join(', ', ' and ');
+        $recipients = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
+        $message = $this->systemMessage($conversation, Auth::user()->name . ' added ' . $names . ' to the group.');
+        $this->broadcastConversationMessage($conversation, $message, $recipients);
+        foreach ($memberIds as $memberId) {
+            $this->notify($memberId, 'group_added', Auth::user()->name . ' added you to ' . $conversation->name . '.', ['conversation_hash' => $conversation->hash]);
+        }
+
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
+    }
+
     public function promoteMember(string $hash, User $user)
     {
         $conversation = $this->groupForUser($hash);
