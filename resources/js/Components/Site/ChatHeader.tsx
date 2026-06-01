@@ -2,14 +2,15 @@ import { Conversation } from '@/types';
 import { ArrowLeftIcon, BanIcon, DotsVerticalIcon, FlagIcon, LogoutIcon, TrashIcon } from '@heroicons/react/outline';
 import { Inertia } from '@inertiajs/inertia';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import route from 'ziggy-js';
 import useTypedPage from '@/Hooks/useTypedPage';
 
-interface Props { conversation: Conversation; onBack: () => void; onDeleted: () => void; onBlocked: () => void; }
+interface Props { conversation: Conversation; onBack: () => void; onDeleted: () => void; onBlocked: () => void; onConversationUpdated: (conversation: Conversation) => void; }
 
-export default function ChatHeader({conversation,onBack,onDeleted,onBlocked}: Props) {
+export default function ChatHeader({conversation,onBack,onDeleted,onBlocked,onConversationUpdated}: Props) {
     const { user: currentUser } = useTypedPage().props;
+    const headerRef = useRef<HTMLElement | null>(null);
     const [menu,setMenu]=useState(false);
     const [membersOpen,setMembersOpen]=useState(false);
     const [groupName,setGroupName]=useState(conversation.name);
@@ -22,21 +23,31 @@ export default function ChatHeader({conversation,onBack,onDeleted,onBlocked}: Pr
         setMembersOpen(false);
         setMenu(false);
     }, [conversation.hash, conversation.name, conversation.participants, conversation.current_user_role]);
+    useEffect(() => {
+        if (!menu && !membersOpen) return;
+        const closeOnOutsideClick = (event: MouseEvent) => {
+            if (headerRef.current?.contains(event.target as Node)) return;
+            setMenu(false);
+            setMembersOpen(false);
+        };
+        document.addEventListener('mousedown', closeOnOutsideClick);
+        return () => document.removeEventListener('mousedown', closeOnOutsideClick);
+    }, [menu, membersOpen]);
     const initials=groupName.split(' ').filter(Boolean).slice(0,2).map(n=>n[0]).join('').toUpperCase();
     const partner = conversation.partner;
     const canManage = conversation.type === 'group' && (currentRole === 'owner' || currentRole === 'admin');
     const block=()=> partner ? axios.post(route('block.users',{id:partner.id})).then(onBlocked) : undefined;
     const remove=()=> partner ? axios.delete(route('destroy.messages',{id:partner.id})).then(onDeleted) : onDeleted();
     const openHeader = () => { if (partner) Inertia.visit(route('profiles.show', {username: partner.username})); else if (conversation.type === 'group') setMembersOpen(v => !v); };
-    const sync = (next: Conversation) => { setGroupName(next.name); setParticipants(next.participants); setCurrentRole(next.current_user_role ?? null); };
+    const sync = (next: Conversation) => { setGroupName(next.name); setParticipants(next.participants); setCurrentRole(next.current_user_role ?? null); onConversationUpdated(next); };
     const saveName = () => axios.patch(route('conversations.groups.update', {hash: conversation.hash}), {name: groupName}).then(r => sync(r.data.conversation));
     const promote = (id: number) => axios.post(route('conversations.groups.members.promote', {hash: conversation.hash, user: id})).then(r => sync(r.data.conversation));
     const demote = (id: number) => axios.post(route('conversations.groups.members.demote', {hash: conversation.hash, user: id})).then(r => sync(r.data.conversation));
     const removeMember = (id: number) => axios.delete(route('conversations.groups.members.remove', {hash: conversation.hash, user: id})).then(r => sync(r.data.conversation));
-    const leaveGroup = () => axios.delete(route('conversations.groups.leave', {hash: conversation.hash})).then(onDeleted);
+    const leaveGroup = () => axios.delete(route('conversations.groups.leave', {hash: conversation.hash})).then(r => { setMenu(false); setMembersOpen(false); sync(r.data.conversation); });
     const reportGroup = () => axios.post(route('conversations.groups.report', {hash: conversation.hash}), {reason:'group_report'}).then(()=>setMenu(false));
 
-    return <header className="relative flex h-16 items-center border-b border-slate-200 px-3 dark:border-slate-800">
+    return <header ref={headerRef} className="relative flex h-16 items-center border-b border-slate-200 px-3 dark:border-slate-800">
         <button type="button" className="mr-2 inline-flex h-10 w-10 items-center justify-center rounded-full text-TBL_SECONDARY md:hidden" onClick={onBack}><ArrowLeftIcon className="h-5 w-5" /></button>
         <button type="button" onClick={openHeader} className="flex min-w-0 items-center rounded-xl px-2 py-1.5 text-left transition hover:bg-slate-100 focus:bg-slate-100 dark:hover:bg-slate-800/80 dark:focus:bg-slate-800/80">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-sm font-bold text-white">{initials}</div>
@@ -51,7 +62,7 @@ export default function ChatHeader({conversation,onBack,onDeleted,onBlocked}: Pr
             <button type="button" onClick={remove} className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700"><TrashIcon className="h-4 w-4" />Delete conversation</button>
             {partner && <button type="button" onClick={block} className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700"><BanIcon className="h-4 w-4" />Block user</button>}
             {conversation.type === 'group' && <button type="button" onClick={reportGroup} className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700"><FlagIcon className="h-4 w-4" />Report group</button>}
-            {conversation.type === 'group' && <button onClick={leaveGroup} className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700"><LogoutIcon className="h-4 w-4" />Leave group</button>}
+            {conversation.type === 'group' && <button type="button" onClick={leaveGroup} className="flex w-full items-center gap-2 rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700"><LogoutIcon className="h-4 w-4" />Leave group</button>}
         </div>}
         {membersOpen && conversation.type === 'group' && <div className="absolute left-3 right-3 top-14 z-30 rounded-lg border border-slate-200 bg-white p-3 shadow-2xl dark:border-slate-700 dark:bg-slate-800 sm:left-auto sm:w-96">
             <div className="mb-3 flex items-center gap-2">

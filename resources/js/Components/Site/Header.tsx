@@ -1,6 +1,6 @@
 import { InertiaLink } from '@inertiajs/inertia-react';
 import { BellIcon, DotsVerticalIcon, MoonIcon, SearchIcon, SunIcon } from '@heroicons/react/outline';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import route from 'ziggy-js';
 import useTypedPage from '@/Hooks/useTypedPage';
 import Logo from './Logo';
@@ -9,6 +9,7 @@ import { AppNotification } from '@/types';
 
 export default function Header() {
     const { user } = useTypedPage().props;
+    const headerRef = useRef<HTMLElement | null>(null);
     const profileHref = user.username ? route('profiles.show', { username: user.username }) : route('profiles.search');
     const [dark, setDark] = useState(document.documentElement.classList.contains('dark'));
     const [menu, setMenu] = useState(false);
@@ -21,6 +22,16 @@ export default function Header() {
         document.body.classList.toggle('dark-app', dark);
         localStorage.setItem('theme', dark ? 'dark' : 'light');
     }, [dark]);
+    useEffect(() => {
+        if (!menu && !notificationsOpen) return;
+        const closeOnOutsideClick = (event: MouseEvent) => {
+            if (headerRef.current?.contains(event.target as Node)) return;
+            setMenu(false);
+            setNotificationsOpen(false);
+        };
+        document.addEventListener('mousedown', closeOnOutsideClick);
+        return () => document.removeEventListener('mousedown', closeOnOutsideClick);
+    }, [menu, notificationsOpen]);
     useEffect(() => {
         axios.get(route('notifications.index')).then(r => { setNotifications(r.data.notifications); setUnread(r.data.unread_count); });
     }, []);
@@ -84,7 +95,7 @@ export default function Header() {
         return () => { channel.stopListening('.UserNotification'); };
     }, [user.id]);
 
-    return <header className="relative flex h-16 items-center border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900">
+    return <header ref={headerRef} className="relative flex h-16 items-center border-b border-slate-200 bg-white px-4 dark:border-slate-800 dark:bg-slate-900">
         <InertiaLink href={route('Home')} className="text-lg font-bold text-purple-300"><Logo /></InertiaLink>
         <nav className="ml-auto flex items-center gap-2">
             <InertiaLink href={route('profiles.search')} title="Search profiles" className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"><SearchIcon className="h-5 w-5" /></InertiaLink>

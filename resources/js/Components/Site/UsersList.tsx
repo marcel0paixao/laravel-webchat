@@ -1,5 +1,5 @@
 import { Conversation, User } from '@/types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import UserBox from './UserBox';
 
 interface Props {
@@ -16,7 +16,17 @@ export default function UsersList({conversations, active, friends, typingConvers
     const [membersOpen, setMembersOpen] = useState(false);
     const [name, setName] = useState('');
     const [selected, setSelected] = useState<number[]>([]);
+    const formRef = useRef<HTMLFormElement | null>(null);
     const toggle = (id: number) => setSelected(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
+    useEffect(() => {
+        if (!membersOpen) return;
+        const closeOnOutsideClick = (event: MouseEvent) => {
+            if (formRef.current?.contains(event.target as Node)) return;
+            setMembersOpen(false);
+        };
+        document.addEventListener('mousedown', closeOnOutsideClick);
+        return () => document.removeEventListener('mousedown', closeOnOutsideClick);
+    }, [membersOpen]);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +44,7 @@ export default function UsersList({conversations, active, friends, typingConvers
             <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100">Chats</h2>
             <button type="button" onClick={() => setCreating(v => !v)} className="ml-auto rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">New group</button>
         </div>
-        {creating && <form onSubmit={submit} className="relative space-y-3 border-b border-slate-200 p-3 dark:border-slate-800">
+        {creating && <form ref={formRef} onSubmit={submit} className="relative space-y-3 border-b border-slate-200 p-3 dark:border-slate-800">
             <input value={name} onChange={e => setName(e.currentTarget.value)} placeholder="Group name" className="h-10 w-full rounded-md border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
             <button type="button" onClick={() => setMembersOpen(v => !v)} className="flex h-10 w-full items-center justify-between rounded-md border border-slate-300 bg-white px-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
                 <span>{selected.length > 0 ? `${selected.length} selected` : 'Select users'}</span>

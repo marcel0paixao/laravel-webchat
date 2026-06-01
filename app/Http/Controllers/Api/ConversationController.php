@@ -14,7 +14,7 @@ class ConversationController extends Controller
     public function index()
     {
         $conversations = Conversation::query()
-            ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id())->whereNull('left_at'))
+            ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id()))
             ->with('users')
             ->get()
             ->map(fn(Conversation $conversation) => $this->serialize($conversation))
@@ -86,6 +86,9 @@ class ConversationController extends Controller
         $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
         abort_if($participant->role === 'owner', 422);
         $participant->update(['role' => 'admin']);
+        $recipients = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
+        $message = $this->systemMessage($conversation, $user->name . ' is now an admin.');
+        $this->broadcastConversationMessage($conversation, $message, $recipients);
 
         return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
@@ -97,6 +100,9 @@ class ConversationController extends Controller
         $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
         abort_unless($participant->role === 'admin', 422);
         $participant->update(['role' => 'member']);
+        $recipients = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
+        $message = $this->systemMessage($conversation, $user->name . ' is no longer an admin.');
+        $this->broadcastConversationMessage($conversation, $message, $recipients);
 
         return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
@@ -119,17 +125,23 @@ class ConversationController extends Controller
     {
         $conversation = $this->groupForUser($hash);
         $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', Auth::id())->whereNull('left_at')->firstOrFail();
+        $recipients = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->pluck('user_id');
         $wasOwner = $participant->role === 'owner';
         $participant->update(['left_at' => now()]);
+        $message = $this->systemMessage($conversation, Auth::user()->name . ' left the group.');
+        $this->broadcastConversationMessage($conversation, $message, $recipients);
 
         if ($wasOwner) {
             $replacement = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->inRandomOrder()->first();
             if ($replacement) {
                 $replacement->update(['role' => 'owner']);
+                $ownerName = User::find($replacement->user_id)?->name ?? 'A member';
+                $ownerMessage = $this->systemMessage($conversation, $ownerName . ' is now the group owner.');
+                $this->broadcastConversationMessage($conversation, $ownerMessage, $recipients);
             }
         }
 
-        return response()->noContent();
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
     }
 
     public function reportGroup(Request $request, string $hash)

@@ -12,6 +12,7 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
     const [requestMenu,setRequestMenu]=useState(false);
     const [photoPreview, setPhotoPreview] = useState(profile.profile_photo_url);
     const fileRef = useRef<HTMLInputElement | null>(null);
+    const actionsRef = useRef<HTMLDivElement | null>(null);
     const form = useForm({name: profile.name, bio: profile.bio ?? '', profile_photo: null as File | null});
     const isSelf = Boolean(profile.is_self);
     const [blockedByMe, setBlockedByMe] = useState(Boolean(profile.is_blocked_by_me));
@@ -44,6 +45,16 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
         window.addEventListener('webchats:friendship-updated', listener);
         return () => window.removeEventListener('webchats:friendship-updated', listener);
     }, [user.id]);
+    useEffect(() => {
+        if (!menu && !requestMenu) return;
+        const closeOnOutsideClick = (event: MouseEvent) => {
+            if (actionsRef.current?.contains(event.target as Node)) return;
+            setMenu(false);
+            setRequestMenu(false);
+        };
+        document.addEventListener('mousedown', closeOnOutsideClick);
+        return () => document.removeEventListener('mousedown', closeOnOutsideClick);
+    }, [menu, requestMenu]);
 
     return <AppLayout title={user.name}>
         <div className="mx-auto max-w-3xl overflow-visible rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
@@ -57,7 +68,7 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
                     <p className="text-slate-400">{user.handle}</p>
                     {!isSelf && <p className="mt-4 whitespace-pre-wrap text-sm text-slate-600 dark:text-slate-300">{user.bio || 'No bio yet.'}</p>}
                 </div>
-                {!isSelf && <div className="relative flex gap-2">
+                {!isSelf && <div ref={actionsRef} className="relative flex gap-2">
                     {blockedByThem && !blockedByMe && <span className="self-center text-sm text-slate-500 dark:text-slate-400">You cannot interact with this user.</span>}
                     {canInteract && user.friendship_status==='accepted' && <button onClick={chat} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Chat</button>}
                     {canInteract && user.friendship_status==='pending' && user.friendship_direction==='incoming' && <div className="relative">

@@ -163,11 +163,13 @@ class SocialMessagingTest extends TestCase
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$owner->id,'role'=>'owner','joined_at'=>now()]);
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'member','joined_at'=>now()]);
         ConversationParticipant::create(['conversation_id'=>$conversation->id,'user_id'=>$other->id,'role'=>'member','joined_at'=>now()]);
+        Message::create(['conversation_id'=>$conversation->id,'from'=>$owner->id,'to'=>$owner->id,'message'=>'Original group history','type'=>'text']);
         Sanctum::actingAs($owner);
 
         $this->patchJson('/api/conversations/groups/'.$conversation->hash, ['name'=>'New name'])->assertOk()->assertJsonPath('conversation.name', 'New name');
         $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$member->id.'/promote')->assertOk();
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'admin']);
+        $this->assertDatabaseHas('messages', ['conversation_id'=>$conversation->id,'message'=>$member->name.' is now an admin.','type'=>'system']);
         $this->postJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$member->id.'/demote')->assertOk();
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$member->id,'role'=>'member']);
         $this->deleteJson('/api/conversations/groups/'.$conversation->hash.'/members/'.$other->id)->assertOk();
@@ -175,8 +177,10 @@ class SocialMessagingTest extends TestCase
         $this->getJson('/api/messages/load?conversation_hash='.$conversation->hash)->assertOk();
         $this->postJson('/api/messages/store', ['conversation_hash'=>$conversation->hash, 'message'=>'Nope'])->assertNotFound();
         Sanctum::actingAs($owner);
-        $this->deleteJson('/api/conversations/groups/'.$conversation->hash.'/leave')->assertNoContent();
+        $this->deleteJson('/api/conversations/groups/'.$conversation->hash.'/leave')->assertOk()->assertJsonPath('conversation.current_user_left_at', fn($leftAt) => filled($leftAt));
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'user_id'=>$owner->id]);
+        $this->assertDatabaseHas('messages', ['conversation_id'=>$conversation->id,'message'=>$owner->name.' left the group.','type'=>'system']);
         $this->assertDatabaseHas('conversation_participants', ['conversation_id'=>$conversation->id,'role'=>'owner','left_at'=>null]);
+        $this->getJson('/api/messages/load?conversation_hash='.$conversation->hash)->assertOk()->assertJsonFragment(['message'=>'Original group history']);
     }
 }
