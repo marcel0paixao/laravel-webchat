@@ -7,9 +7,9 @@ import Form from './Form';
 import MessagesList from './MessagesList';
 import { BanIcon } from '@heroicons/react/outline';
 
-interface Props { conversation: Conversation; onBack: () => void; incomingMessage: Message | null; readReceipt: {conversation_hash: string; reader_id: number; read_at: string} | null; typing: boolean; onConversationMessage: (message: Message) => void; onConversationBlocked: () => void; }
+interface Props { conversation: Conversation; onBack: () => void; incomingMessage: Message | null; readReceipt: {conversation_hash: string; reader_id: number; read_at: string} | null; typing: boolean; onConversationMessage: (message: Message) => void; onConversationCleared: (conversation: Conversation) => void; onConversationBlocked: () => void; }
 
-export default function Chat({conversation, onBack, incomingMessage, readReceipt, typing, onConversationMessage, onConversationBlocked}: Props) {
+export default function Chat({conversation, onBack, incomingMessage, readReceipt, typing, onConversationMessage, onConversationCleared, onConversationBlocked}: Props) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [meta, setMeta] = useState(conversation);
     const [draft, setDraft] = useState('');
@@ -99,9 +99,17 @@ export default function Chat({conversation, onBack, incomingMessage, readReceipt
         } catch (err: any) { setError(err.response?.status === 429 ? 'You tried too many times. Please wait one minute before sending more messages.' : (err.response?.data?.message ?? 'Unable to send message.')); }
         finally { setProcessing(false); }
     };
+    const clearConversation = () => {
+        setMessages([]);
+        setMeta(current => {
+            const next = {...current, last_message: null};
+            onConversationCleared(next);
+            return next;
+        });
+    };
 
     return <div className="relative flex h-full min-h-0 flex-col">
-        <ChatHeader conversation={meta} onBack={onBack} onBlocked={onConversationBlocked} onDeleted={() => { setMessages([]); }} onConversationUpdated={setMeta} />
+        <ChatHeader conversation={meta} onBack={onBack} onBlocked={onConversationBlocked} onDeleted={clearConversation} onConversationUpdated={setMeta} />
         <div ref={boxRef} onScroll={() => { if ((boxRef.current?.scrollTop ?? 0) < 80) loadOlder(); if (isNearBottom()) setNewCount(0); }} className="min-h-0 flex-1 overflow-y-auto px-3 py-4 sm:px-4">
             {loadingMore && <div className="mb-3 text-center text-xs text-slate-400">Loading older messages...</div>}
             <MessagesList messages={messages} showSenders={conversation.type === 'group'} onImageClick={setPreview} />
