@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\{Friendship, User};
+use App\Models\{Friendship, User, UserBlock};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,10 +14,16 @@ class ProfileController extends Controller
     public function show(string $username)
     {
         $profile = User::where('username', ltrim($username, '@'))->firstOrFail();
-        $friendship = Auth::check() ? Friendship::between(Auth::id(), $profile->id)->first() : null;
-        $profile->friendship_status = $friendship?->status;
-        $profile->friendship_direction = $friendship ? ((int)$friendship->requester_id === (int)Auth::id() ? 'outgoing' : 'incoming') : null;
         $profile->is_self = (int) $profile->id === (int) Auth::id();
+        if (Auth::check() && !$profile->is_self) {
+            $profile->is_blocked_by_me = UserBlock::blocks(Auth::id(), $profile->id);
+            $profile->is_blocked_by_them = UserBlock::blocks($profile->id, Auth::id());
+            $friendship = Friendship::between(Auth::id(), $profile->id)->first();
+            $profile->friendship_status = ($profile->is_blocked_by_me || $profile->is_blocked_by_them) ? null : $friendship?->status;
+            $profile->friendship_direction = ($profile->is_blocked_by_me || $profile->is_blocked_by_them || !$friendship)
+                ? null
+                : ((int)$friendship->requester_id === (int)Auth::id() ? 'outgoing' : 'incoming');
+        }
         return Inertia::render('Profiles/Show', ['profile' => $profile]);
     }
 

@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Conversation, ConversationParticipant, Friendship, Message, User};
+use App\Models\{Conversation, ConversationParticipant, Friendship, Message, User, UserBlock};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,6 +61,55 @@ class ConversationController extends Controller
         return response()->json(['conversation' => $this->serialize($conversation->load('users'))], 201);
     }
 
+    public function updateGroup(Request $request, string $hash)
+    {
+        $conversation = $this->groupForUser($hash);
+        abort_unless($this->currentRole($conversation) !== 'member', 403);
+        $validated = $request->validate(['name' => ['required', 'string', 'max:80']]);
+        $conversation->update(['name' => $validated['name']]);
+
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
+    }
+
+    public function promoteMember(string $hash, User $user)
+    {
+        $conversation = $this->groupForUser($hash);
+        abort_unless($this->currentRole($conversation) !== 'member', 403);
+        $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
+        abort_if($participant->role === 'owner', 422);
+        $participant->update(['role' => 'admin']);
+
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
+    }
+
+    public function removeMember(string $hash, User $user)
+    {
+        $conversation = $this->groupForUser($hash);
+        abort_unless($this->currentRole($conversation) !== 'member', 403);
+        $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $user->id)->whereNull('left_at')->firstOrFail();
+        abort_if($participant->role === 'owner', 422);
+        $participant->update(['left_at' => now()]);
+
+        return response()->json(['conversation' => $this->serialize($conversation->fresh()->load('users'))]);
+    }
+
+    public function leaveGroup(string $hash)
+    {
+        $conversation = $this->groupForUser($hash);
+        $participant = ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', Auth::id())->whereNull('left_at')->firstOrFail();
+        $wasOwner = $participant->role === 'owner';
+        $participant->update(['left_at' => now()]);
+
+        if ($wasOwner) {
+            $replacement = ConversationParticipant::where('conversation_id', $conversation->id)->whereNull('left_at')->inRandomOrder()->first();
+            if ($replacement) {
+                $replacement->update(['role' => 'owner']);
+            }
+        }
+
+        return response()->noContent();
+    }
+
     private function conversationForUser(string $hash): Conversation
     {
         return Conversation::where('hash', $hash)
@@ -68,15 +117,36 @@ class ConversationController extends Controller
             ->firstOrFail();
     }
 
+    private function groupForUser(string $hash): Conversation
+    {
+        return Conversation::where('hash', $hash)
+            ->where('type', 'group')
+            ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id())->whereNull('left_at'))
+            ->firstOrFail();
+    }
+
+    private function currentRole(Conversation $conversation): string
+    {
+        return (string) ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', Auth::id())->whereNull('left_at')->value('role');
+    }
+
     public function serialize(Conversation $conversation): array
     {
-        $users = $conversation->users;
+        $users = $conversation->users()->wherePivotNull('left_at')->get();
         $others = $users->where('id', '!=', Auth::id())->values();
         $last = Message::with('attachments', 'statuses', 'sender', 'conversation')
             ->where('conversation_id', $conversation->id)
             ->latest()
             ->first();
         $title = $conversation->type === 'group' ? ($conversation->name ?? 'Group') : ($others->first()?->name ?? 'Conversation');
+        $partner = $conversation->type === 'direct' ? $others->first() : null;
+        if ($partner) {
+            $partner->is_blocked_by_me = UserBlock::blocks(Auth::id(), $partner->id);
+            $partner->is_blocked_by_them = UserBlock::blocks($partner->id, Auth::id());
+            $partner->friendship_status = ($partner->is_blocked_by_me || $partner->is_blocked_by_them)
+                ? null
+                : Friendship::between(Auth::id(), $partner->id)->value('status');
+        }
 
         return [
             'id' => $conversation->id,
@@ -85,7 +155,8 @@ class ConversationController extends Controller
             'name' => $title,
             'avatar_path' => $conversation->avatar_path,
             'participants' => $users->values(),
-            'partner' => $conversation->type === 'direct' ? $others->first() : null,
+            'partner' => $partner,
+            'current_user_role' => $conversation->type === 'group' ? $this->currentRole($conversation) : null,
             'last_message' => $last,
             'created_at' => $conversation->created_at,
             'updated_at' => $conversation->updated_at,

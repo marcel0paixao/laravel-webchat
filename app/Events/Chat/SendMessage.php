@@ -3,6 +3,7 @@
 namespace App\Events\Chat;
 
 use App\Models\Message;
+use App\Models\UserBlock;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -20,6 +21,11 @@ class SendMessage implements ShouldBroadcastNow
     {
         $this->message = $message;
         $this->userNotification = $userNotification;
+    }
+
+    public function broadcastWhen(): bool
+    {
+        return ! UserBlock::between((int) $this->message->from, $this->userNotification);
     }
 
     public function broadcastOn()

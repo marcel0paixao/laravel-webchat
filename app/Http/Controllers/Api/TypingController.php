@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Api;
 use App\Events\Chat\UserTyping;
 use App\Http\Controllers\Controller;
-use App\Models\{Conversation, Friendship};
+use App\Models\{Conversation, Friendship, UserBlock};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class TypingController extends Controller
@@ -17,15 +17,23 @@ class TypingController extends Controller
             $conversation = Conversation::where('hash', $validated['conversation_hash'])
                 ->whereHas('participants', fn($q) => $q->where('user_id', Auth::id())->whereNull('left_at'))
                 ->firstOrFail();
-            $conversation->participants()->where('user_id', '!=', Auth::id())->whereNull('left_at')->pluck('user_id')->each(
-                fn($id) => event(new UserTyping(Auth::id(), (int) $id, Auth::user()->name, $conversation->hash))
-            );
+            $conversation->participants()
+                ->where('user_id', '!=', Auth::id())
+                ->whereNull('left_at')
+                ->pluck('user_id')
+                ->each(function (int $id) {
+                    if (UserBlock::between(Auth::id(), $id)) {
+                        return;
+                    }
+                    event(new UserTyping(Auth::id(), $id, Auth::user()->name, $conversation->hash));
+                });
             return response()->noContent();
         }
-        if (!Friendship::areFriends(Auth::id(), (int)$validated['to'])) {
+        $to = (int) $validated['to'];
+        if (!Friendship::areFriends(Auth::id(), $to) || UserBlock::between(Auth::id(), $to)) {
             return response()->noContent();
         }
-        event(new UserTyping(Auth::id(), (int)$validated['to'], Auth::user()->name, null));
+        event(new UserTyping(Auth::id(), $to, Auth::user()->name, null));
         return response()->noContent();
     }
 }

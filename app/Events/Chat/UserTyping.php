@@ -2,6 +2,7 @@
 
 namespace App\Events\Chat;
 
+use App\Models\UserBlock;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -13,6 +14,11 @@ class UserTyping implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(public int $from, public int $to, public string $name, public ?string $conversationHash = null) {}
+
+    public function broadcastWhen(): bool
+    {
+        return ! UserBlock::between($this->from, $this->to);
+    }
 
     public function broadcastOn()
     {

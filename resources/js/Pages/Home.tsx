@@ -33,7 +33,7 @@ export default function Home({conversationHash = null}: Props) {
     useEffect(() => { if (!conversationHash) return; axios.get(route('conversations.show', {hash: conversationHash})).then(r => setActiveConversation(r.data.conversation)); }, [conversationHash]);
 
     const selectConversation = (conversation: Conversation) => {
-        setActiveConversation(conversation);
+        axios.get(route('conversations.show', {hash: conversation.hash})).then(r => setActiveConversation(r.data.conversation));
         Inertia.visit(route('chat.show', {hash: conversation.hash}), { preserveState: true, preserveScroll: true });
     };
 
@@ -75,7 +75,7 @@ export default function Home({conversationHash = null}: Props) {
             <UsersList conversations={conversations} active={activeConversation} friends={friends} onSelect={selectConversation} onCreateGroup={createGroup} typingConversationHash={typingConversationHash} />
         </div>
         <div className={`min-h-0 flex-1 ${activeConversation ? 'block' : 'hidden md:block'}`}>
-            {activeConversation ? <Chat conversation={activeConversation} onBack={() => setActiveConversation(null)} incomingMessage={incomingMessage} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationBlocked={() => { setConversations(current => current.filter(c => c.hash !== activeConversation.hash)); setActiveConversation(null); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
+            {activeConversation ? <Chat conversation={activeConversation} onBack={() => { setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} incomingMessage={incomingMessage} typing={typingConversationHash === activeConversation.hash} onConversationMessage={updatePreview} onConversationBlocked={() => { const hash = activeConversation.hash; setConversations(current => current.filter(c => c.hash !== hash)); setActiveConversation(null); Inertia.visit(route('Home'), { preserveState: true, preserveScroll: true }); }} /> : <div className="flex h-full items-center justify-center text-slate-400">Select a chat</div>}
         </div>
     </ChatRoom></OuterCenteredContainer></AppLayout>;
 }

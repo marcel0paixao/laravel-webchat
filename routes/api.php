@@ -11,12 +11,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/conversations/{hash}', [\App\Http\Controllers\Api\ConversationController::class, 'show'])->name('conversations.show');
     Route::post('/conversations/direct/{user}', [\App\Http\Controllers\Api\ConversationController::class, 'direct'])->name('conversations.direct');
     Route::post('/conversations/groups', [\App\Http\Controllers\Api\ConversationController::class, 'storeGroup'])->name('conversations.groups.store');
+    Route::patch('/conversations/groups/{hash}', [\App\Http\Controllers\Api\ConversationController::class, 'updateGroup'])->name('conversations.groups.update');
+    Route::post('/conversations/groups/{hash}/members/{user}/promote', [\App\Http\Controllers\Api\ConversationController::class, 'promoteMember'])->name('conversations.groups.members.promote');
+    Route::delete('/conversations/groups/{hash}/members/{user}', [\App\Http\Controllers\Api\ConversationController::class, 'removeMember'])->name('conversations.groups.members.remove');
+    Route::delete('/conversations/groups/{hash}/leave', [\App\Http\Controllers\Api\ConversationController::class, 'leaveGroup'])->name('conversations.groups.leave');
     Route::get('/profiles/search', [\App\Http\Controllers\Api\UserController::class, 'search'])->name('profiles.api.search');
     Route::get('/profiles/{username}', [\App\Http\Controllers\Api\UserController::class, 'profile'])->name('profiles.api.show');
     Route::post('/typing', [\App\Http\Controllers\Api\TypingController::class, 'store'])->name('typing.store');
     Route::prefix('messages')->group(function () {
         Route::get('/load', [\App\Http\Controllers\Api\MessageController::class, 'index'])->name('load.messages');
-        Route::post('/store', [\App\Http\Controllers\Api\MessageController::class, 'store'])->name('store.messages');
+        Route::post('/store', [\App\Http\Controllers\Api\MessageController::class, 'store'])->middleware('throttle:messages')->name('store.messages');
         Route::delete('/delete/{id}', [\App\Http\Controllers\Api\MessageController::class, 'destroy'])->name('destroy.messages');
     });
     Route::prefix('friends')->group(function () {
@@ -26,6 +30,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/{id}', [\App\Http\Controllers\Api\FriendshipController::class, 'destroy'])->name('friends.destroy');
     });
     Route::get('/notifications', [\App\Http\Controllers\Api\NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [\App\Http\Controllers\Api\NotificationController::class, 'read'])->name('notifications.read');
+    Route::delete('/notifications', [\App\Http\Controllers\Api\NotificationController::class, 'clear'])->name('notifications.clear');
     Route::prefix('blocks')->group(function () {
         Route::post('/{id}', [\App\Http\Controllers\Api\UserBlockController::class, 'store'])->name('block.users');
         Route::delete('/{id}', [\App\Http\Controllers\Api\UserBlockController::class, 'destroy'])->name('unblock.users');

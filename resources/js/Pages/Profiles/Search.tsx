@@ -29,6 +29,7 @@ export default function Search() {
     };
     const add=(id:number)=>axios.post(route('friends.store',{id})).then(r=>setUsers(u=>u.map(x=>x.id===id?{...x,friendship_status:r.data.friendship.status,friendship_direction:r.data.friendship.requester_id===x.id?'incoming':'outgoing'}:x)));
     const cancel=(id:number)=>axios.delete(route('friends.destroy',{id})).then(()=>setUsers(u=>u.map(x=>x.id===id?{...x,friendship_status:null,friendship_direction:null}:x)));
+    const unblock=(id:number)=>axios.delete(route('unblock.users',{id})).then(r=>setUsers(u=>u.map(x=>x.id===id?{...x,is_blocked_by_me:false,friendship_status:r.data.friendship_status ?? null,friendship_direction:r.data.friendship_direction ?? null}:x)));
     const initials = (name: string) => name.split(' ').filter(Boolean).slice(0,2).map(part => part[0]).join('').toUpperCase();
 
     return <AppLayout title="Search profiles">
@@ -46,7 +47,8 @@ export default function Search() {
                 {user.friendship_status==='accepted' && <span className="ml-auto text-sm text-emerald-500">Friends</span>}
                 {user.friendship_status==='pending' && user.friendship_direction==='incoming' && <InertiaLink onClick={()=>remember(normalized)} href={route('profiles.show',{username:user.username})} className="ml-auto rounded-md border border-purple-300 px-3 py-2 text-sm font-semibold text-purple-700 dark:border-purple-500/40 dark:text-purple-200">Respond</InertiaLink>}
                 {user.friendship_status==='pending' && user.friendship_direction==='outgoing' && <button onClick={()=>cancel(user.id)} className="ml-auto rounded-md border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel request</button>}
-                {!user.friendship_status && <button onClick={()=>add(user.id)} className="ml-auto rounded-md bg-TBL_SECONDARY px-3 py-2 text-sm font-semibold text-white">Add friend</button>}
+                {user.is_blocked_by_me && <button onClick={()=>unblock(user.id)} className="ml-auto rounded-md bg-TBL_SECONDARY px-3 py-2 text-sm font-semibold text-white">Unblock</button>}
+                {!user.friendship_status && !user.is_blocked_by_me && !user.is_blocked_by_them && <button onClick={()=>add(user.id)} className="ml-auto rounded-md bg-TBL_SECONDARY px-3 py-2 text-sm font-semibold text-white">Add friend</button>}
             </li>)}</ul>}
             {normalized && users.length === 0 && <p className="mt-6 text-sm text-slate-400">No matching handles.</p>}
         </div>

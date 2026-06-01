@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\AppNotification;
+use App\Models\UserBlock;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -18,6 +19,16 @@ class UserNotificationSent implements ShouldBroadcastNow
     public function __construct(AppNotification $notification)
     {
         $this->notification = $notification->loadMissing('actor');
+    }
+
+    public function broadcastWhen(): bool
+    {
+        $actorId = $this->notification->actor_id;
+        if (!$actorId) {
+            return true;
+        }
+
+        return ! UserBlock::between((int) $this->notification->user_id, (int) $actorId);
     }
 
     public function broadcastOn()

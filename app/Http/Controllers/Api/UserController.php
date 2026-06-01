@@ -46,9 +46,13 @@ class UserController extends Controller
 
     private function withRelationship(User $user): User
     {
+        $user->is_blocked_by_me = UserBlock::blocks(Auth::id(), $user->id);
+        $user->is_blocked_by_them = UserBlock::blocks($user->id, Auth::id());
         $friendship = Friendship::between(Auth::id(), $user->id)->first();
-        $user->friendship_status = $friendship?->status;
-        $user->friendship_direction = $friendship ? ((int)$friendship->requester_id === (int)Auth::id() ? 'outgoing' : 'incoming') : null;
+        $user->friendship_status = ($user->is_blocked_by_me || $user->is_blocked_by_them) ? null : $friendship?->status;
+        $user->friendship_direction = ($user->is_blocked_by_me || $user->is_blocked_by_them || !$friendship)
+            ? null
+            : ((int)$friendship->requester_id === (int)Auth::id() ? 'outgoing' : 'incoming');
         return $user;
     }
 

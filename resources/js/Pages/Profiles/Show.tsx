@@ -14,18 +14,27 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
     const fileRef = useRef<HTMLInputElement | null>(null);
     const form = useForm({name: profile.name, bio: profile.bio ?? '', profile_photo: null as File | null});
     const isSelf = Boolean(profile.is_self);
-    const add=()=>axios.post(route('friends.store',{id:user.id})).then(r=>setUser({...user, friendship_status:r.data.friendship.status, friendship_direction:'outgoing'}));
-    const accept=()=>axios.post(route('friends.accept',{id:user.id})).then(r=>{ setUser({...user, friendship_status:r.data.friendship.status, friendship_direction:null}); setRequestMenu(false); });
-    const reject=()=>axios.delete(route('friends.reject',{id:user.id})).then(()=>{ setUser({...user, friendship_status:null, friendship_direction:null}); setRequestMenu(false); });
-    const cancel=()=>axios.delete(route('friends.destroy',{id:user.id})).then(()=>setUser({...user, friendship_status:null, friendship_direction:null}));
-    const unfriend=()=>axios.delete(route('friends.destroy',{id:user.id})).then(()=>setUser({...user, friendship_status:null, friendship_direction:null}));
-    const block=()=>axios.post(route('block.users',{id:user.id})).then(()=>Inertia.visit(route('profiles.search')));
+    const [blockedByMe, setBlockedByMe] = useState(Boolean(profile.is_blocked_by_me));
+    const blockedByThem = Boolean(user.is_blocked_by_them);
+    const canInteract = !blockedByMe && !blockedByThem;
+    const add=()=>axios.post(route('friends.store',{id:user.id})).then(r=>setUser(current => ({...current, friendship_status:r.data.friendship.status, friendship_direction:'outgoing'})));
+    const accept=()=>axios.post(route('friends.accept',{id:user.id})).then(r=>{ setUser(current => ({...current, friendship_status:r.data.friendship.status, friendship_direction:null})); setRequestMenu(false); });
+    const reject=()=>axios.delete(route('friends.reject',{id:user.id})).then(()=>{ setUser(current => ({...current, friendship_status:null, friendship_direction:null})); setRequestMenu(false); });
+    const cancel=()=>axios.delete(route('friends.destroy',{id:user.id})).then(()=>setUser(current => ({...current, friendship_status:null, friendship_direction:null})));
+    const unfriend=()=>axios.delete(route('friends.destroy',{id:user.id})).then(()=>setUser(current => ({...current, friendship_status:null, friendship_direction:null})));
+    const block=()=>axios.post(route('block.users',{id:user.id})).then(r=>{ setBlockedByMe(true); setMenu(false); setUser(current => ({...current, friendship_status: r.data.friendship_status ?? null, friendship_direction: r.data.friendship_direction ?? null, is_blocked_by_me: true})); });
+    const unblock=()=>axios.delete(route('unblock.users',{id:user.id})).then(r=>{ setBlockedByMe(false); setMenu(false); setUser(current => ({...current, friendship_status: r.data.friendship_status ?? null, friendship_direction: r.data.friendship_direction ?? null, is_blocked_by_me: false})); });
     const report=()=>axios.post(route('reports.store',{id:user.id, reason:'profile_report'})).then(()=>setMenu(false));
     const chat=()=>axios.post(route('conversations.direct',{user:user.id})).then((r:{data:{conversation:Conversation}})=>Inertia.visit(route('chat.show',{hash:r.data.conversation.hash})));
     const save=(e:React.FormEvent)=>{ e.preventDefault(); form.post(route('profiles.update'), { forceFormData: true, onSuccess: () => setUser(current => ({...current, name: form.data.name, bio: form.data.bio, profile_photo_url: photoPreview})) }); };
     const initials = (form.data.name || user.name).split(' ').filter(Boolean).slice(0,2).map(part => part[0]).join('').toUpperCase();
     const hasPhoto = Boolean(user.profile_photo_path || form.data.profile_photo);
     const avatar = hasPhoto ? <img src={photoPreview} className="h-full w-full object-cover" /> : <span className="flex h-full w-full items-center justify-center bg-TBL_SECONDARY text-2xl font-bold text-white">{initials}</span>;
+    useEffect(() => {
+        setUser(profile);
+        setBlockedByMe(Boolean(profile.is_blocked_by_me));
+    }, [profile.id, profile.is_blocked_by_me, profile.friendship_status, profile.friendship_direction]);
+
     useEffect(() => {
         const listener = (event: Event) => {
             const detail = (event as CustomEvent).detail as {userId: number; status: 'pending' | 'accepted' | null; direction: 'incoming' | 'outgoing' | null};
@@ -49,18 +58,20 @@ export default function Show({profile}: {profile: User & {is_self?: boolean}}) {
                     {!isSelf && <p className="mt-4 whitespace-pre-wrap text-sm text-slate-600 dark:text-slate-300">{user.bio || 'No bio yet.'}</p>}
                 </div>
                 {!isSelf && <div className="relative flex gap-2">
-                    {user.friendship_status==='accepted' && <button onClick={chat} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Chat</button>}
-                    {user.friendship_status==='pending' && user.friendship_direction==='incoming' && <div className="relative">
+                    {blockedByThem && !blockedByMe && <span className="self-center text-sm text-slate-500 dark:text-slate-400">You cannot interact with this user.</span>}
+                    {canInteract && user.friendship_status==='accepted' && <button onClick={chat} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Chat</button>}
+                    {canInteract && user.friendship_status==='pending' && user.friendship_direction==='incoming' && <div className="relative">
                         <button onClick={()=>setRequestMenu(v=>!v)} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Respond request</button>
                         {requestMenu && <div className="absolute right-0 top-11 z-20 w-40 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">
-                            <button onClick={accept} className="block w-full rounded px-3 py-2 text-left text-sm text-emerald-700 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-slate-700">Accept</button>
-                            <button onClick={reject} className="block w-full rounded px-3 py-2 text-left text-sm font-semibold text-red-700 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-500/10">Reject</button>
+                            <button type="button" onClick={accept} className="block w-full rounded px-3 py-2 text-left text-sm text-emerald-700 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-slate-700">Accept</button>
+                            <button type="button" onClick={reject} className="block w-full rounded px-3 py-2 text-left text-sm font-semibold text-red-700 hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-500/10">Reject</button>
                         </div>}
                     </div>}
-                    {user.friendship_status==='pending' && user.friendship_direction==='outgoing' && <button onClick={cancel} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel request</button>}
-                    {!user.friendship_status && <button onClick={add} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Add friend</button>}
-                    <button onClick={()=>setMenu(v=>!v)} className="rounded-md border border-slate-300 px-3 py-2 text-slate-700 dark:border-slate-700 dark:text-slate-200">...</button>
-                    {menu&&<div className="absolute right-0 top-11 z-10 w-44 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">{user.friendship_status==='accepted'&&<button onClick={unfriend} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Unfriend</button>}<button onClick={block} className="block w-full rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700">Block</button><button onClick={report} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Report</button></div>}
+                    {canInteract && user.friendship_status==='pending' && user.friendship_direction==='outgoing' && <button onClick={cancel} className="rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Cancel request</button>}
+                    {blockedByMe && <button onClick={unblock} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Unblock</button>}
+                    {canInteract && !user.friendship_status && <button onClick={add} className="rounded-md bg-TBL_SECONDARY px-4 py-2 text-sm font-semibold text-white">Add friend</button>}
+                    {canInteract && <button onClick={()=>setMenu(v=>!v)} className="rounded-md border border-slate-300 px-3 py-2 text-slate-700 dark:border-slate-700 dark:text-slate-200">...</button>}
+                    {menu&&<div className="absolute right-0 top-11 z-10 w-44 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800">{user.friendship_status==='accepted'&&<button type="button" onClick={unfriend} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Unfriend</button>}<button type="button" onClick={block} className="block w-full rounded px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-slate-700">Block</button><button type="button" onClick={report} className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700">Report</button></div>}
                 </div>}
             </div>
             {isSelf && <form onSubmit={save} className="mt-8 space-y-4">

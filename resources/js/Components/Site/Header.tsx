@@ -31,22 +31,38 @@ export default function Header() {
     const actorAvatar = (notification: AppNotification) => notification.actor?.profile_photo_path
         ? <img src={notification.actor.profile_photo_url} className="h-10 w-10 rounded-full object-cover" />
         : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-TBL_SECONDARY text-xs font-bold text-white">{initials(notification.actor?.name)}</span>;
+    const removeNotification = (notification: AppNotification) => {
+        if (!notification.read_at) setUnread(current => Math.max(0, current - 1));
+        setNotifications(current => current.filter(item => item.id !== notification.id));
+        setToast(current => current?.id === notification.id ? null : current);
+    };
+    const clearNotifications = () => {
+        axios.delete(route('notifications.clear')).then(() => {
+            setNotifications([]);
+            setUnread(0);
+            setToast(null);
+        });
+    };
+    const markRead = (notification: AppNotification) => {
+        if (notification.read_at) return;
+        setNotifications(current => current.map(item => item.id === notification.id ? {...item, read_at: new Date().toISOString()} : item));
+        setUnread(current => Math.max(0, current - 1));
+        axios.patch(route('notifications.read', {notification: notification.id})).catch(() => {});
+    };
     const emitFriendshipUpdate = (userId: number, status: 'pending' | 'accepted' | null, direction: 'incoming' | 'outgoing' | null) => {
         window.dispatchEvent(new CustomEvent('webchats:friendship-updated', { detail: { userId, status, direction } }));
     };
     const acceptRequest = (notification: AppNotification) => {
         if (!notification.actor_id) return;
         axios.post(route('friends.accept', {id: notification.actor_id})).then(() => {
-            setToast(current => current?.id === notification.id ? null : current);
-            setNotifications(current => current.filter(item => item.id !== notification.id));
+            removeNotification(notification);
             emitFriendshipUpdate(notification.actor_id as number, 'accepted', null);
         });
     };
     const rejectRequest = (notification: AppNotification) => {
         if (!notification.actor_id) return;
         axios.delete(route('friends.reject', {id: notification.actor_id})).then(() => {
-            setToast(current => current?.id === notification.id ? null : current);
-            setNotifications(current => current.filter(item => item.id !== notification.id));
+            removeNotification(notification);
             emitFriendshipUpdate(notification.actor_id as number, null, null);
         });
     };
@@ -82,21 +98,24 @@ export default function Header() {
         {notificationsOpen && <div className="absolute right-14 top-14 z-30 w-[min(24rem,calc(100vw-2rem))] rounded-lg border border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-800">
             <div className="flex items-center justify-between px-2 py-2">
                 <h2 className="text-sm font-bold text-slate-900 dark:text-white">Notifications</h2>
-                {unread > 0 && <span className="rounded-full bg-purple-50 px-2 py-1 text-xs font-semibold text-purple-700 dark:bg-purple-500/15 dark:text-purple-200">{unread} new</span>}
+                <div className="flex items-center gap-2">
+                    {notifications.length > 0 && <button type="button" onClick={clearNotifications} className="rounded-md px-2 py-1 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700">Clear</button>}
+                    {unread > 0 && <span className="rounded-full bg-purple-50 px-2 py-1 text-xs font-semibold text-purple-700 dark:bg-slate-700 dark:text-purple-200">{unread} new</span>}
+                </div>
             </div>
             <div className="max-h-96 overflow-y-auto">
                 {notifications.length === 0 && <p className="px-2 py-8 text-center text-sm text-slate-500 dark:text-slate-400">No notifications yet.</p>}
-                {notifications.map(notification => <div key={notification.id} className="rounded-md px-2 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-700">
+                {notifications.map(notification => <div key={notification.id} className={(notification.read_at ? '' : 'bg-purple-50/70 dark:bg-purple-500/10 ') + 'rounded-md px-2 py-3 transition hover:bg-slate-100 dark:hover:bg-slate-700'}>
                     <div className="flex gap-3">
-                        <InertiaLink href={profileUrl(notification)} className="shrink-0">{actorAvatar(notification)}</InertiaLink>
-                        <InertiaLink href={profileUrl(notification)} className="min-w-0 flex-1">
+                        <InertiaLink href={profileUrl(notification)} onClick={() => markRead(notification)} className="shrink-0">{actorAvatar(notification)}</InertiaLink>
+                        <InertiaLink href={profileUrl(notification)} onClick={() => markRead(notification)} className="min-w-0 flex-1">
                             <span className="block text-sm font-semibold text-slate-900 dark:text-white">{notification.title}</span>
                             <span className="block text-sm leading-5 text-slate-600 dark:text-slate-300">{notificationText(notification)}</span>
                         </InertiaLink>
                     </div>
                     {isFriendRequest(notification) && <div className="mt-3 flex gap-2 pl-[3.25rem]">
-                        <button type="button" onClick={() => acceptRequest(notification)} className="rounded-md bg-TBL_SECONDARY px-3 py-1.5 text-xs font-bold text-white">Accept</button>
-                        <button type="button" onClick={() => rejectRequest(notification)} className="rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Reject</button>
+                        <button type="button" onClick={() => acceptRequest(notification)} className="flex-1 rounded-md bg-TBL_SECONDARY px-3 py-1.5 text-xs font-bold text-white">Accept</button>
+                        <button type="button" onClick={() => rejectRequest(notification)} className="flex-1 rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Reject</button>
                     </div>}
                 </div>)}
             </div>
@@ -108,15 +127,15 @@ export default function Header() {
         </div>}
         {toast && <div className="fixed bottom-5 left-5 z-50 w-[min(22rem,calc(100vw-2.5rem))] rounded-lg border border-slate-200 bg-white p-3 shadow-2xl transition hover:-translate-y-0.5 dark:border-slate-700 dark:bg-slate-800">
             <div className="flex gap-3">
-                <InertiaLink href={profileUrl(toast)} className="shrink-0">{actorAvatar(toast)}</InertiaLink>
-                <InertiaLink href={profileUrl(toast)} className="min-w-0 flex-1">
+                <InertiaLink href={profileUrl(toast)} onClick={() => markRead(toast)} className="shrink-0">{actorAvatar(toast)}</InertiaLink>
+                <InertiaLink href={profileUrl(toast)} onClick={() => markRead(toast)} className="min-w-0 flex-1">
                     <span className="block text-sm font-bold text-slate-900 dark:text-white">{toast.title}</span>
                     <span className="block text-sm leading-5 text-slate-600 dark:text-slate-300">{notificationText(toast)}</span>
                 </InertiaLink>
             </div>
             {isFriendRequest(toast) && <div className="mt-3 flex gap-2 pl-[3.25rem]">
-                <button type="button" onClick={() => acceptRequest(toast)} className="rounded-md bg-TBL_SECONDARY px-3 py-1.5 text-xs font-bold text-white">Accept</button>
-                <button type="button" onClick={() => rejectRequest(toast)} className="rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Reject</button>
+                <button type="button" onClick={() => acceptRequest(toast)} className="flex-1 rounded-md bg-TBL_SECONDARY px-3 py-1.5 text-xs font-bold text-white">Accept</button>
+                <button type="button" onClick={() => rejectRequest(toast)} className="flex-1 rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700 hover:bg-red-100 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300">Reject</button>
             </div>}
         </div>}
     </header>;

@@ -2,13 +2,14 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Events\UserNotificationSent;
-use App\Models\{AppNotification, Friendship, User};
+use App\Models\{AppNotification, Friendship, User, UserBlock};
 use Illuminate\Support\Facades\Auth;
 class FriendshipController extends Controller
 {
     public function store(int $id)
     {
         abort_if((int)$id === (int)Auth::id() || !User::whereKey($id)->exists(), 404);
+        abort_if(UserBlock::between(Auth::id(), $id), 403, 'You cannot send a friend request to this user.');
         $existing = Friendship::between(Auth::id(), $id)->first();
         if ($existing) { return response()->json(['friendship' => $existing->fresh()], 200); }
         $friendship = Friendship::create(['requester_id' => Auth::id(), 'addressee_id' => $id, 'status' => Friendship::PENDING]);
@@ -20,6 +21,7 @@ class FriendshipController extends Controller
     }
     public function accept(int $id)
     {
+        abort_if(UserBlock::between(Auth::id(), $id), 403, 'You cannot accept a friend request from this user.');
         $friendship = Friendship::where('requester_id', $id)
             ->where('addressee_id', Auth::id())
             ->where('status', Friendship::PENDING)

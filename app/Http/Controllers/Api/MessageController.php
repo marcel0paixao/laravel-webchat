@@ -39,8 +39,10 @@ class MessageController extends Controller
             ->reverse()
             ->values();
 
-        ConversationParticipant::where('conversation_id', $conversation->id)->where('user_id', $currentUserId)->update(['last_read_at' => now()]);
-        MessageStatus::whereIn('message_id', $messages->pluck('id'))->where('user_id', $currentUserId)->update(['delivered_at' => now(), 'read_at' => now()]);
+        if (empty($validated['before_id'])) {
+            $this->markIncomingAsRead($conversation, $currentUserId);
+            $messages->each(fn(Message $message) => $message->load('statuses'));
+        }
 
         return response()->json(['messages' => $messages, 'has_more' => $messages->count() === 30]);
     }
@@ -66,6 +68,9 @@ class MessageController extends Controller
             $to = $conversation->type === 'direct'
                 ? (int) $conversation->participants()->where('user_id', '!=', Auth::id())->value('user_id')
                 : null;
+            if ($to && !Friendship::areFriends(Auth::id(), $to)) {
+                return response()->json(['message' => 'You can only chat with friends.'], 403);
+            }
         } else {
             $to = (int) $validated['to'];
             if (!Friendship::areFriends(Auth::id(), $to)) {
@@ -158,6 +163,39 @@ class MessageController extends Controller
             'height' => is_array($dimensions) ? $dimensions[1] : null,
             'expires_at' => now()->addWeek(),
         ]);
+    }
+
+    private function markIncomingAsRead(Conversation $conversation, int $currentUserId): void
+    {
+        ConversationParticipant::where('conversation_id', $conversation->id)
+            ->where('user_id', $currentUserId)
+            ->update(['last_read_at' => now()]);
+
+        $incomingIds = Message::where('conversation_id', $conversation->id)
+            ->where('from', '!=', $currentUserId)
+            ->pluck('id');
+
+        if ($incomingIds->isEmpty()) {
+            return;
+        }
+
+        $now = now();
+        MessageStatus::whereIn('message_id', $incomingIds)
+            ->where('user_id', $currentUserId)
+            ->update(['delivered_at' => $now, 'read_at' => $now]);
+
+        $existing = MessageStatus::whereIn('message_id', $incomingIds)
+            ->where('user_id', $currentUserId)
+            ->pluck('message_id');
+
+        foreach ($incomingIds->diff($existing) as $messageId) {
+            MessageStatus::create([
+                'message_id' => $messageId,
+                'user_id' => $currentUserId,
+                'delivered_at' => $now,
+                'read_at' => $now,
+            ]);
+        }
     }
 
     private function isBlocked(int $a, int $b): bool
