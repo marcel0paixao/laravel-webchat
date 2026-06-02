@@ -5,24 +5,9 @@ use App\Models\{Friendship, User, UserBlock};
 use Illuminate\Support\Facades\Auth;
 class UserBlockController extends Controller
 {
-    public function index()
-    {
-        $users = UserBlock::with('blocked')
-            ->where('blocker_id', Auth::id())
-            ->latest()
-            ->get()
-            ->map(fn($block) => $block->blocked)
-            ->filter()
-            ->values();
-
-        return response()->json(['users' => $users]);
-    }
-
     public function store(int $id)
     {
-        abort_if((bool) Auth::user()?->is_admin, 403);
-        $target = User::findOrFail($id);
-        abort_if((int)Auth::id() === $id || (bool) $target->is_admin, 404);
+        abort_if((int)Auth::id() === $id || !User::whereKey($id)->exists(), 404);
         Friendship::between(Auth::id(), $id)->delete();
         UserBlock::firstOrCreate(['blocker_id' => Auth::id(), 'blocked_id' => $id]);
         return response()->json([

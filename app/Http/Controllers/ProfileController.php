@@ -14,7 +14,6 @@ class ProfileController extends Controller
     public function show(string $username)
     {
         $profile = User::where('username', ltrim($username, '@'))->firstOrFail();
-        abort_if((bool) $profile->is_admin, 404);
         $profile->is_self = (int) $profile->id === (int) Auth::id();
         if (Auth::check() && !$profile->is_self) {
             $profile->is_blocked_by_me = UserBlock::blocks(Auth::id(), $profile->id);
@@ -30,7 +29,6 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        abort_if((bool) $request->user()->is_admin, 403);
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:1000'],

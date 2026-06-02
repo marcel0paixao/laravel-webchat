@@ -16,9 +16,4 @@ class UserBlock extends Model
     {
         return static::blocks($a, $b) || static::blocks($b, $a);
     }
-
-    public function blocked()
-    {
-        return $this->belongsTo(User::class, 'blocked_id');
-    }
 }
